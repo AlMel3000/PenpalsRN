@@ -1,0 +1,3 @@
+rootProject.name = 'PenpalsRN'
+
+include ':app'
