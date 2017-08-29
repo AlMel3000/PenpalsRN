@@ -1,0 +1,7 @@
+// react-native libraries used for project
+
+npm install --save react-navigation
+
+npm install react-native-orientation --save
+react-native link react-native-orientation
+
