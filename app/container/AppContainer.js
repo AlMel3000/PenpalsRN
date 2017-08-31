@@ -11,10 +11,12 @@ import {
 
 import TabBar from './../components/TabBar'
 import LoadingScreen from '../components/screens/LoadingScreen'
+import Main from '../components/screens/Main'
 
 const ApplicationNavContainer = StackNavigator(
     {
-        Loading: { screen: LoadingScreen }
+        Loading: { screen: LoadingScreen },
+        Main: { screen: Main },
     },
     { headerMode: 'screen' }
 );
