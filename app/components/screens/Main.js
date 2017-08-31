@@ -1,7 +1,6 @@
 import {View, Text, Image, Dimensions, StyleSheet, ActivityIndicator} from 'react-native';
 import React, {Component} from 'react';
 
-import Orientation from 'react-native-orientation';
 
 var ViewPager = require('react-native-viewpager');
 const ds = new ViewPager.DataSource({pageHasChanged: (r1, r2) => r1 !== r2});
@@ -11,9 +10,6 @@ let deviceHeight = Dimensions.get('window').height;
 let envelopesArray = [];
 let stampRotationArray = [];
 let sealRotationArray = [];
-
-let stampRotation = '2deg';
-let sealRotation = '-2deg';
 
 export default class Main extends Component {
 
@@ -35,7 +31,6 @@ export default class Main extends Component {
 
 
     componentWillMount() {
-        Orientation.lockToLandscape();
         this.getCards();
     }
 
@@ -55,7 +50,6 @@ export default class Main extends Component {
 
                 envelopesArray = res.cards;
                 this.setState({
-                    showProgress: false,
                     dataSource: this.state.dataSource.cloneWithPages(envelopesArray),
                     showProgress: false
                 });
@@ -97,11 +91,14 @@ export default class Main extends Component {
         let sealURL;
         if (sealNumber<10){
             sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=00'+sealNumber;
-        } else if (stampNumber>9 && stampNumber< 100){
+        } else if (sealNumber>9 && sealNumber< 100){
             sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=0'+sealNumber;
         } else{
             sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id='+sealNumber;
         }
+
+        let stampRotation;
+        let sealRotation;
 
         if (stampRotationArray.hasOwnProperty(data.data.id)){
             stampRotation = stampRotationArray[data.data.id];
@@ -150,13 +147,15 @@ export default class Main extends Component {
                     </View>
                     <View style={styles.topRightRow}>
                         <Image source={{uri: imageURL}} style={styles.userPhoto}/>
-                        <Image source={{uri: stampURL}} style={styles.stampImage}/>
-                        <Image source={{uri: sealURL}} style={styles.sealImage}/>
+                        <Image source={{uri: stampURL}} style={{height: deviceHeight/5, width: deviceWidth/4, resizeMode:'contain', transform:[{rotate: stampRotation}], alignSelf:'center', left: deviceWidth/6, position: 'absolute'
+                        }}/>
+                        <Image source={{uri: sealURL}} style={{height: deviceHeight/5, width: deviceWidth/5, resizeMode:'contain', alignSelf:'center', left: deviceWidth/6, position: 'absolute', transform:[{rotate: sealRotation}]
+                        }}/>
                     </View>
                 </View>
                 <View style={{flex: 1,  justifyContent:'center', alignItems:'center', flexDirection: 'row'}}>
                     <View style={{flex: 1, width: deviceWidth/2}}/>
-                    <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:36}}>
+                    <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:36, paddingRight:8}}>
                         <Image source={require('./../assets/quote.png')} style={{height: deviceHeight/25,resizeMode:'contain'}}/>
                         <Text style={{color: '#212121', fontSize: 14, marginRight:32}}>
                             {data.data.description}
@@ -176,7 +175,7 @@ export default class Main extends Component {
                     <ActivityIndicator size={55} style = {{alignItems: 'center', justifyContent: 'center', flex:1}}/>
                 </View>}
                 {! this.state.showProgress&&
-                <ViewPager style={styles.container}
+                <ViewPager style={styles.viewPager}
                            dataSource={this.state.dataSource}
                            renderPage={this.renderEnvelope}
                            renderPageIndicator={false}/>}
@@ -191,16 +190,19 @@ export default class Main extends Component {
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        paddingVertical:8,
-        paddingHorizontal: 2,
         backgroundColor:'#e4e4e4',
     },
     viewPager: {
-        width: deviceWidth-8,
-        height: deviceHeight-16,
+        width: deviceWidth,
+        height: deviceHeight,
         alignSelf: 'center',
-        padding:16
+        paddingVertical:8,
+        paddingHorizontal: 22,
 
+    },
+    page:{
+        width: deviceWidth - 4,
+        height: deviceHeight - 16,
     },
     topRow:{
         height: deviceHeight/1.9,
@@ -220,8 +222,8 @@ const styles = StyleSheet.create({
         justifyContent:'flex-start',
         alignItems:'flex-start',
         flexDirection: 'column',
-        paddingLeft:24,
-        paddingTop:36
+        paddingLeft:8,
+        paddingTop:48
     },
     prefix:{
         height: deviceHeight/25,
@@ -229,30 +231,18 @@ const styles = StyleSheet.create({
     },
     topRightRow:{
         height: deviceHeight/1.9,
-        flex: 1,  justifyContent:'flex-start',
+        flex: 1,
+        justifyContent:'flex-start',
         alignItems:'center',
         flexDirection: 'row',
         paddingRight:24,
         paddingTop:36
     },
     userPhoto: {
-        height: deviceHeight/3,
-        width: deviceHeight/3,
-        resizeMode:'contain'
-    },
-    stampImage:{height: deviceHeight/4,
-        width: deviceHeight/4,
+        height: deviceHeight/2.5,
+        width: deviceWidth/4,
         resizeMode:'contain',
-        transform:[{rotate: stampRotation}]
-    },
-    sealImage: {
-        height: deviceHeight/4,
-        width: deviceHeight/4,
-        resizeMode:'contain',
-        alignSelf:'center',
-        right: 8,
-        position: 'absolute',
-        transform:[{rotate: sealRotation}]
+        marginTop:8
     }
 });
 

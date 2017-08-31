@@ -4,7 +4,6 @@ import {
     StackNavigator,  NavigationActions
 } from 'react-navigation';
 
-import Orientation from 'react-native-orientation';
 
 import {
     StyleSheet,
@@ -29,7 +28,6 @@ export default class LoadingScreen extends Component {
     }
 
     componentWillMount() {
-        Orientation.lockToLandscape();
     }
 
     componentDidMount() {
