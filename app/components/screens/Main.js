@@ -1,4 +1,4 @@
-import {View, Text, Image, Dimensions, StyleSheet, ActivityIndicator} from 'react-native';
+import {View, Text, Image, Dimensions, StyleSheet, ActivityIndicator, AsyncStorage} from 'react-native';
 import React, {Component} from 'react';
 
 
@@ -11,6 +11,10 @@ let envelopesArray = [];
 let stampRotationArray = [];
 let sealRotationArray = [];
 
+const BLOCKS_RANGE_FOR_RANDOMIZATION = 100;
+const ENVELOPES_AMOUNT_PER_BLOCK = 50;
+
+
 export default class Main extends Component {
 
     static navigationOptions = {
@@ -20,7 +24,8 @@ export default class Main extends Component {
     constructor(props){
         super(props);
         this.state = {
-           page: 1,
+           page: 0,
+            block: 1,
             dataSource: ds.cloneWithPages(envelopesArray),
             showProgress:true
         };
@@ -31,13 +36,48 @@ export default class Main extends Component {
 
 
     componentWillMount() {
-        this.getCards();
+        this.getUserStatus();
+    }
+
+    componentWillUnmount(){
+        this.saveStatus();
+    }
+
+    async getUserStatus(){
+        try {
+            let savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
+            let savedPage = JSON.parse(await AsyncStorage.getItem('page'));
+            if (savedBlock!== null){
+                this.setState({
+                    block: savedBlock,
+                    page: savedPage
+                });
+
+                this.getCards();
+            } else{
+                let randomBlock =  Math.floor(Math.random() * (BLOCKS_RANGE_FOR_RANDOMIZATION - 1)) + 1;
+                this.setState({
+                    block: randomBlock
+                })
+            }
+
+        } catch (message) {
+            console.log(message)
+        }
+
+    }
+
+    async saveStatus(){
+        try {
+            await AsyncStorage.setItem('block', JSON.stringify(this.state.block));
+            await AsyncStorage.setItem('page', JSON.stringify(this.state.page));
+        } catch (error) {}
     }
 
     async getCards() {
 
         try {
-            let response = await fetch(('http://penpal.eken.live/api/get-cards?page='+this.state.page+'&perPage=50'), {
+            let response = await fetch(('http://penpal.eken.live/api/get-cards?page='+this.state.block+'&perPage='+ENVELOPES_AMOUNT_PER_BLOCK), {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
@@ -157,13 +197,20 @@ export default class Main extends Component {
                     <View style={{flex: 1, width: deviceWidth/2}}/>
                     <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:deviceHeight*0.1, paddingRight:deviceWidth*0.0125}}>
                         <Image source={require('./../assets/quote.png')} style={{height: deviceHeight/25,resizeMode:'contain'}}/>
-                        <Text style={{color: '#212121', fontSize: 14, marginRight:deviceWidth*0.02}}>
+                        <Text style={{color: '#212121', fontSize: 14, marginRight:deviceWidth*0.02, marginLeft: deviceWidth*0.003125}}>
                             {data.data.description}
                         </Text>
                     </View>
                 </View>
             </View>
         );
+    }
+
+    _onChangePage(page: number | string){
+        this.setState({
+            page: page
+        });
+
     }
 
 
@@ -178,7 +225,9 @@ export default class Main extends Component {
                 <ViewPager style={styles.viewPager}
                            dataSource={this.state.dataSource}
                            renderPage={this.renderEnvelope}
-                           renderPageIndicator={false}/>}
+                           renderPageIndicator={false}
+                           initialPage={this.state.page}
+                           onChangePage={(page)=>this._onChangePage(page)}/>}
             </View>
         );
     }
