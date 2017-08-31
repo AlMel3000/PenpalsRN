@@ -122,25 +122,25 @@ export default class Main extends Component {
                     <View style={styles.topLeftRow}>
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', }}>
                             <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
-                            <Text style={{color: '#212121', fontSize: 16, marginLeft:2}}>
+                            <Text style={styles.name}>
                                 {data.data.first_name}
                             </Text>
                         </View>
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row'}}>
                             <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
-                            <Text style={{color: '#212121', fontSize: 14, marginLeft:2}}>
+                            <Text style={styles.address}>
                                 {data.data.address}
                             </Text>
                         </View>
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row'}}>
                             <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
-                            <Text style={{color: '#212121', fontSize: 14, marginLeft:2}}>
+                            <Text style={styles.address}>
                                 {data.data.city}
                             </Text>
                         </View>
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row'}}>
                             <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
-                            <Text style={{color: '#212121', fontSize: 14, marginLeft:2}}>
+                            <Text style={styles.address}>
                                 {data.data.country+', '+data.data.postal}
                             </Text>
                         </View>
@@ -155,9 +155,9 @@ export default class Main extends Component {
                 </View>
                 <View style={{flex: 1,  justifyContent:'center', alignItems:'center', flexDirection: 'row'}}>
                     <View style={{flex: 1, width: deviceWidth/2}}/>
-                    <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:36, paddingRight:8}}>
+                    <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:deviceHeight*0.1, paddingRight:deviceWidth*0.0125}}>
                         <Image source={require('./../assets/quote.png')} style={{height: deviceHeight/25,resizeMode:'contain'}}/>
-                        <Text style={{color: '#212121', fontSize: 14, marginRight:32}}>
+                        <Text style={{color: '#212121', fontSize: 14, marginRight:deviceWidth*0.02}}>
                             {data.data.description}
                         </Text>
                     </View>
@@ -196,13 +196,13 @@ const styles = StyleSheet.create({
         width: deviceWidth,
         height: deviceHeight,
         alignSelf: 'center',
-        paddingVertical:8,
-        paddingHorizontal: 22,
+        paddingVertical:deviceHeight*0.025,
+        paddingHorizontal: deviceWidth*0.034,
 
     },
     page:{
-        width: deviceWidth - 4,
-        height: deviceHeight - 16,
+        width: (deviceWidth - (deviceWidth*0.00625)),
+        height: deviceHeight - (deviceHeight*0.0445),
     },
     topRow:{
         height: deviceHeight/1.9,
@@ -211,10 +211,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     envelopeImage: {
-        width: deviceWidth,
+        width: deviceWidth* 0.994,
         height: deviceHeight,
         resizeMode: 'contain',
-        position:'absolute'
+        position:'absolute',
+        marginLeft: deviceWidth*0.003125,
+        marginRight:deviceWidth*0.003125
     },
     topLeftRow:{
         height: deviceHeight/1.9,
@@ -222,8 +224,8 @@ const styles = StyleSheet.create({
         justifyContent:'flex-start',
         alignItems:'flex-start',
         flexDirection: 'column',
-        paddingLeft:8,
-        paddingTop:48
+        paddingLeft: deviceWidth*0.0125,
+        paddingTop:deviceHeight*0.15
     },
     prefix:{
         height: deviceHeight/25,
@@ -235,14 +237,24 @@ const styles = StyleSheet.create({
         justifyContent:'flex-start',
         alignItems:'center',
         flexDirection: 'row',
-        paddingRight:24,
-        paddingTop:36
+        paddingRight:deviceWidth*0.0375,
+        paddingTop:deviceHeight*0.1125
     },
     userPhoto: {
         height: deviceHeight/2.5,
         width: deviceWidth/4,
         resizeMode:'contain',
-        marginTop:8
+        marginTop:deviceHeight*0.025
+    },
+    address:{
+        color: '#212121',
+        fontSize: 14,
+        marginLeft:deviceWidth*0.003125
+    },
+    name:{
+        color: '#212121',
+        fontSize: 16,
+        marginLeft:deviceWidth*0.003125
     }
 });
 
