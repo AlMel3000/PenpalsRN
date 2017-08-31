@@ -141,7 +141,7 @@ export default class Main extends Component {
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row'}}>
                             <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
                             <Text style={styles.address}>
-                                {data.data.country+', '+data.data.postal}
+                                {data.data.country_name+', '+data.data.postal}
                             </Text>
                         </View>
                     </View>
