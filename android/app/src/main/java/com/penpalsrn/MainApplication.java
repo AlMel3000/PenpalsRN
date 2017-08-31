@@ -1,4 +1,4 @@
-package com.penpalsrn;
+package live.eken.penpal;
 
 import android.app.Application;
 

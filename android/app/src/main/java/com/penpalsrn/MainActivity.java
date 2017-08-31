@@ -1,4 +1,4 @@
-package com.penpalsrn;
+package live.eken.penpal;
 
 import com.facebook.react.ReactActivity;
 import android.content.Intent;

@@ -33,7 +33,7 @@ export default class LoadingScreen extends Component {
     }
 
     componentDidMount() {
-
+        this._navigateTo("Main");
     }
 
 
