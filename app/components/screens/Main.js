@@ -1,4 +1,13 @@
-import {View, Text, Image, Dimensions, StyleSheet, ActivityIndicator, AsyncStorage} from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    Dimensions,
+    StyleSheet,
+    ActivityIndicator,
+    AsyncStorage
+} from 'react-native';
+
 import React, {Component} from 'react';
 
 
@@ -14,6 +23,9 @@ let sealRotationArray = [];
 const BLOCKS_RANGE_FOR_RANDOMIZATION = 100;
 const ENVELOPES_AMOUNT_PER_BLOCK = 50;
 
+let savedBlock;
+let blocksAvailable;
+
 
 export default class Main extends Component {
 
@@ -27,7 +39,7 @@ export default class Main extends Component {
            page: 0,
             block: 1,
             dataSource: ds.cloneWithPages(envelopesArray),
-            showProgress:true
+            showProgress: true
         };
 
         this.renderEnvelope = this.renderEnvelope.bind(this)
@@ -37,6 +49,7 @@ export default class Main extends Component {
 
     componentWillMount() {
         this.getUserStatus();
+
     }
 
     componentWillUnmount(){
@@ -45,20 +58,28 @@ export default class Main extends Component {
 
     async getUserStatus(){
         try {
-            let savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
+            savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
             let savedPage = JSON.parse(await AsyncStorage.getItem('page'));
+
+            let lastCardOfUser = JSON.parse(await AsyncStorage.getItem('lastCardOfUser'));
+
             if (savedBlock!== null){
                 this.setState({
                     block: savedBlock,
                     page: savedPage
                 });
+                if (lastCardOfUser===null){
+                    this.getCards();
+                } else{
+                    this.getLastCardOfUser(lastCardOfUser);
+                }
 
-                this.getCards();
             } else{
-                let randomBlock =  Math.floor(Math.random() * (BLOCKS_RANGE_FOR_RANDOMIZATION - 1)) + 1;
+                let randomBlock = this.randomizer(BLOCKS_RANGE_FOR_RANDOMIZATION);
                 this.setState({
                     block: randomBlock
-                })
+                });
+                await this.getCards();
             }
 
         } catch (message) {
@@ -74,8 +95,35 @@ export default class Main extends Component {
         } catch (error) {}
     }
 
-    async getCards() {
+    async getLastCardOfUser(email: string) {
 
+        try {
+            let response = await fetch(('http://penpal.eken.live//Api/get-last-user-envelope/?email='+email), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+            let res = JSON.parse(await response.text());
+            console.log(JSON.stringify(res));
+            if (response.status >= 200 && response.status < 300) {
+
+                envelopesArray = [{type: "card", data:{id: res.id, first_name: res.first_name, address: res.address, city: res.city, country_name: res.country_name, postal: res.postal, description: res.description,  photo: res.image_id}, resources:{envelope: res.envelope, stamp: res.stamp, seal: res.seal}}];
+
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithPages(envelopesArray),
+                });
+
+                this.getCards();
+            }
+        } catch (message) {
+            console.log(message)
+        }
+    }
+
+    async getCards() {
+        console.log("BOOM " +this.state.block);
         try {
             let response = await fetch(('http://penpal.eken.live/api/get-cards?page='+this.state.block+'&perPage='+ENVELOPES_AMOUNT_PER_BLOCK), {
                 method: 'GET',
@@ -87,8 +135,42 @@ export default class Main extends Component {
             let res = JSON.parse(await response.text());
             console.log(JSON.stringify(res));
             if (response.status >= 200 && response.status < 300) {
+                blocksAvailable = res.pages;
+                let envelopesReceived = res.cards;
 
-                envelopesArray = res.cards;
+                // it was here
+
+                console.log(blocksAvailable+" "+this.state.block);
+                // if any user doesn't exceed blocks range - let my user go
+                if (this.state.block<=blocksAvailable){
+                    // if user exceeds page range (due to card deletion) - get him to 1st page of first block
+                    if (this.state.page>=envelopesReceived.length){
+                        this.setState({
+                            page: 0,
+                            block:1
+                        })
+                    }
+                    envelopesArray = envelopesArray.concat(envelopesReceived);
+                } else {
+                    // if not new user exceeds blocks range (due to card deletion) - get him to 1st page of 1st block
+                    if(savedBlock!==null){
+                        this.setState({
+                            block: 1,
+                            page:0
+                        });
+                        envelopesArray = envelopesArray.concat(envelopesReceived);
+                        // if new user exceeds blocks range - randomize him again
+                    } else{
+                        let randomBlockWithinBounds =  this.randomizer(blocksAvailable);
+                        this.setState({
+                            block: randomBlockWithinBounds
+                        });
+                        this.getCards();
+                        return;
+                    }
+
+                }
+
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithPages(envelopesArray),
                     showProgress: false
@@ -99,8 +181,16 @@ export default class Main extends Component {
         }
     }
 
+    randomizer(max: number) {
+        let rand =  (Math.random() * max);
+        let randomBlock = Math.floor(rand) + 1;
+        return randomBlock;
+    }
+
+
     renderEnvelope( data: Object,
                     pageID: number | string){
+
         let imageURL;
         if(data.data.photo < 0){
             imageURL = 'https://robohash.org/'+data.data.first_name;
@@ -207,6 +297,19 @@ export default class Main extends Component {
     }
 
     _onChangePage(page: number | string){
+        if (page === (this.state.dataSource.getPageCount()-1)){
+            let nextBlock;
+            if (this.state.block !== blocksAvailable){
+                nextBlock = this.state.block +1;
+            }  else{
+                nextBlock = 1;
+            }
+            this.setState({
+                block: nextBlock,
+                showProgress: true
+            })
+            this.getCards();
+        }
         this.setState({
             page: page
         });
