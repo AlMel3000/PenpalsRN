@@ -12,8 +12,8 @@ import {
 
 import React, {Component} from 'react';
 
-
-var ViewPager = require('react-native-viewpager');
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
@@ -53,6 +53,7 @@ export default class Main extends Component {
 
         this.renderEnvelope = this.renderEnvelope.bind(this);
         this._onScrollEnd = this._onScrollEnd.bind(this);
+        this.onScroll = this.onScroll.bind(this);
         this.saveStatus = this.saveStatus.bind(this);
         this.getUserStatus = this.getUserStatus.bind(this);
     }
@@ -241,7 +242,7 @@ export default class Main extends Component {
 
         return (
             <TouchableOpacity style={styles.viewPager}
-                              onPress={(e) => this.showButton}>
+                              onPress={(e) => this.showButton()}>
                 <Image source={{uri: envelopeURL}} style={styles.envelopeImage}/>
                 <View style={styles.topRow}>
                     <View style={styles.topLeftRow}>
@@ -287,19 +288,31 @@ export default class Main extends Component {
                         </Text>
                     </View>
                 </View>
-                <TouchableOpacity style={{backgroundColor: 'red', position: 'absolute', bottom: 16, right: 16}}/>
+                {this.state.showButton &&
+                <ActionButton buttonColor="rgba(231,76,60,1)"
+                buttonText={''}>
+                    <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
+                        <Icon name="md-create" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                    <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => {}}>
+                        <Icon name="md-add" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                    <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => {}}>
+                        <Icon name="md-done-all" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                </ActionButton>}
             </TouchableOpacity>
         );
     }
 
     showButton(){
-        if (this.state.showButton){
+        if (!this.state.showButton){
             this.setState({
-                showButton: false
+                showButton: true
             })
         } else{
             this.setState({
-                showButton: true
+                showButton: false
             })
         }
     }
@@ -311,6 +324,10 @@ export default class Main extends Component {
         // Divide the horizontal offset by the width of the view to see which page is visible
         let pageNum = Math.floor(contentOffset.x / viewSize.width);
         console.log('scrolled to page ', pageNum);
+
+        this.setState({
+            showButton: false
+        })
     }
 
     _onScrollEnd() {
@@ -374,7 +391,6 @@ export default class Main extends Component {
                     refreshing={this.state.refreshing}
                     onRefresh={this.onRefresh}
                     removeClippedSubviews={false}
-                    debug={true}
                     onMomentumScrollEnd={this.onScroll}
                 />
                }
@@ -454,6 +470,11 @@ const styles = StyleSheet.create({
         color: '#212121',
         fontSize: 16,
         marginLeft:deviceWidth*0.003125
+    },
+    actionButtonIcon: {
+        fontSize: 20,
+        height: 22,
+        color: 'red',
     }
 });
 

@@ -6,4 +6,4 @@ npm install react-native-orientation --save
 react-native link react-native-orientation
 
 
-npm install react-native-viewpager --save
+npm install react-native-vector-icons --save
