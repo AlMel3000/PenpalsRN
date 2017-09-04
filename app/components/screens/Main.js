@@ -5,14 +5,15 @@ import {
     Dimensions,
     StyleSheet,
     ActivityIndicator,
-    AsyncStorage
+    AsyncStorage,
+    VirtualizedList,
+    TouchableOpacity
 } from 'react-native';
 
 import React, {Component} from 'react';
 
 
 var ViewPager = require('react-native-viewpager');
-const ds = new ViewPager.DataSource({pageHasChanged: (r1, r2) => r1 !== r2});
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
@@ -26,6 +27,11 @@ const ENVELOPES_AMOUNT_PER_BLOCK = 50;
 let savedBlock;
 let blocksAvailable;
 
+let page = 0;
+let block = 1;
+
+let isLastBlockListed = false;
+
 
 
 
@@ -38,14 +44,17 @@ export default class Main extends Component {
 
     constructor(props){
         super(props);
+
         this.state = {
-           page: 0,
-            block: 1,
-            dataSource: ds.cloneWithPages(envelopesArray),
-            showProgress: true
+            showProgress: true,
+            refreshing: false,
+            showButton: false
         };
 
-        this.renderEnvelope = this.renderEnvelope.bind(this)
+        this.renderEnvelope = this.renderEnvelope.bind(this);
+        this._onScrollEnd = this._onScrollEnd.bind(this);
+        this.saveStatus = this.saveStatus.bind(this);
+        this.getUserStatus = this.getUserStatus.bind(this);
     }
 
 
@@ -62,15 +71,11 @@ export default class Main extends Component {
     async getUserStatus(){
         try {
             savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
-            let savedPage = JSON.parse(await AsyncStorage.getItem('page'));
 
             let lastCardOfUser = JSON.parse(await AsyncStorage.getItem('lastCardOfUser'));
 
             if (savedBlock!== null){
-                this.setState({
-                    block: savedBlock,
-                    page: savedPage
-                });
+                block = savedBlock;
                 if (lastCardOfUser===null){
                     this.getCards();
                 } else{
@@ -78,10 +83,7 @@ export default class Main extends Component {
                 }
 
             } else{
-                let randomBlock = this.randomizer(BLOCKS_RANGE_FOR_RANDOMIZATION);
-                this.setState({
-                    block: randomBlock
-                });
+                block = this.randomizer(BLOCKS_RANGE_FOR_RANDOMIZATION);
                 await this.getCards();
             }
 
@@ -93,8 +95,7 @@ export default class Main extends Component {
 
     async saveStatus(){
         try {
-            await AsyncStorage.setItem('block', JSON.stringify(this.state.block));
-            await AsyncStorage.setItem('page', JSON.stringify(this.state.page));
+            await AsyncStorage.setItem('block', JSON.stringify(block));
         } catch (error) {}
     }
 
@@ -114,10 +115,6 @@ export default class Main extends Component {
 
                 envelopesArray = [{type: "card", data:{id: res.id, first_name: res.first_name, address: res.address, city: res.city, country_name: res.country_name, postal: res.postal, description: res.description,  photo: res.image_id}, resources:{envelope: res.envelope, stamp: res.stamp, seal: res.seal}}];
 
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithPages(envelopesArray),
-                });
-
                 this.getCards();
             }
         } catch (message) {
@@ -126,9 +123,9 @@ export default class Main extends Component {
     }
 
     async getCards() {
-        console.log("BOOM " +this.state.block);
+        console.log("BOOM " +block);
         try {
-            let response = await fetch(('http://penpal.eken.live/api/get-cards?page='+this.state.block+'&perPage='+ENVELOPES_AMOUNT_PER_BLOCK), {
+            let response = await fetch(('http://penpal.eken.live/api/get-cards?page='+block+'&perPage='+ENVELOPES_AMOUNT_PER_BLOCK), {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
@@ -136,36 +133,27 @@ export default class Main extends Component {
                 },
             });
             let res = JSON.parse(await response.text());
-            console.log(JSON.stringify(res));
             if (response.status >= 200 && response.status < 300) {
                 blocksAvailable = res.pages;
                 let envelopesReceived = res.cards;
 
-                console.log(blocksAvailable+" "+this.state.block);
                 // if any user doesn't exceed blocks range - let my user go
-                if (this.state.block<=blocksAvailable){
+                if (block<=blocksAvailable){
                     // if user exceeds page range (due to card deletion) - get him to 1st page of first block
                     if (this.state.page>=envelopesReceived.length){
-                        this.setState({
-                            page: 0,
-                            block:1
-                        });
+                        page = 0;
+                        block = 1;
                     }
                     envelopesArray = envelopesArray.concat(envelopesReceived);
                 } else {
                     // if not new user exceeds blocks range (due to card deletion) - get him to 1st page of 1st block
                     if(savedBlock!==null){
-                        this.setState({
-                            block: 1,
-                            page:0
-                        });
+                        page = 0;
+                        block = 1;
                         envelopesArray = envelopesArray.concat(envelopesReceived);
                         // if new user exceeds blocks range - randomize him again
                     } else{
-                        let randomBlockWithinBounds =  this.randomizer(blocksAvailable);
-                        this.setState({
-                            block: randomBlockWithinBounds
-                        });
+                        block = this.randomizer(blocksAvailable);
                         this.getCards();
                         return;
                     }
@@ -173,7 +161,6 @@ export default class Main extends Component {
                 }
 
                 this.setState({
-                    dataSource: this.state.dataSource.cloneWithPages(envelopesArray),
                     showProgress: false
                 });
             }
@@ -189,16 +176,18 @@ export default class Main extends Component {
     }
 
 
-    renderEnvelope( data: Object,
-                    pageID: number | string){
+    renderEnvelope( envelope){
+        console.log("item "+ JSON.stringify(envelope.index));
+        const { data } = envelope.item;
+        page = envelope.index;
 
         let imageURL;
-        if(data.data.photo < 0){
-            imageURL = 'https://robohash.org/'+data.data.first_name;
+        if(envelope.item.data.photo < 0){
+            imageURL = 'https://robohash.org/'+envelope.item.data.first_name;
         } else{
-            imageURL = 'http://penpal.eken.live/Api/photo/width/300/id/'+data.data.photo;
+            imageURL = 'http://penpal.eken.live/Api/photo/width/300/id/'+envelope.item.data.photo;
         }
-        let envelopeNumber = data.resources.envelope;
+        let envelopeNumber = envelope.item.resources.envelope;
         let envelopeURL;
         if (envelopeNumber<10){
             envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=00'+envelopeNumber;
@@ -208,7 +197,7 @@ export default class Main extends Component {
             envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id='+envelopeNumber;
         }
 
-        let stampNumber = data.resources.stamp;
+        let stampNumber = envelope.item.resources.stamp;
         let stampURL;
         if (stampNumber<10){
             stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=00'+stampNumber;
@@ -218,7 +207,7 @@ export default class Main extends Component {
             stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id='+stampNumber;
         }
 
-        let sealNumber = data.resources.seal;
+        let sealNumber = envelope.item.resources.seal;
         let sealURL;
         if (sealNumber<10){
             sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=00'+sealNumber;
@@ -231,51 +220,53 @@ export default class Main extends Component {
         let stampRotation;
         let sealRotation;
 
-        if (stampRotationArray.hasOwnProperty(data.data.id)){
-            stampRotation = stampRotationArray[data.data.id];
+        if (stampRotationArray.hasOwnProperty(envelope.item.data.id)){
+            stampRotation = stampRotationArray[envelope.item.data.id];
         } else{
             stampRotation = (Math.floor(Math.random() * (10) - 5))+"deg";
-            stampRotationArray[data.data.id] = stampRotation;
+            stampRotationArray[envelope.item.data.id] = stampRotation;
         }
 
-        ;
-        if (data.data.id in sealRotationArray){
-            sealRotation = sealRotationArray[data.data.id];
+        let id = envelope.item.data.id;
+
+        if (id in sealRotationArray){
+            sealRotation = sealRotationArray[id];
         } else{
             sealRotation = (Math.floor(Math.random() * (10) - 5))+"deg";
-            sealRotationArray[data.data.id] = sealRotation;
+            sealRotationArray[id] = sealRotation;
         }
 
 
 
 
         return (
-            <View style={styles.viewPager}>
+            <TouchableOpacity style={styles.viewPager}
+                              onPress={(e) => this.showButton}>
                 <Image source={{uri: envelopeURL}} style={styles.envelopeImage}/>
                 <View style={styles.topRow}>
                     <View style={styles.topLeftRow}>
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', }}>
                             <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
                             <Text style={styles.name}>
-                                {data.data.first_name}
+                                {envelope.item.data.first_name}
                             </Text>
                         </View>
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row'}}>
                             <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
                             <Text style={styles.address}>
-                                {data.data.address}
+                                {envelope.item.data.address}
                             </Text>
                         </View>
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row'}}>
                             <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
                             <Text style={styles.address}>
-                                {data.data.city}
+                                {envelope.item.data.city}
                             </Text>
                         </View>
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row'}}>
                             <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
                             <Text style={styles.address}>
-                                {data.data.country_name+', '+data.data.postal}
+                                {envelope.item.data.country_name+', '+envelope.item.data.postal}
                             </Text>
                         </View>
                     </View>
@@ -292,37 +283,64 @@ export default class Main extends Component {
                     <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:deviceHeight*0.1, paddingRight:deviceWidth*0.0125}}>
                         <Image source={require('./../assets/quote.png')} style={{height: deviceHeight/25,resizeMode:'contain'}}/>
                         <Text style={{color: '#212121', fontSize: 14, marginRight:deviceWidth*0.02, marginLeft: deviceWidth*0.003125}}>
-                            {data.data.description}
+                            {envelope.item.data.description}
                         </Text>
                     </View>
                 </View>
-            </View>
+                <TouchableOpacity style={{backgroundColor: 'red', position: 'absolute', bottom: 16, right: 16}}/>
+            </TouchableOpacity>
         );
     }
 
-    _onChangePage(page: number | string){
-        if (page === (this.state.dataSource.getPageCount()-1)){
+    showButton(){
+        if (this.state.showButton){
+            this.setState({
+                showButton: false
+            })
+        } else{
+            this.setState({
+                showButton: true
+            })
+        }
+    }
+
+    onScroll(e) {
+        let contentOffset = e.nativeEvent.contentOffset;
+        let viewSize = e.nativeEvent.layoutMeasurement;
+
+        // Divide the horizontal offset by the width of the view to see which page is visible
+        let pageNum = Math.floor(contentOffset.x / viewSize.width);
+        console.log('scrolled to page ', pageNum);
+    }
+
+    _onScrollEnd() {
             this.setState({
                 showProgress: true
             });
             let nextBlock;
-            if (this.state.block < blocksAvailable){
-                nextBlock = this.state.block +1;
+            if (block < blocksAvailable){
+                nextBlock = block +1;
+
             }  else{
                 nextBlock = 1;
+                isLastBlockListed = true;
             }
-            this.setState({
-                block: nextBlock
-            });
+        console.log('nextBlock ' + nextBlock);
+            block = nextBlock;
             this.getCards();
-        }
-        this.setState({
-            page: page
-        });
-
-        console.log(page+ ' '+ this.state.dataSource.getPageCount() );
 
     }
+
+    onRefresh = () => {
+        this.setState({
+            showProgress: true
+        });
+        this.saveStatus()
+            .then(this.getUserStatus())
+            .catch((e)=> console.log.e)
+    };
+
+
 
     render() {
         return (
@@ -332,12 +350,34 @@ export default class Main extends Component {
                     <ActivityIndicator size={55} style = {{alignItems: 'center', justifyContent: 'center', flex:1}}/>
                 </View>}
                 {! this.state.showProgress&&
-                <ViewPager style={styles.viewPager}
-                           dataSource={this.state.dataSource}
-                           renderPage={this.renderEnvelope}
-                           renderPageIndicator={false}
-                           initialPage={this.state.page}
-                           onChangePage={(page)=>this._onChangePage(page)}/>}
+                <VirtualizedList
+                    horizontal
+                    pagingEnabled
+                    initialNumToRender={1}
+                    getItemCount={data => data.length}
+                    data={envelopesArray}
+                    initialScrollIndex={page}
+                    keyExtractor={(item, index) => item.data.id}
+                    getItemLayout={(data, index) => ({
+                        length: deviceWidth,
+                        offset: deviceWidth * index,
+                        index
+                    })}
+                    maxToRenderPerBatch={1}
+                    windowSize={1}
+                    getItem={(data, index) => ( data[index])}
+                    renderItem={this.renderEnvelope}
+                    onEndReached={this._onScrollEnd}
+                    onEndReachedThreshold = {1}
+                    onStartReached={this._onScrollEnd}
+                    onStartThreshold = {1}
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.onRefresh}
+                    removeClippedSubviews={false}
+                    debug={true}
+                    onMomentumScrollEnd={this.onScroll}
+                />
+               }
             </View>
         );
     }
