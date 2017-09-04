@@ -27,6 +27,9 @@ let savedBlock;
 let blocksAvailable;
 
 
+
+
+
 export default class Main extends Component {
 
     static navigationOptions = {
@@ -138,8 +141,6 @@ export default class Main extends Component {
                 blocksAvailable = res.pages;
                 let envelopesReceived = res.cards;
 
-                // it was here
-
                 console.log(blocksAvailable+" "+this.state.block);
                 // if any user doesn't exceed blocks range - let my user go
                 if (this.state.block<=blocksAvailable){
@@ -148,7 +149,7 @@ export default class Main extends Component {
                         this.setState({
                             page: 0,
                             block:1
-                        })
+                        });
                     }
                     envelopesArray = envelopesArray.concat(envelopesReceived);
                 } else {
@@ -245,6 +246,9 @@ export default class Main extends Component {
             sealRotationArray[data.data.id] = sealRotation;
         }
 
+
+
+
         return (
             <View style={styles.viewPager}>
                 <Image source={{uri: envelopeURL}} style={styles.envelopeImage}/>
@@ -298,24 +302,27 @@ export default class Main extends Component {
 
     _onChangePage(page: number | string){
         if (page === (this.state.dataSource.getPageCount()-1)){
+            this.setState({
+                showProgress: true
+            });
             let nextBlock;
-            if (this.state.block !== blocksAvailable){
+            if (this.state.block < blocksAvailable){
                 nextBlock = this.state.block +1;
             }  else{
                 nextBlock = 1;
             }
             this.setState({
-                block: nextBlock,
-                showProgress: true
-            })
+                block: nextBlock
+            });
             this.getCards();
         }
         this.setState({
             page: page
         });
 
-    }
+        console.log(page+ ' '+ this.state.dataSource.getPageCount() );
 
+    }
 
     render() {
         return (
