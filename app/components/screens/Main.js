@@ -12,8 +12,12 @@ import {
 
 import React, {Component} from 'react';
 
-import ActionButton from 'react-native-action-button';
+import CardView from 'react-native-cardview'
+
 import Icon from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/FontAwesome';
+
+import LocalizedStrings from 'react-native-localization';
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
@@ -27,12 +31,104 @@ const ENVELOPES_AMOUNT_PER_BLOCK = 50;
 let savedBlock;
 let blocksAvailable;
 
+let userEmails;
+
 let page = 0;
 let block = 1;
 
 let isLastBlockListed = false;
 
+let strings = new LocalizedStrings({
+    "en-US":{
+        send_letter:"SEND LETTER",
+        create_envelope: 'CREATE ENVELOPE',
+        delete_envelope: 'DELETE OWN CARD',
+        filter: 'FILTER'
+    },
+    en:{
+        send_letter:"SEND LETTER",
+        create_envelope: 'CREATE ENVELOPE',
+        delete_envelope: 'DELETE OWN CARD',
+        filter: 'FILTER'
+    },
+    ja: {
+        send_letter: '手紙を送ります',
+        create_envelope: '封筒を作成します。',
+        delete_envelope: '自分の封筒を消去',
+        filter: 'フィルタ'
+    },
+    ru: {
+        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        create_envelope: 'СОЗДАТЬ КОНВЕРТ',
+        delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
+        filter: 'ФИЛЬТР'
 
+    },
+    be: {
+        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        create_envelope: 'СОЗДАТЬ КОНВЕРТ',
+        delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
+        filter: 'ФИЛЬТР'
+
+    },
+    uk: {
+        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        create_envelope: 'СОЗДАТЬ КОНВЕРТ',
+        delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
+        filter: 'ФИЛЬТР'
+
+    },
+    az: {
+        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        create_envelope: 'СОЗДАТЬ КОНВЕРТ',
+        delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
+        filter: 'ФИЛЬТР'
+
+    },
+    hy: {
+        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        create_envelope: 'СОЗДАТЬ КОНВЕРТ',
+        delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
+        filter: 'ФИЛЬТР'
+
+    },
+    kk: {
+        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        create_envelope: 'СОЗДАТЬ КОНВЕРТ',
+        delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
+        filter: 'ФИЛЬТР'
+
+    },
+    ky: {
+        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        create_envelope: 'СОЗДАТЬ КОНВЕРТ',
+        delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
+        filter: 'ФИЛЬТР'
+
+    },
+    tg: {
+        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        create_envelope: 'СОЗДАТЬ КОНВЕРТ',
+        delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
+        filter: 'ФИЛЬТР'
+
+    },
+    tk: {
+        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        create_envelope: 'СОЗДАТЬ КОНВЕРТ',
+        delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
+        filter: 'ФИЛЬТР'
+
+    },
+    uz: {
+        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        create_envelope: 'СОЗДАТЬ КОНВЕРТ',
+        delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
+        filter: 'ФИЛЬТР'
+
+    }
+
+});
 
 
 
@@ -48,8 +144,10 @@ export default class Main extends Component {
         this.state = {
             showProgress: true,
             refreshing: false,
-            showButton: false
+            showButton: false,
+            showMenu: false
         };
+
 
         this.renderEnvelope = this.renderEnvelope.bind(this);
         this._onScrollEnd = this._onScrollEnd.bind(this);
@@ -74,6 +172,8 @@ export default class Main extends Component {
             savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
 
             let lastCardOfUser = JSON.parse(await AsyncStorage.getItem('lastCardOfUser'));
+
+            userEmails = JSON.parse(await AsyncStorage.getItem('userEmails'));
 
             if (savedBlock!== null){
                 block = savedBlock;
@@ -177,11 +277,18 @@ export default class Main extends Component {
     }
 
 
+
     renderEnvelope( envelope){
         console.log("item "+ JSON.stringify(envelope.index));
         const { data } = envelope.item;
         page = envelope.index;
 
+        let buttonIconColor = '#9e9e9e';
+        let buttonTextColor = '#9e9e9e';
+        if (userEmails!== null && userEmails.includes(envelope.data.email)>=0){
+            buttonIconColor = 'red';
+            buttonTextColor = 'red';
+        }
         let imageURL;
         if(envelope.item.data.photo < 0){
             imageURL = 'https://robohash.org/'+envelope.item.data.first_name;
@@ -289,18 +396,40 @@ export default class Main extends Component {
                     </View>
                 </View>
                 {this.state.showButton &&
-                <ActionButton buttonColor="rgba(231,76,60,1)"
-                buttonText={''}>
-                    <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
-                        <Icon name="md-create" style={styles.actionButtonIcon} />
-                    </ActionButton.Item>
-                    <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => {}}>
-                        <Icon name="md-add" style={styles.actionButtonIcon} />
-                    </ActionButton.Item>
-                    <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => {}}>
-                        <Icon name="md-done-all" style={styles.actionButtonIcon} />
-                    </ActionButton.Item>
-                </ActionButton>}
+                    <View  style={{position: 'absolute', bottom: 32, right: 16, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end', flex: 0}}>
+                        {this.state.showMenu&&
+                        <CardView style={{marginBottom: deviceHeight*0.011, paddingVertical: deviceHeight* 0.022222, paddingHorizontal: deviceWidth* 0.025}}
+                                  cardElevation={2}
+                                  cardMaxElevation={2}
+                                  cornerRadius={2}>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}>
+                                <Text style={styles.actionButtonText}>{strings.send_letter}</Text>
+                                <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
+                                    <Icon2 name="send-o" style={styles.actionButtonIcon} />
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}>
+                                <Text style={styles.actionButtonText}>{strings.create_envelope}</Text>
+                                <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
+                                    <Icon2 name="envelope-o" style={styles.actionButtonIcon} />
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}>
+                                <Text style={{color: buttonTextColor, fontSize: 16, marginRight: deviceWidth*0.03125}}>{strings.delete_envelope}</Text>
+                                <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
+                                    <Icon2 name="trash-o" style={{ fontSize: 22, color: buttonIconColor}} />
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}>
+                                <Text style={styles.actionButtonText}>{strings.filter}</Text>
+                                <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
+                                    <Icon2 name="filter" style={styles.actionButtonIcon} />
+                                </View>
+                            </TouchableOpacity>
+                        </CardView>}
+                        <TouchableOpacity style={{backgroundColor:'#ff4444', borderRadius: 64, height:deviceHeight*0.155, width: deviceHeight*0.155}}
+                                          onPress={(e) => this.onClickFab()}/>
+                    </View>}
             </TouchableOpacity>
         );
     }
@@ -315,6 +444,9 @@ export default class Main extends Component {
                 showButton: false
             })
         }
+        this.setState({
+            showMenu: false
+        })
     }
 
     onScroll(e) {
@@ -328,6 +460,18 @@ export default class Main extends Component {
         this.setState({
             showButton: false
         })
+    }
+
+    onClickFab(){
+        if (!this.state.showMenu){
+            this.setState({
+                showMenu: true
+            })
+        } else{
+            this.setState({
+                showMenu: false
+            })
+        }
     }
 
     _onScrollEnd() {
@@ -472,9 +616,13 @@ const styles = StyleSheet.create({
         marginLeft:deviceWidth*0.003125
     },
     actionButtonIcon: {
-        fontSize: 20,
-        height: 22,
-        color: 'red',
+        fontSize: 22,
+        color: '#757575',
+    },
+    actionButtonText:{
+        color: '#212121',
+        fontSize: 16,
+        marginRight: deviceWidth*0.03125
     }
 });
 
