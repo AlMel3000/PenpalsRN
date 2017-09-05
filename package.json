@@ -12,6 +12,7 @@
     "react-native-action-button": "^2.8.0",
     "react-native-cardview": "^1.1.0",
     "react-native-localization": "^0.1.32",
+    "react-native-orientation-locker": "^1.0.3",
     "react-native-vector-icons": "^4.3.0",
     "react-navigation": "^1.0.0-beta.11"
   },

@@ -9,6 +9,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.reactlibrary.RNCardViewPackage;
+import org.wonday.orientation.OrientationPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +27,8 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
               new ReactNativeLocalizationPackage(),
-              new RNCardViewPackage()
+              new RNCardViewPackage(),
+              new OrientationPackage()
       );
     }
   };

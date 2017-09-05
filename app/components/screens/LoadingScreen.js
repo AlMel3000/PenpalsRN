@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
-import {
-    StackNavigator,  NavigationActions
+import { NavigationActions
 } from 'react-navigation';
 
 

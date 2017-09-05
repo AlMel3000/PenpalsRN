@@ -12,9 +12,13 @@ import {
 
 import React, {Component} from 'react';
 
-import CardView from 'react-native-cardview'
+import CardView from 'react-native-cardview';
 
-import Icon from 'react-native-vector-icons/Ionicons';
+import {
+    NavigationActions
+} from 'react-navigation';
+
+
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
 import LocalizedStrings from 'react-native-localization';
@@ -408,7 +412,8 @@ export default class Main extends Component {
                                     <Icon2 name="send-o" style={styles.actionButtonIcon} />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}
+                                              onPress={(e) => this._navigateTo('EnvelopeFillingScreen')}>
                                 <Text style={styles.actionButtonText}>{strings.create_envelope}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="envelope-o" style={styles.actionButtonIcon} />
@@ -501,6 +506,13 @@ export default class Main extends Component {
             .catch((e)=> console.log.e)
     };
 
+    _navigateTo = (routeName: string) => {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName })]
+        })
+        this.props.navigation.dispatch(resetAction);
+    }
 
 
     render() {

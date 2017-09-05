@@ -151,6 +151,7 @@ dependencies {
     compile "com.facebook.react:react-native:+"  // From node_modules
     compile project(':react-native-localization')
     compile project(':react-native-cardview')
+    compile project(':react-native-orientation-locker')
 }
 
 // Run this once to be able to run the application with BUCK
