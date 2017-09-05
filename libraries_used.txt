@@ -6,4 +6,11 @@ npm install react-native-orientation --save
 react-native link react-native-orientation
 
 
-npm install react-native-viewpager --save
+npm install react-native-vector-icons --save
+//todo iOS linking
+
+npm install react-native-localization --save
+react-native link
+
+npm install react-native-cardview --save
+react-native link react-native-cardview
