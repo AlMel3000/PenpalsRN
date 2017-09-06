@@ -18,6 +18,8 @@ import {
     NavigationActions
 } from 'react-navigation';
 
+import Orientation from 'react-native-orientation-locker';
+
 
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
@@ -165,6 +167,10 @@ export default class Main extends Component {
     componentWillMount() {
         this.getUserStatus();
 
+    }
+
+    componentDidMount(){
+        Orientation.lockToLandscapeLeft();
     }
 
     componentWillUnmount(){
@@ -354,7 +360,7 @@ export default class Main extends Component {
         return (
             <TouchableOpacity style={styles.viewPager}
                               onPress={(e) => this.showButton()}>
-                <Image source={{uri: envelopeURL}} style={styles.envelopeImage}/>
+                <Image source={{uri: envelopeURL}} style={styles.envelopeImage}>
                 <View style={styles.topRow}>
                     <View style={styles.topLeftRow}>
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', }}>
@@ -390,11 +396,11 @@ export default class Main extends Component {
                         }}/>
                     </View>
                 </View>
-                <View style={{flex: 1,  justifyContent:'center', alignItems:'center', flexDirection: 'row'}}>
+                <View style={{flex: 2,  justifyContent:'center', alignItems:'center', flexDirection: 'row'}}>
                     <View style={{flex: 1, width: deviceWidth/2}}/>
-                    <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:deviceHeight*0.1, paddingRight:deviceWidth*0.0125}}>
+                    <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:deviceHeight*0.1}}>
                         <Image source={require('./../assets/quote.png')} style={{height: deviceHeight/25,resizeMode:'contain'}}/>
-                        <Text style={{color: '#212121', fontSize: 14, marginRight:deviceWidth*0.02, marginLeft: deviceWidth*0.003125}}>
+                        <Text style={{color: '#212121', fontSize: 14, marginLeft: deviceWidth*0.003125, width: deviceWidth/2-48}}>
                             {envelope.item.data.description}
                         </Text>
                     </View>
@@ -435,6 +441,7 @@ export default class Main extends Component {
                         <TouchableOpacity style={{backgroundColor:'#ff4444', borderRadius: 64, height:deviceHeight*0.155, width: deviceHeight*0.155}}
                                           onPress={(e) => this.onClickFab()}/>
                     </View>}
+                </Image>
             </TouchableOpacity>
         );
     }
@@ -564,33 +571,30 @@ const styles = StyleSheet.create({
         backgroundColor:'#e4e4e4',
     },
     viewPager: {
-        width: deviceWidth,
-        height: deviceHeight,
+        flex:1,
+        width: null, height: null,
         alignSelf: 'center',
         paddingVertical:deviceHeight*0.025,
-        paddingHorizontal: deviceWidth*0.034,
 
     },
     page:{
-        width: (deviceWidth - (deviceWidth*0.00625)),
-        height: deviceHeight - (deviceHeight*0.0445),
+        flex:1,
     },
     topRow:{
-        height: deviceHeight/1.9,
+        flex:3,
         justifyContent:'center',
         alignItems:'center',
         flexDirection: 'row'
     },
     envelopeImage: {
-        width: deviceWidth* 0.994,
-        height: deviceHeight,
+        flex:1,
+        width: null,
+        height: null,
         resizeMode: 'contain',
-        position:'absolute',
-        marginLeft: deviceWidth*0.003125,
-        marginRight:deviceWidth*0.003125
     },
     topLeftRow:{
         height: deviceHeight/1.9,
+        width: deviceWidth/2,
         flex: 1,
         justifyContent:'flex-start',
         alignItems:'flex-start',

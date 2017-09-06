@@ -12,7 +12,8 @@ import {
     Dimensions,
     ScrollView,
     Text,
-    TextInput
+    TextInput,
+    TouchableOpacity
 } from 'react-native';
 
 import Orientation from 'react-native-orientation-locker';
@@ -34,6 +35,13 @@ export default class EnvelopeFillingScreen extends Component {
 
         this.state = {
             name: '',
+            nameUnderlineColor: '#1ca9c9',
+            address: '',
+            addressUnderlineColor: '#e4e4e4',
+            city: '',
+            cityUnderlineColor: '#e4e4e4',
+            country: '',
+            countryUnderlineColor: '#e4e4e4',
         };
 
     }
@@ -47,7 +55,29 @@ export default class EnvelopeFillingScreen extends Component {
 
     _onChangeName(text){
         this.setState({
-            name: text
+            name: text,
+            nameUnderlineColor: '#1ca9c9',
+        });
+    }
+
+    _onChangeAddress(text){
+        this.setState({
+            address: text,
+            addressUnderlineColor: '#1ca9c9',
+        });
+    }
+
+    _onChangeCity(text){
+        this.setState({
+            city: text,
+            cityUnderlineColor: '#1ca9c9',
+        });
+    }
+
+    _onChangeCountry(text){
+        this.setState({
+            country: text,
+            countryUnderlineColor: '#1ca9c9',
         });
     }
 
@@ -63,34 +93,95 @@ export default class EnvelopeFillingScreen extends Component {
 
     render() {
         return (
-           <View style={{flex:1}}>
-               <Image source={require('./../assets/envelope_background.png')} style={{position:"absolute", flex: 1, width: deviceHeight, height: deviceWidth-22, resizeMode: 'stretch'}}/>
+               <Image source={require('./../assets/envelope_background.png')} style={{ flex: 1, width: null, height: null, resizeMode: 'stretch'}}>
                <ScrollView showsVerticalScrollIndicator={false}>
-                   <View style={{padding: 16, justifyContent: 'center', alignItems:'flex-start', alignSelf:'stretch'}}>
-                       <Text style={{color: '#212121', alignSelf: 'center', marginBottom:16}}>
+                   <View style={{flex: 1, padding: 16, justifyContent: 'center', alignItems:'flex-start', alignSelf:'stretch'}}>
+                       <Text style={{color: '#212121', alignSelf: 'center', marginVertical:16}}>
                            Specify correct mailing address to receive letters
                        </Text>
-                       <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems:'flex-start', alignSelf:'stretch'}}>
-                           <View style={{flex:2, flexDirection: 'row', justifyContent: 'flex-start', alignItems:'flex-start', alignSelf:'stretch'}}>
-                              <View  style={{flex:0, flexDirection: 'row', justifyContent: 'flex-start', alignItems:'center', alignSelf:'stretch'}}>
-                                  <Icon2 name="trash-o" style={{ fontSize: 20, color: 'black'}} />
-                                  <TextInput
-                                      style={{flex:1, marginLeft: 16, marginRight: 8,color: '#212121',fontSize: 14,alignSelf:'stretch'}}
-                                      placeholder={'Город'}
-                                      autoFocus={true}
-                                      onChangeText={(text) => this._onChangeName(text)}
-                                      underlineColorAndroid={'transparent'}
-                                      value={this.state.name}/>
+                       <View style={{flexDirection: 'row', justifyContent: 'center', alignItems:'flex-start', alignSelf:'stretch'}}>
+                           <View style={{flex:2,flexDirection: 'column', justifyContent: 'flex-start', alignItems:'flex-start', alignSelf:'stretch'}}>
 
+                              <View  style={{flex:1, flexDirection: 'row', justifyContent: 'flex-start', alignItems:'center', alignSelf:'stretch'}}>
+                                  <View style={{width:22}}>
+                                      <Icon2 name="user-o" style={{ fontSize: 20, color: 'black'}} />
+                                  </View>
+                                  <View style={{flex:1, marginHorizontal: 8}}>
+                                      <TextInput
+                                          style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
+                                          placeholder={'Имя, фамилия'}
+                                          autoFocus={true}
+                                          onFocus={(e)=> this._onChangeName()}
+                                          onEndEditing={(e)=>this.setState({nameUnderlineColor: '#e4e4e4'})}
+                                          onChangeText={(text) => this._onChangeName(text)}
+                                          underlineColorAndroid={'transparent'}
+                                          value={this.state.name}/>
+                                      <View style={{flex:0, height:1, backgroundColor: this.state.nameUnderlineColor}}/>
+                                  </View>
                               </View>
-                           </View>
-                           <View style={{flex: 1, justifyContent: 'center', alignItems:'flex-start', alignSelf:'stretch', backgroundColor:'green'}}>
 
+                               <View  style={{flex:1, flexDirection: 'row', justifyContent: 'flex-start', alignItems:'center', alignSelf:'stretch'}}>
+                                   <View style={{width:22}}>
+                                       <Icon2 name="map-o" style={{ fontSize: 20, color: 'black'}} />
+                                   </View>
+                                   <View style={{flex:1, marginHorizontal: 8}}>
+                                       <TextInput
+                                           style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
+                                           placeholder={'Адрес'}
+                                           onFocus={(e)=> this._onChangeAddress()}
+                                           onEndEditing={(e)=>this.setState({addressUnderlineColor: '#e4e4e4'})}
+                                           onChangeText={(text) => this._onChangeName(text)}
+                                           underlineColorAndroid={'transparent'}
+                                           value={this.state.address}/>
+                                       <View style={{flex:0, height:1, backgroundColor: this.state.addressUnderlineColor}}/>
+                                   </View>
+                               </View>
+
+                               <View  style={{flex:1, flexDirection: 'row', justifyContent: 'flex-start', alignItems:'center', alignSelf:'stretch'}}>
+                                   <View style={{width:22}}>
+                                       <Icon2 name="building-o" style={{ fontSize: 20, color: 'black'}} />
+                                   </View>
+                                   <View style={{flex:1, marginHorizontal: 8}}>
+                                       <TextInput
+                                           style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
+                                           placeholder={'Город'}
+                                           onFocus={(e)=> this._onChangeCity()}
+                                           onEndEditing={(e)=>this.setState({cityUnderlineColor: '#e4e4e4'})}
+                                           onChangeText={(text) => this._onChangeName(text)}
+                                           underlineColorAndroid={'transparent'}
+                                           value={this.state.city}/>
+                                       <View style={{flex:0, height:1, backgroundColor: this.state.cityUnderlineColor}}/>
+                                   </View>
+                               </View>
+
+                           </View>
+
+                           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems:'flex-start', alignSelf:'stretch', borderColor:'#e4e4e4', borderWidth:0.2, padding: 8}}>
+                               <Image source={require('./../assets/default_robohash.png')} style={{flex: 0, height: 130, resizeMode:'contain'}}/>
+                           </TouchableOpacity>
+                       </View>
+
+                       <View style={{justifyContent: 'center', alignItems:'flex-start', alignSelf:'stretch'}}>
+                           <View  style={{flex:1, flexDirection: 'row', justifyContent: 'flex-start', alignItems:'center', alignSelf:'stretch'}}>
+                               <View style={{width:22}}>
+                                   <Icon2 name="globe" style={{ fontSize: 20, color: 'black'}} />
+                               </View>
+                               <View style={{flex:1, marginHorizontal: 8}}>
+                                   <TextInput
+                                       style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
+                                       placeholder={'Страна'}
+                                       onFocus={(e)=> this._onChangeCountry()}
+                                       onEndEditing={(e)=>this.setState({countryUnderlineColor: '#e4e4e4'})}
+                                       onChangeText={(text) => this._onChangeName(text)}
+                                       underlineColorAndroid={'transparent'}
+                                       value={this.state.country}/>
+                                   <View style={{flex:0, height:1, backgroundColor: this.state.countryUnderlineColor}}/>
+                               </View>
                            </View>
                        </View>
                    </View>
                </ScrollView>
-           </View>
+               </Image>
         );
     }
 }
@@ -98,7 +189,7 @@ export default class EnvelopeFillingScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         padding: 6,
-        display: 'flex'
+        width: deviceHeight, height: deviceWidth-22
     },
     loading: {
         color: 'red',
