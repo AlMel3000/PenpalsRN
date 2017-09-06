@@ -23,6 +23,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 
+import CountryPicker, {getAllCountries} from 'react-native-country-picker-modal';
 
 export default class EnvelopeFillingScreen extends Component {
 
@@ -40,8 +41,14 @@ export default class EnvelopeFillingScreen extends Component {
             addressUnderlineColor: '#e4e4e4',
             city: '',
             cityUnderlineColor: '#e4e4e4',
+            cca2:'',
             country: '',
-            countryUnderlineColor: '#e4e4e4',
+            zip: '',
+            zipUnderlineColor: '#e4e4e4',
+            email: '',
+            emailUnderlineColor: '#e4e4e4',
+            description:'',
+            descriptionUnderlineColor: '#e4e4e4'
         };
 
     }
@@ -74,13 +81,26 @@ export default class EnvelopeFillingScreen extends Component {
         });
     }
 
-    _onChangeCountry(text){
+    _onChangeZip(text){
         this.setState({
-            country: text,
-            countryUnderlineColor: '#1ca9c9',
+            zip: text,
+            zipUnderlineColor: '#1ca9c9',
         });
     }
 
+    _onChangeEmail(text){
+        this.setState({
+            email: text,
+            emailUnderlineColor: '#1ca9c9',
+        });
+    }
+
+    _onChangeDescription(text){
+        this.setState({
+            description: text,
+            descriptionUnderlineColor: '#1ca9c9',
+        });
+    }
 
 
     _navigateTo = (routeName: string) => {
@@ -115,6 +135,7 @@ export default class EnvelopeFillingScreen extends Component {
                                           onEndEditing={(e)=>this.setState({nameUnderlineColor: '#e4e4e4'})}
                                           onChangeText={(text) => this._onChangeName(text)}
                                           underlineColorAndroid={'transparent'}
+                                          maxLength={40}
                                           value={this.state.name}/>
                                       <View style={{flex:0, height:1, backgroundColor: this.state.nameUnderlineColor}}/>
                                   </View>
@@ -132,7 +153,8 @@ export default class EnvelopeFillingScreen extends Component {
                                            onEndEditing={(e)=>this.setState({addressUnderlineColor: '#e4e4e4'})}
                                            onChangeText={(text) => this._onChangeName(text)}
                                            underlineColorAndroid={'transparent'}
-                                           value={this.state.address}/>
+                                           value={this.state.address}
+                                           maxLength={120}/>
                                        <View style={{flex:0, height:1, backgroundColor: this.state.addressUnderlineColor}}/>
                                    </View>
                                </View>
@@ -149,7 +171,8 @@ export default class EnvelopeFillingScreen extends Component {
                                            onEndEditing={(e)=>this.setState({cityUnderlineColor: '#e4e4e4'})}
                                            onChangeText={(text) => this._onChangeName(text)}
                                            underlineColorAndroid={'transparent'}
-                                           value={this.state.city}/>
+                                           value={this.state.city}
+                                           maxLength={40}/>
                                        <View style={{flex:0, height:1, backgroundColor: this.state.cityUnderlineColor}}/>
                                    </View>
                                </View>
@@ -167,17 +190,74 @@ export default class EnvelopeFillingScreen extends Component {
                                    <Icon2 name="globe" style={{ fontSize: 20, color: 'black'}} />
                                </View>
                                <View style={{flex:1, marginHorizontal: 8}}>
+                                   <CountryPicker
+                                       onChange={(value)=> {
+                                           this.setState({cca2: value.cca2, country: value.name});
+                                       }}
+                                       cca2={this.state.cca2}
+                                       filterable={true}
+                                       autoFocusFilter={true}
+                                       translation='eng'>
                                    <TextInput
                                        style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
                                        placeholder={'Страна'}
-                                       onFocus={(e)=> this._onChangeCountry()}
-                                       onEndEditing={(e)=>this.setState({countryUnderlineColor: '#e4e4e4'})}
-                                       onChangeText={(text) => this._onChangeName(text)}
+                                       editable={false}
                                        underlineColorAndroid={'transparent'}
                                        value={this.state.country}/>
-                                   <View style={{flex:0, height:1, backgroundColor: this.state.countryUnderlineColor}}/>
+                                   <View style={{flex:0, height:1, backgroundColor: '#e4e4e4'}}/>
+                                   </CountryPicker>
                                </View>
                            </View>
+
+                           <View  style={{flex:1, flexDirection: 'row', justifyContent: 'flex-start', alignItems:'center', alignSelf:'stretch'}}>
+                               <View style={{width:22}}>
+                                   <Icon2 name="map-signs" style={{ fontSize: 20, color: 'black'}} />
+                               </View>
+                               <View style={{flex:1, marginHorizontal: 8}}>
+                                   <TextInput
+                                       style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
+                                       placeholder={'Индекс'}
+                                       onFocus={(e)=> this._onChangeZip()}
+                                       onEndEditing={(e)=>this.setState({zipUnderlineColor: '#e4e4e4'})}
+                                       onChangeText={(text) => this._onChangeName(text)}
+                                       underlineColorAndroid={'transparent'}
+                                       value={this.state.zip}
+                                       maxLength={10}/>
+                                   <View style={{flex:0, height:1, backgroundColor: this.state.zipUnderlineColor}}/>
+                               </View>
+                           </View>
+
+                           <View  style={{flex:1, flexDirection: 'row', justifyContent: 'flex-start', alignItems:'center', alignSelf:'stretch'}}>
+                               <View style={{width:22}}>
+                                   <Icon2 name="envelope-o" style={{ fontSize: 20, color: 'black'}} />
+                               </View>
+                               <View style={{flex:1, marginHorizontal: 8}}>
+                                   <TextInput
+                                       style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
+                                       placeholder={'Email'}
+                                       keyboardType={'email-address'}
+                                       onFocus={(e)=> this._onChangeEmail()}
+                                       onEndEditing={(e)=>this.setState({emailUnderlineColor: '#e4e4e4'})}
+                                       onChangeText={(text) => this._onChangeName(text)}
+                                       underlineColorAndroid={'transparent'}
+                                       value={this.state.email}
+                                       maxLength={40}/>
+                                   <View style={{flex:0, height:1, backgroundColor: this.state.emailUnderlineColor}}/>
+                               </View>
+                           </View>
+                       </View>
+
+                       <View style={{flex:1, alignSelf:'stretch', borderColor: this.state.descriptionUnderlineColor, borderWidth: 1, marginVertical:16}}>
+                           <TextInput
+                               style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
+                               placeholder={'p.s.'}
+                               maxLength={150}
+                               multiline={true}
+                               onFocus={(e)=> this._onChangeDescription()}
+                               onEndEditing={(e)=>this.setState({descriptionUnderlineColor: '#e4e4e4'})}
+                               onChangeText={(text) => this._onChangeName(text)}
+                               underlineColorAndroid={'transparent'}
+                               value={this.state.description}/>
                        </View>
                    </View>
                </ScrollView>
