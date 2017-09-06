@@ -25,6 +25,8 @@ let deviceHeight = Dimensions.get('window').height;
 
 import CountryPicker, {getAllCountries} from 'react-native-country-picker-modal';
 
+import CheckBox from 'react-native-check-box'
+
 export default class EnvelopeFillingScreen extends Component {
 
     static navigationOptions = {
@@ -48,7 +50,8 @@ export default class EnvelopeFillingScreen extends Component {
             email: '',
             emailUnderlineColor: '#e4e4e4',
             description:'',
-            descriptionUnderlineColor: '#e4e4e4'
+            descriptionUnderlineColor: '#e4e4e4',
+            checked: false
         };
 
     }
@@ -110,6 +113,18 @@ export default class EnvelopeFillingScreen extends Component {
         })
         this.props.navigation.dispatch(resetAction);
     };
+
+    _ConfirmationCheckboxStateChanged(){
+        if(this.state.checked){
+            this.setState({
+                checked:false
+            });
+        } else{
+            this.setState({
+                checked:true
+            });
+        }
+    }
 
     render() {
         return (
@@ -247,7 +262,7 @@ export default class EnvelopeFillingScreen extends Component {
                            </View>
                        </View>
 
-                       <View style={{flex:1, alignSelf:'stretch', borderColor: this.state.descriptionUnderlineColor, borderWidth: 1, marginVertical:16}}>
+                       <View style={{flex:1, alignSelf:'stretch', borderColor: this.state.descriptionUnderlineColor, borderWidth: 1, marginVertical:12}}>
                            <TextInput
                                style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
                                placeholder={'p.s.'}
@@ -258,6 +273,31 @@ export default class EnvelopeFillingScreen extends Component {
                                onChangeText={(text) => this._onChangeName(text)}
                                underlineColorAndroid={'transparent'}
                                value={this.state.description}/>
+                       </View>
+
+                       <View style={{alignSelf:'stretch', flexDirection:'row', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+                           <CheckBox
+                               style={{flex: 0, paddingVertical:2, paddingHorizontal: 6, borderColor: '#1ca9c9' }}
+                               onClick={()=>this._ConfirmationCheckboxStateChanged()}
+                               isChecked={this.state.checked}
+                           />
+                           <Text style={{color: '#212121', alignSelf: 'center'}}>
+                               Я принимаю условия
+                           </Text>
+                           <TouchableOpacity>
+                               <Text style={{color: '#1ca9c9', alignSelf: 'center', margin: 4, textDecorationLine:'underline'}}>
+                                   соглашения
+                               </Text>
+                           </TouchableOpacity>
+                       </View>
+
+                       <View style={{alignSelf:'stretch', flexDirection:'row', alignItems: 'flex-end', justifyContent: 'flex-end', padding:16}}>
+                           <TouchableOpacity style={{marginRight:32}}>
+                               <Text style={{fontSize:16, color:'#7299BF'}}>ОТМЕНА</Text>
+                           </TouchableOpacity>
+                           <TouchableOpacity>
+                               <Text style={{fontSize:16, color:'#7299BF'}}>ДАЛЕЕ</Text>
+                           </TouchableOpacity>
                        </View>
                    </View>
                </ScrollView>
