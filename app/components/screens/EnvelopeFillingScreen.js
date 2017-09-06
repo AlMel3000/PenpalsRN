@@ -156,7 +156,7 @@ export default class EnvelopeFillingScreen extends Component {
 
                            </View>
 
-                           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems:'flex-start', alignSelf:'stretch', borderColor:'#e4e4e4', borderWidth:0.2, padding: 8}}>
+                           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems:'center', alignSelf:'stretch', borderColor:'#e4e4e4', borderWidth:0.2, padding: 8}}>
                                <Image source={require('./../assets/default_robohash.png')} style={{flex: 0, height: 130, resizeMode:'contain'}}/>
                            </TouchableOpacity>
                        </View>
