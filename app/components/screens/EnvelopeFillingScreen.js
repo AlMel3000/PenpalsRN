@@ -14,7 +14,8 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    BackHandler
+    BackHandler,
+    Alert
 } from 'react-native';
 
 import Orientation from 'react-native-orientation-locker';
@@ -110,6 +111,16 @@ export default class EnvelopeFillingScreen extends Component {
         });
     }
 
+    _showEULA(){
+        Alert.alert(
+            '',
+            '\t\t\t1) I am of sound mind and memory, in person, without any pressure from outside, decided to publish my personal information in the Penpals Service for finding penpals. \n\n\t\t\t2) Each card is verified by the moderator before it gets into the list of the envelopes. Be worthy of yourself. We\'ll remove all the dirt, trash and spam.Also cards that contain email, phone, links to other sites and profiles in social networks will not be moderated. Moderation takes some time, please be patient a little bit and your address will appear in the Penpals.',
+            [
+                {text: 'OK'},
+            ],
+            { cancelable: true}
+        )
+    }
 
     _navigateTo = (routeName: string) => {
         Orientation.unlockAllOrientations();
@@ -290,7 +301,8 @@ export default class EnvelopeFillingScreen extends Component {
                            <Text style={{color: '#212121', alignSelf: 'center'}}>
                                Я принимаю условия
                            </Text>
-                           <TouchableOpacity>
+                           <TouchableOpacity
+                               onPress={(e) => this._showEULA()}>
                                <Text style={{color: '#1ca9c9', alignSelf: 'center', marginVertical: 4, marginLeft:3, textDecorationLine:'underline'}}>
                                    соглашения
                                </Text>
