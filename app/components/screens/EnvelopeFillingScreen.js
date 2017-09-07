@@ -13,7 +13,8 @@ import {
     ScrollView,
     Text,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    BackHandler
 } from 'react-native';
 
 import Orientation from 'react-native-orientation-locker';
@@ -61,6 +62,10 @@ export default class EnvelopeFillingScreen extends Component {
 
     componentDidMount(){
     Orientation.lockToPortrait();
+        BackHandler.addEventListener('hardwareBackPress', () =>{
+            this._navigateTo('Main');
+            return true;
+        });
     }
 
     _onChangeName(text){
@@ -107,6 +112,7 @@ export default class EnvelopeFillingScreen extends Component {
 
 
     _navigateTo = (routeName: string) => {
+        Orientation.unlockAllOrientations();
         const resetAction = NavigationActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({ routeName })]
@@ -285,14 +291,15 @@ export default class EnvelopeFillingScreen extends Component {
                                Я принимаю условия
                            </Text>
                            <TouchableOpacity>
-                               <Text style={{color: '#1ca9c9', alignSelf: 'center', margin: 4, textDecorationLine:'underline'}}>
+                               <Text style={{color: '#1ca9c9', alignSelf: 'center', marginVertical: 4, marginLeft:3, textDecorationLine:'underline'}}>
                                    соглашения
                                </Text>
                            </TouchableOpacity>
                        </View>
 
                        <View style={{alignSelf:'stretch', flexDirection:'row', alignItems: 'flex-end', justifyContent: 'flex-end', padding:16}}>
-                           <TouchableOpacity style={{marginRight:32}}>
+                           <TouchableOpacity style={{marginRight:32}}
+                                             onPress={(e) => this._navigateTo('Main')}>
                                <Text style={{fontSize:16, color:'#7299BF'}}>ОТМЕНА</Text>
                            </TouchableOpacity>
                            <TouchableOpacity>

@@ -7,7 +7,8 @@ import {
     ActivityIndicator,
     AsyncStorage,
     VirtualizedList,
-    TouchableOpacity
+    TouchableOpacity,
+    BackHandler
 } from 'react-native';
 
 import React, {Component} from 'react';
@@ -171,6 +172,10 @@ export default class Main extends Component {
 
     componentDidMount(){
         Orientation.lockToLandscapeLeft();
+        BackHandler.addEventListener('hardwareBackPress', () =>{
+            BackHandler.exitApp();
+            return true;
+        });
     }
 
     componentWillUnmount(){
@@ -517,7 +522,7 @@ export default class Main extends Component {
         const resetAction = NavigationActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({ routeName })]
-        })
+        });
         this.props.navigation.dispatch(resetAction);
     }
 
