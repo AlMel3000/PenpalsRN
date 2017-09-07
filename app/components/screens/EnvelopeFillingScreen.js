@@ -113,10 +113,11 @@ export default class EnvelopeFillingScreen extends Component {
 
     _showEULA(){
         Alert.alert(
-            '',
+            'Terms & Conditions',
             '\t\t\t1) I am of sound mind and memory, in person, without any pressure from outside, decided to publish my personal information in the Penpals Service for finding penpals. \n\n\t\t\t2) Each card is verified by the moderator before it gets into the list of the envelopes. Be worthy of yourself. We\'ll remove all the dirt, trash and spam.Also cards that contain email, phone, links to other sites and profiles in social networks will not be moderated. Moderation takes some time, please be patient a little bit and your address will appear in the Penpals.',
             [
-                {text: 'OK'},
+                {text: 'УЗНАТЬ БОЛЬШЕ', onPress: () => this._navigateTo('EulaScreen')},
+                {text: 'OК'},
             ],
             { cancelable: true}
         )
