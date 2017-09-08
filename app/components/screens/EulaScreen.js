@@ -12,6 +12,11 @@ import {
 
 import Orientation from 'react-native-orientation-locker';
 
+let envelopesArray = [];
+let userEmails =[];
+
+let block = 1;
+
 export default class LoadingScreen extends Component {
 
     static navigationOptions = {
@@ -21,6 +26,9 @@ export default class LoadingScreen extends Component {
     constructor(props) {
         super(props);
 
+        envelopesArray = this.props.navigation.state.params.envelopesData;
+        block = this.props.navigation.state.params.block;
+        userEmails = this.props.navigation.state.params.userEmails;
     }
 
     componentWillMount() {
@@ -29,19 +37,18 @@ export default class LoadingScreen extends Component {
     componentDidMount() {
         Orientation.lockToPortrait();
         BackHandler.addEventListener('hardwareBackPress', () =>{
-            this._navigateTo('EnvelopeFillingScreen');
+            this._navigateTo('EnvelopeFillingScreen', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false});
             return true;
         });
     }
 
-
-    _navigateTo = (routeName: string) => {
+    _navigateTo = (routeName, params) => {
         const resetAction = NavigationActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName })]
-        })
-        this.props.navigation.dispatch(resetAction);
-    }
+            actions: [NavigationActions.navigate({routeName, params})]
+        });
+        this.props.navigation.dispatch(resetAction)
+    };
 
     render() {
         return (

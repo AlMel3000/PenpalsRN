@@ -10,6 +10,7 @@ import com.facebook.soloader.SoLoader;
 import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.reactlibrary.RNCardViewPackage;
 import org.wonday.orientation.OrientationPackage;
+import com.imagepicker.ImagePickerPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +29,8 @@ public class MainApplication extends Application implements ReactApplication {
               new MainReactPackage(),
               new ReactNativeLocalizationPackage(),
               new RNCardViewPackage(),
-              new OrientationPackage()
+              new OrientationPackage(),
+              new ImagePickerPackage()
       );
     }
   };

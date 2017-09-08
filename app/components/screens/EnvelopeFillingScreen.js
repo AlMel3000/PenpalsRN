@@ -4,30 +4,49 @@ import {
     NavigationActions
 } from 'react-navigation';
 
-
 import {
-    StyleSheet,
     View,
     Image,
-    Dimensions,
     ScrollView,
     Text,
     TextInput,
     TouchableOpacity,
     BackHandler,
-    Alert
+    Alert,
+    Vibration,
+    ToastAndroid,
+    AsyncStorage
 } from 'react-native';
 
 import Orientation from 'react-native-orientation-locker';
 
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
-let deviceWidth = Dimensions.get('window').width;
-let deviceHeight = Dimensions.get('window').height;
+var ImagePicker = require('react-native-image-picker');
+
+let defaultRobohash = require('./../assets/default_robohash.png');
+
+let options = {
+    title: 'Добавьте фото',
+    storageOptions: {
+        skipBackup: true,
+        path: 'images',
+        returnBase64Image: true
+    },
+    cancelButtonTitle: 'Отмена',
+    takePhotoButtonTitle: 'Сфотографировать',
+    chooseFromLibraryButtonTitle: 'Выбрать из галереи',
+
+};
 
 import CountryPicker, {getAllCountries} from 'react-native-country-picker-modal';
 
 import CheckBox from 'react-native-check-box'
+
+let envelopesArray = [];
+let userEmails =[];
+
+let block = 1;
 
 export default class EnvelopeFillingScreen extends Component {
 
@@ -38,41 +57,89 @@ export default class EnvelopeFillingScreen extends Component {
     constructor(props) {
         super(props);
 
+        envelopesArray = this.props.navigation.state.params.envelopesData;
+        block = this.props.navigation.state.params.block;
+        userEmails = this.props.navigation.state.params.userEmails;
+
         this.state = {
-            name: '',
+            name: ' ',
             nameUnderlineColor: '#1ca9c9',
-            address: '',
+            address: ' ',
             addressUnderlineColor: '#e4e4e4',
-            city: '',
+            city: ' ',
             cityUnderlineColor: '#e4e4e4',
-            cca2:'',
-            country: '',
-            zip: '',
+            cca2:' ',
+            country: ' ',
+            countryUnderlineColor:  '#e4e4e4',
+            zip: ' ',
             zipUnderlineColor: '#e4e4e4',
-            email: '',
+            email: ' ',
             emailUnderlineColor: '#e4e4e4',
-            description:'',
+            description:' ',
             descriptionUnderlineColor: '#e4e4e4',
-            checked: false
+            checked: false,
+
+            checkboxBorderColor: 'transparent',
+
+            photo: null,
+            image: defaultRobohash
         };
 
     }
 
     componentWillMount() {
+        this.retrieveFields();
     }
 
     componentDidMount(){
     Orientation.lockToPortrait();
         BackHandler.addEventListener('hardwareBackPress', () =>{
-            this._navigateTo('Main');
+            this._navigateTo('Main', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false});
             return true;
         });
+    }
+
+    componentWillUnmount(){
+        this._saveFields();
+    }
+
+    async retrieveFields(){
+        try {
+            this.setState({
+                name: JSON.parse(await AsyncStorage.getItem('name')),
+                address: JSON.parse(await AsyncStorage.getItem('address')),
+                city: JSON.parse(await AsyncStorage.getItem('city')),
+                country: JSON.parse(await AsyncStorage.getItem('country')),
+                zip: JSON.parse(await AsyncStorage.getItem('zip')),
+                email: JSON.parse(await AsyncStorage.getItem('email')),
+                description: JSON.parse(await AsyncStorage.getItem('description'))
+            })
+        } catch (message) {
+        }
     }
 
     _onChangeName(text){
         this.setState({
             name: text,
             nameUnderlineColor: '#1ca9c9',
+
+        });
+
+        if (this.state.name && this.state.name.length>1) {
+            this.setState({
+                image: {uri: 'https://robohash.org/' + text}
+            });
+        } else {
+           this.setState({
+               image: defaultRobohash
+           })
+        }
+    }
+
+    onFocusName(){
+        this.setState({
+            nameUnderlineColor: '#1ca9c9',
+
         });
     }
 
@@ -111,38 +178,200 @@ export default class EnvelopeFillingScreen extends Component {
         });
     }
 
-    _showEULA(){
-        Alert.alert(
-            'Terms & Conditions',
-            '\t\t\t1) I am of sound mind and memory, in person, without any pressure from outside, decided to publish my personal information in the Penpals Service for finding penpals. \n\n\t\t\t2) Each card is verified by the moderator before it gets into the list of the envelopes. Be worthy of yourself. We\'ll remove all the dirt, trash and spam.Also cards that contain email, phone, links to other sites and profiles in social networks will not be moderated. Moderation takes some time, please be patient a little bit and your address will appear in the Penpals.',
-            [
-                {text: 'УЗНАТЬ БОЛЬШЕ', onPress: () => this._navigateTo('EulaScreen')},
-                {text: 'OК'},
-            ],
-            { cancelable: true}
-        )
-    }
-
-    _navigateTo = (routeName: string) => {
-        Orientation.unlockAllOrientations();
-        const resetAction = NavigationActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName })]
-        })
-        this.props.navigation.dispatch(resetAction);
-    };
-
-    _ConfirmationCheckboxStateChanged(){
+    _onConfirmationCheckboxStateChanged(){
         if(this.state.checked){
             this.setState({
                 checked:false
             });
         } else{
             this.setState({
-                checked:true
+                checked:true,
+                checkboxBorderColor: 'transparent'
             });
         }
     }
+
+    _checkFields(){
+        let name = false;
+        if (!this.state.name||this.state.name.length<2){
+            this.setState({
+                nameUnderlineColor: 'red'
+            });
+            name = false;
+        } else{
+            this.setState({
+                nameUnderlineColor: '#e4e4e4'
+            });
+            name = true;
+        }
+
+        let address = false;
+        if (!this.state.address||this.state.address.length<3){
+            this.setState({
+                addressUnderlineColor: 'red'
+            });
+            address = false;
+        } else{
+            this.setState({
+                addressUnderlineColor: '#e4e4e4'
+            });
+            address = true;
+        }
+
+        let city = false;
+        if (!this.state.city||this.state.city.length<2){
+            this.setState({
+                cityUnderlineColor: 'red'
+            });
+            city = false;
+        } else{
+            this.setState({
+                cityUnderlineColor: '#e4e4e4'
+            });
+            city = true;
+        }
+
+        let country = false;
+        if (!this.state.country||this.state.country.length<2){
+            this.setState({
+                countryUnderlineColor: 'red'
+            });
+            country = false;
+        } else{
+            this.setState({
+                countryUnderlineColor: '#e4e4e4'
+            });
+            country = true;
+        }
+
+        let zip = false;
+        if (!this.state.zip||this.state.zip.length<2){
+            this.setState({
+                zipUnderlineColor: 'red'
+            });
+            zip = false;
+        } else{
+            this.setState({
+                zipUnderlineColor: '#e4e4e4'
+            });
+            zip = true;
+        }
+
+        let email = false;
+        let emailFieldText = this.state.email;
+        if (!emailFieldText||emailFieldText.length<2||!this.isEmailValid(emailFieldText)){
+            this.setState({
+                emailUnderlineColor: 'red'
+            });
+            email = false;
+        } else{
+            this.setState({
+                emailUnderlineColor: '#e4e4e4'
+            });
+            email = true;
+        }
+
+        let eulaAcepted = false;
+        if (!this.state.checked){
+            this.setState({
+                checkboxBorderColor: 'red'
+            });
+            eulaAcepted = false;
+        } else{
+            this.setState({
+                checkboxBorderColor: 'transparent'
+            });
+            eulaAcepted = true;
+        }
+
+        if (name && address && city && country && zip && email && eulaAcepted){
+            this._saveFields();
+
+        } else{
+            Vibration.vibrate();
+            if (!eulaAcepted && (name && address && city && country && zip && email)){
+                ToastAndroid.showWithGravity('Вы должны принять соглашение', ToastAndroid.LONG, ToastAndroid.CENTER);
+            } else if (!eulaAcepted && !(name&&address&&country&&zip&&email)){
+                ToastAndroid.showWithGravity('Вы должны принять соглашение и корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
+            } else {
+                ToastAndroid.showWithGravity('Вы должны корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
+            }
+        }
+
+    }
+
+    isEmailValid(email){
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
+
+   async _saveFields(){
+        try {
+            let userEmails;
+            savedUserEmails = JSON.parse(await AsyncStorage.getItem('userEmails'));
+            let currentEmail = this.state.email;
+            if (savedUserEmails && this.isEmailValid(currentEmail)){
+                userEmails = savedUserEmails+','+currentEmail;
+            } else if (!savedUserEmails && this.isEmailValid(currentEmail)){
+                userEmails = currentEmail;
+            }
+
+            await AsyncStorage.setItem('name', JSON.stringify(this.state.name));
+            await AsyncStorage.setItem('address', JSON.stringify(this.state.address));
+            await AsyncStorage.setItem('city', JSON.stringify(this.state.city));
+            await AsyncStorage.setItem('country', JSON.stringify(this.state.country));
+            await AsyncStorage.setItem('zip', JSON.stringify(this.state.zip));
+            await AsyncStorage.setItem('email', JSON.stringify(currentEmail));
+            await AsyncStorage.setItem('userEmails', JSON.stringify(userEmails));
+            await AsyncStorage.setItem('description', JSON.stringify(this.state.description));
+            await AsyncStorage.setItem('photo', JSON.stringify(this.state.photo));
+
+    } catch (error) {}
+    }
+
+    _showEULA(){
+        Alert.alert(
+            'Terms & Conditions',
+            '\t\t\t1) I am of sound mind and memory, in person, without any pressure from outside, decided to publish my personal information in the Penpals Service for finding penpals. \n\n\t\t\t2) Each card is verified by the moderator before it gets into the list of the envelopes. Be worthy of yourself. We\'ll remove all the dirt, trash and spam.Also cards that contain email, phone, links to other sites and profiles in social networks will not be moderated. Moderation takes some time, please be patient a little bit and your address will appear in the Penpals.',
+            [
+                {text: 'УЗНАТЬ БОЛЬШЕ', onPress: () => this._navigateTo('EulaScreen', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false})},
+                {text: 'OК'},
+            ],
+            { cancelable: true}
+        )
+    }
+
+
+    _pickPhoto(){
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            }
+            else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            }
+            else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            }
+            else {
+                let source = { uri: response.uri };
+                this.setState({
+                    image: source,
+                    proto: response.uri
+                });
+            }
+        });
+    }
+
+    _navigateTo = (routeName, params) => {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({routeName, params})]
+        });
+        this.props.navigation.dispatch(resetAction)
+    };
 
     render() {
         return (
@@ -164,7 +393,7 @@ export default class EnvelopeFillingScreen extends Component {
                                           style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
                                           placeholder={'Имя, фамилия'}
                                           autoFocus={true}
-                                          onFocus={(e)=> this._onChangeName()}
+                                          onFocus={(e)=> this.onFocusName()}
                                           onEndEditing={(e)=>this.setState({nameUnderlineColor: '#e4e4e4'})}
                                           onChangeText={(text) => this._onChangeName(text)}
                                           underlineColorAndroid={'transparent'}
@@ -184,7 +413,7 @@ export default class EnvelopeFillingScreen extends Component {
                                            placeholder={'Адрес'}
                                            onFocus={(e)=> this._onChangeAddress()}
                                            onEndEditing={(e)=>this.setState({addressUnderlineColor: '#e4e4e4'})}
-                                           onChangeText={(text) => this._onChangeName(text)}
+                                           onChangeText={(text) => this._onChangeAddress(text)}
                                            underlineColorAndroid={'transparent'}
                                            value={this.state.address}
                                            maxLength={120}/>
@@ -202,7 +431,7 @@ export default class EnvelopeFillingScreen extends Component {
                                            placeholder={'Город'}
                                            onFocus={(e)=> this._onChangeCity()}
                                            onEndEditing={(e)=>this.setState({cityUnderlineColor: '#e4e4e4'})}
-                                           onChangeText={(text) => this._onChangeName(text)}
+                                           onChangeText={(text) => this._onChangeCity(text)}
                                            underlineColorAndroid={'transparent'}
                                            value={this.state.city}
                                            maxLength={40}/>
@@ -212,8 +441,9 @@ export default class EnvelopeFillingScreen extends Component {
 
                            </View>
 
-                           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems:'center', alignSelf:'stretch', borderColor:'#e4e4e4', borderWidth:0.2, padding: 8}}>
-                               <Image source={require('./../assets/default_robohash.png')} style={{flex: 0, height: 130, resizeMode:'contain'}}/>
+                           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems:'center', alignSelf:'stretch', borderColor:'#e4e4e4', borderWidth:0.2, padding: 8}}
+                                             onPress={(event) => this._pickPhoto()}>
+                               <Image source={this.state.image} style={{flex: 1, width: 120, height: 130, resizeMode:'contain'}}/>
                            </TouchableOpacity>
                        </View>
 
@@ -225,7 +455,7 @@ export default class EnvelopeFillingScreen extends Component {
                                <View style={{flex:1, marginHorizontal: 8}}>
                                    <CountryPicker
                                        onChange={(value)=> {
-                                           this.setState({cca2: value.cca2, country: value.name});
+                                           this.setState({cca2: value.cca2, country: value.name, countryUnderlineColor: '#e4e4e4'});
                                        }}
                                        cca2={this.state.cca2}
                                        filterable={true}
@@ -237,7 +467,7 @@ export default class EnvelopeFillingScreen extends Component {
                                        editable={false}
                                        underlineColorAndroid={'transparent'}
                                        value={this.state.country}/>
-                                   <View style={{flex:0, height:1, backgroundColor: '#e4e4e4'}}/>
+                                   <View style={{flex:0, height:1, backgroundColor: this.state.countryUnderlineColor}}/>
                                    </CountryPicker>
                                </View>
                            </View>
@@ -252,7 +482,7 @@ export default class EnvelopeFillingScreen extends Component {
                                        placeholder={'Индекс'}
                                        onFocus={(e)=> this._onChangeZip()}
                                        onEndEditing={(e)=>this.setState({zipUnderlineColor: '#e4e4e4'})}
-                                       onChangeText={(text) => this._onChangeName(text)}
+                                       onChangeText={(text) => this._onChangeZip(text)}
                                        underlineColorAndroid={'transparent'}
                                        value={this.state.zip}
                                        maxLength={10}/>
@@ -271,7 +501,7 @@ export default class EnvelopeFillingScreen extends Component {
                                        keyboardType={'email-address'}
                                        onFocus={(e)=> this._onChangeEmail()}
                                        onEndEditing={(e)=>this.setState({emailUnderlineColor: '#e4e4e4'})}
-                                       onChangeText={(text) => this._onChangeName(text)}
+                                       onChangeText={(text) => this._onChangeEmail(text)}
                                        underlineColorAndroid={'transparent'}
                                        value={this.state.email}
                                        maxLength={40}/>
@@ -288,15 +518,15 @@ export default class EnvelopeFillingScreen extends Component {
                                multiline={true}
                                onFocus={(e)=> this._onChangeDescription()}
                                onEndEditing={(e)=>this.setState({descriptionUnderlineColor: '#e4e4e4'})}
-                               onChangeText={(text) => this._onChangeName(text)}
+                               onChangeText={(text) => this._onChangeDescription(text)}
                                underlineColorAndroid={'transparent'}
                                value={this.state.description}/>
                        </View>
 
                        <View style={{alignSelf:'stretch', flexDirection:'row', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
                            <CheckBox
-                               style={{flex: 0, paddingVertical:2, paddingHorizontal: 6, borderColor: '#1ca9c9' }}
-                               onClick={()=>this._ConfirmationCheckboxStateChanged()}
+                               style={{flex: 0, paddingVertical:4, paddingHorizontal: 6, borderColor: this.state.checkboxBorderColor, borderWidth:2 }}
+                               onClick={()=>this._onConfirmationCheckboxStateChanged()}
                                isChecked={this.state.checked}
                            />
                            <Text style={{color: '#212121', alignSelf: 'center'}}>
@@ -312,10 +542,11 @@ export default class EnvelopeFillingScreen extends Component {
 
                        <View style={{alignSelf:'stretch', flexDirection:'row', alignItems: 'flex-end', justifyContent: 'flex-end', padding:16}}>
                            <TouchableOpacity style={{marginRight:32}}
-                                             onPress={(e) => this._navigateTo('Main')}>
+                                             onPress={(e) => this._navigateTo('Main', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false})}>
                                <Text style={{fontSize:16, color:'#7299BF'}}>ОТМЕНА</Text>
                            </TouchableOpacity>
-                           <TouchableOpacity>
+                           <TouchableOpacity
+                               onPress={(e) =>this._checkFields()}>
                                <Text style={{fontSize:16, color:'#7299BF'}}>ДАЛЕЕ</Text>
                            </TouchableOpacity>
                        </View>
@@ -326,13 +557,3 @@ export default class EnvelopeFillingScreen extends Component {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        padding: 6,
-        width: deviceHeight, height: deviceWidth-22
-    },
-    loading: {
-        color: 'red',
-        fontSize:16,
-    },
-});

@@ -13,6 +13,7 @@
     "react-native-cardview": "^1.1.0",
     "react-native-check-box": "^2.0.1",
     "react-native-country-picker-modal": "^0.3.0",
+    "react-native-image-picker": "^0.26.6",
     "react-native-localization": "^0.1.32",
     "react-native-orientation-locker": "^1.0.3",
     "react-native-vector-icons": "^4.3.0",

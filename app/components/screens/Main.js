@@ -38,7 +38,9 @@ const ENVELOPES_AMOUNT_PER_BLOCK = 50;
 let savedBlock;
 let blocksAvailable;
 
-let userEmails;
+let scrollToFirst = false;
+
+let userEmails = [];
 
 let page = 0;
 let block = 1;
@@ -147,6 +149,10 @@ export default class Main extends Component {
 
     constructor(props){
         super(props);
+        envelopesArray = this.props.navigation.state.params.envelopesData;
+        block = this.props.navigation.state.params.block;
+        userEmails = this.props.navigation.state.params.userEmails;
+        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
 
         this.state = {
             showProgress: true,
@@ -166,7 +172,16 @@ export default class Main extends Component {
 
 
     componentWillMount() {
-        this.getUserStatus();
+        if (envelopesArray.length<=0){
+            this.getUserStatus();
+        } else {
+            this.setState({
+                showProgress: false
+            })
+        }
+        if (scrollToFirst){
+            page = 0;
+        }
 
     }
 
@@ -424,7 +439,7 @@ export default class Main extends Component {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}
-                                              onPress={(e) => this._navigateTo('EnvelopeFillingScreen')}>
+                                              onPress={(e) => this._navigateTo('EnvelopeFillingScreen', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false})}>
                                 <Text style={styles.actionButtonText}>{strings.create_envelope}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="envelope-o" style={styles.actionButtonIcon} />
@@ -518,13 +533,13 @@ export default class Main extends Component {
             .catch((e)=> console.log.e)
     };
 
-    _navigateTo = (routeName: string) => {
+    _navigateTo = (routeName, params) => {
         const resetAction = NavigationActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName })]
+            actions: [NavigationActions.navigate({routeName, params})]
         });
-        this.props.navigation.dispatch(resetAction);
-    }
+        this.props.navigation.dispatch(resetAction)
+    };
 
 
     render() {
