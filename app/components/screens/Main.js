@@ -1,26 +1,25 @@
 import {
-    View,
-    Text,
-    Image,
-    Dimensions,
-    StyleSheet,
-    ActivityIndicator,
     AsyncStorage,
-    VirtualizedList,
+    BackHandler,
+    Dimensions,
+    Image,
+    Linking,
+    StyleSheet,
+    Text,
     TouchableOpacity,
-    BackHandler
+    View,
+    VirtualizedList
 } from 'react-native';
 
 import React, {Component} from 'react';
 
 import CardView from 'react-native-cardview';
 
-import {
-    NavigationActions
-} from 'react-navigation';
+import {NavigationActions} from 'react-navigation';
 
 import Orientation from 'react-native-orientation-locker';
 
+import RotatingView from './../assets/RotatingView';
 
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
@@ -156,9 +155,10 @@ export default class Main extends Component {
 
         this.state = {
             showProgress: true,
+            showError: false,
             refreshing: false,
             showButton: false,
-            showMenu: false
+            showMenu: false,
         };
 
 
@@ -219,7 +219,7 @@ export default class Main extends Component {
             }
 
         } catch (message) {
-            console.log(message)
+            this.getCards();
         }
 
     }
@@ -243,13 +243,24 @@ export default class Main extends Component {
             let res = JSON.parse(await response.text());
             console.log(JSON.stringify(res));
             if (response.status >= 200 && response.status < 300) {
-
-                envelopesArray = [{type: "card", data:{id: res.id, first_name: res.first_name, address: res.address, city: res.city, country_name: res.country_name, postal: res.postal, description: res.description,  photo: res.image_id}, resources:{envelope: res.envelope, stamp: res.stamp, seal: res.seal}}];
-
+                envelopesArray = [{
+                    type: "card",
+                    data: {
+                        id: res.id,
+                        first_name: res.first_name,
+                        address: res.address,
+                        city: res.city,
+                        country_name: res.country_name,
+                        postal: res.postal,
+                        description: res.description,
+                        photo: res.image_id
+                    },
+                    resources: {envelope: res.envelope, stamp: res.stamp, seal: res.seal}
+                }];
                 this.getCards();
             }
         } catch (message) {
-            console.log(message)
+            this.getCards();
         }
     }
 
@@ -292,11 +303,20 @@ export default class Main extends Component {
                 }
 
                 this.setState({
-                    showProgress: false
+                    showProgress: false,
+                    showError: false
+                });
+            } else {
+                this.setState({
+                    showProgress: false,
+                    showError: true
                 });
             }
         } catch (message) {
-            console.log(message)
+            this.setState({
+                showProgress: false,
+                showError: true
+            });
         }
     }
 
@@ -315,7 +335,7 @@ export default class Main extends Component {
 
         let buttonIconColor = '#9e9e9e';
         let buttonTextColor = '#9e9e9e';
-        if (userEmails!== null && userEmails.includes(envelope.data.email)>=0){
+        if (userEmails !== null && userEmails.includes(envelope.item.data.email) >= 0) {
             buttonIconColor = 'red';
             buttonTextColor = 'red';
         }
@@ -546,10 +566,86 @@ export default class Main extends Component {
         return (
             <View style={styles.container}>
                 {this.state.showProgress&&
-                <View style = {{alignItems: 'center', justifyContent: 'center', flex:1, flexDirection: 'row'}}>
-                    <ActivityIndicator size={55} style = {{alignItems: 'center', justifyContent: 'center', flex:1}}/>
-                </View>}
-                {! this.state.showProgress&&
+                <Image source={require('./../assets/envelope_background_lanscape.png')} style={{
+                    flex: 1,
+                    width: deviceWidth,
+                    height: deviceHeight,
+                    alignSelf: "stretch",
+                    resizeMode: 'stretch',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <RotatingView
+                        style={{height: 48, width: 48, alignSelf: 'center'}}
+                        duration={3000}
+                        onFinishedAnimating={( (status) => {
+                            console.log(status)
+                        } )}>
+                        <Image
+                            style={{height: '100%', width: '100%', resizeMode: 'contain'}}
+                            resizeMode='contain'
+                            source={require("./../assets/enveolopes_loading_48_px.png")}/>
+                    </RotatingView>
+                </Image>}
+                {this.state.showError &&
+                <Image source={require('./../assets/envelope_background_lanscape.png')} style={{
+                    flex: 1,
+                    width: deviceWidth,
+                    height: deviceHeight,
+                    alignSelf: "stretch",
+                    resizeMode: 'stretch',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <View style={{
+                        flex: 1,
+                        alignSelf: 'center',
+                        width: deviceWidth - 64,
+                        margin: 64,
+                        flexDirection: 'column',
+                        justifyContent: 'flex-start',
+                        alignItems: 'flex-start'
+                    }}>
+                        <Text
+                            style={{color: '#212121', flex: 1, fontSize: 16,}}>
+                            {'Что-то пошло не так.\n\nПожалуйста проверьте интернет соединение или зайдите к нам позже'}
+                        </Text>
+                        <TouchableOpacity
+                            style={{flex: 1, flexDirection: 'row', alignSelf: 'center'}}
+                            onPress={(e) => Linking.openURL('mailto:119@penpal.eken.live?subject=From Penpals app&body=Здравствуйте!\n' +
+                                '\n' +
+                                'Пожалуйста не изменяйте тему письма.\n' +
+                                '\n' +
+                                'Мы как и все очень любим Google Translate :)\n' +
+                                'И как и все умеем им пользоваться.\n' +
+                                'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n' +
+                                '\n' +
+                                'С наилучшими пожеланиями, Ваш Penpals.\n' +
+                                '\n---------------------------------------------------------------')}>
+                            <Text
+                                style={{
+                                    flex: 3,
+                                    alignSelf: 'center',
+                                    color: '#212121',
+                                    width: deviceWidth,
+                                    fontSize: 16
+                                }}>
+                                {'По любым вопросам Вы можете написать нам:'}
+                            </Text>
+                            <Text
+                                style={{
+                                    flex: 2,
+                                    alignSelf: 'center',
+                                    color: '#1ca9c9',
+                                    width: deviceWidth,
+                                    fontSize: 16
+                                }}>
+                                {'119@penpal.eken.live'}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </Image>}
+                {!( this.state.showProgress || this.state.showError) &&
                 <VirtualizedList
                     horizontal
                     pagingEnabled

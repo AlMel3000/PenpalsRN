@@ -1,21 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import { NavigationActions
-} from 'react-navigation';
+import {NavigationActions} from 'react-navigation';
 
 
-import {
+import {AsyncStorage, Dimensions, Image, Linking, Text, TouchableOpacity, View,} from 'react-native';
 
-    Image,
-    Dimensions,
-    AsyncStorage,
-    Text,
-    View,
-    Linking,
-    TouchableOpacity,
-} from 'react-native';
-
-import RotatingView from  './../assets/RotatingView';
+import RotatingView from './../assets/RotatingView';
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
@@ -78,7 +68,7 @@ export default class LoadingScreen extends Component {
             }
 
         } catch (message) {
-            console.log(message)
+            console.log(message);
             this.getCards();
         }
 
@@ -116,7 +106,7 @@ export default class LoadingScreen extends Component {
                 this.getCards();
             }
         } catch (message) {
-            console.log(message)
+            console.log(message);
             this.getCards();
         }
     }
@@ -162,6 +152,7 @@ export default class LoadingScreen extends Component {
                 this.setState({
                     showProgress: false
                 });
+                console.log(JSON.stringify(envelopesArray));
                 this._navigateTo('Main', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false});
             } else {
                 this.setState({
@@ -170,7 +161,7 @@ export default class LoadingScreen extends Component {
                 });
             }
         } catch (message) {
-            console.log(message)
+            console.log(message);
             this.setState({
                 showProgress: false,
                 showError: true

@@ -1,26 +1,27 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+
+import {NavigationActions} from 'react-navigation';
 
 import {
-    NavigationActions
-} from 'react-navigation';
-
-import {
-    View,
+    Alert,
+    AsyncStorage,
+    BackHandler,
     Image,
     ScrollView,
     Text,
     TextInput,
-    TouchableOpacity,
-    BackHandler,
-    Alert,
-    Vibration,
     ToastAndroid,
-    AsyncStorage
+    TouchableOpacity,
+    Vibration,
+    View
 } from 'react-native';
 
 import Orientation from 'react-native-orientation-locker';
 
 import Icon2 from 'react-native-vector-icons/FontAwesome';
+import CountryPicker from 'react-native-country-picker-modal';
+
+import CheckBox from 'react-native-check-box'
 
 var ImagePicker = require('react-native-image-picker');
 
@@ -38,10 +39,6 @@ let options = {
     chooseFromLibraryButtonTitle: 'Выбрать из галереи',
 
 };
-
-import CountryPicker, {getAllCountries} from 'react-native-country-picker-modal';
-
-import CheckBox from 'react-native-check-box'
 
 let envelopesArray = [];
 let userEmails =[];
@@ -82,7 +79,8 @@ export default class EnvelopeFillingScreen extends Component {
             checkboxBorderColor: 'transparent',
 
             photo: null,
-            image: defaultRobohash
+            image: defaultRobohash,
+
         };
 
     }
@@ -193,7 +191,7 @@ export default class EnvelopeFillingScreen extends Component {
 
     _checkFields(){
         let name = false;
-        if (!this.state.name||this.state.name.length<2){
+        if (!this.state.name || this.state.name.trim().length < 2) {
             this.setState({
                 nameUnderlineColor: 'red'
             });
@@ -206,7 +204,7 @@ export default class EnvelopeFillingScreen extends Component {
         }
 
         let address = false;
-        if (!this.state.address||this.state.address.length<3){
+        if (!this.state.address || this.state.address.trim().length < 3) {
             this.setState({
                 addressUnderlineColor: 'red'
             });
@@ -232,7 +230,7 @@ export default class EnvelopeFillingScreen extends Component {
         }
 
         let country = false;
-        if (!this.state.country||this.state.country.length<2){
+        if (!this.state.country || this.state.country.trim().length < 2) {
             this.setState({
                 countryUnderlineColor: 'red'
             });
@@ -245,7 +243,7 @@ export default class EnvelopeFillingScreen extends Component {
         }
 
         let zip = false;
-        if (!this.state.zip||this.state.zip.length<2){
+        if (!this.state.zip || this.state.zip.trim().length < 2) {
             this.setState({
                 zipUnderlineColor: 'red'
             });
@@ -259,7 +257,7 @@ export default class EnvelopeFillingScreen extends Component {
 
         let email = false;
         let emailFieldText = this.state.email;
-        if (!emailFieldText||emailFieldText.length<2||!this.isEmailValid(emailFieldText)){
+        if (!emailFieldText || emailFieldText.trim().length < 2 || !this.isEmailValid(emailFieldText)) {
             this.setState({
                 emailUnderlineColor: 'red'
             });
@@ -269,6 +267,19 @@ export default class EnvelopeFillingScreen extends Component {
                 emailUnderlineColor: '#e4e4e4'
             });
             email = true;
+        }
+
+        let description = false;
+        if (!this.state.description || this.state.description.trim().length < 2) {
+            this.setState({
+                descriptionUnderlineColor: 'red'
+            });
+            description = false;
+        } else {
+            this.setState({
+                descriptionUnderlineColor: '#e4e4e4'
+            });
+            description = true;
         }
 
         let eulaAcepted = false;
@@ -284,14 +295,20 @@ export default class EnvelopeFillingScreen extends Component {
             eulaAcepted = true;
         }
 
-        if (name && address && city && country && zip && email && eulaAcepted){
+        if (name && address && city && country && zip && email && description && eulaAcepted) {
             this._saveFields();
+            this._navigateTo('EnvelopePreview', {
+                envelopesData: envelopesArray,
+                block: block,
+                userEmails: userEmails,
+                scrollToFirst: false
+            })
 
         } else{
             Vibration.vibrate();
-            if (!eulaAcepted && (name && address && city && country && zip && email)){
+            if (!eulaAcepted && (name && address && city && country && zip && email && description)) {
                 ToastAndroid.showWithGravity('Вы должны принять соглашение', ToastAndroid.LONG, ToastAndroid.CENTER);
-            } else if (!eulaAcepted && !(name&&address&&country&&zip&&email)){
+            } else if (!eulaAcepted && !(name && address && country && zip && email && description)) {
                 ToastAndroid.showWithGravity('Вы должны принять соглашение и корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
             } else {
                 ToastAndroid.showWithGravity('Вы должны корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
@@ -320,6 +337,7 @@ export default class EnvelopeFillingScreen extends Component {
             await AsyncStorage.setItem('address', JSON.stringify(this.state.address));
             await AsyncStorage.setItem('city', JSON.stringify(this.state.city));
             await AsyncStorage.setItem('country', JSON.stringify(this.state.country));
+            await AsyncStorage.setItem('cca2', JSON.stringify(this.state.cca2));
             await AsyncStorage.setItem('zip', JSON.stringify(this.state.zip));
             await AsyncStorage.setItem('email', JSON.stringify(currentEmail));
             await AsyncStorage.setItem('userEmails', JSON.stringify(userEmails));
