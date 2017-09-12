@@ -335,7 +335,7 @@ export default class Main extends Component {
 
         let buttonIconColor = '#9e9e9e';
         let buttonTextColor = '#9e9e9e';
-        if (userEmails !== null && userEmails.includes(envelope.item.data.email) >= 0) {
+        if (userEmails !== null && userEmails.indexOf(envelope.item.data.email) >= 0) {
             buttonIconColor = 'red';
             buttonTextColor = 'red';
         }

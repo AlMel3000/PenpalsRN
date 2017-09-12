@@ -1,4 +1,14 @@
-import {AsyncStorage, BackHandler, Dimensions, Image, StyleSheet, Text, View, VirtualizedList} from 'react-native';
+import {
+    AsyncStorage,
+    BackHandler,
+    Dimensions,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    VirtualizedList
+} from 'react-native';
 
 import React, {Component} from 'react';
 
@@ -6,14 +16,15 @@ import {NavigationActions} from 'react-navigation';
 
 import RotatingView from './../assets/RotatingView';
 
+import * as ImageCache from "react-native-img-cache";
+import {CachedImage} from "react-native-img-cache";
+
 import Orientation from 'react-native-orientation-locker';
 
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 let envelopesArray = [];
-let usersEnvelope = [];
-
 
 let scrollToFirst = false;
 
@@ -21,34 +32,18 @@ let userEmails = [];
 
 let block = 1;
 
+let envelopeData;
+
 
 export default class EnvelopePreview extends Component {
 
     static navigationOptions = {
         header: false
     };
-    onRefresh = () => {
 
-        this.setState({
-            usersEnvelope: [{
-                type: "card",
-                data: {
-                    id: 1,
-                    first_name: this.state.name,
-                    address: this.state.address,
-                    city: this.state.city,
-                    country_name: this.state.country,
-                    postal: this.state.zip,
-                    description: this.state.description,
-                    photo: this.state.photo
-                },
-                resources: {
-                    envelope: 'http://penpal.eken.live/Api/get-resource/?type=envelope',
-                    stamp: 'http://penpal.eken.live/Api/get-resource/?type=stamp',
-                    seal: 'http://penpal.eken.live/Api/get-resource/?type=seal'
-                }
-            }]
-        });
+
+    onRefresh = () => {
+        this.reloadResources();
     };
     _navigateTo = (routeName, params) => {
         const resetAction = NavigationActions.reset({
@@ -58,42 +53,7 @@ export default class EnvelopePreview extends Component {
         this.props.navigation.dispatch(resetAction)
     };
 
-    constructor(props) {
-        super(props);
-        envelopesArray = this.props.navigation.state.params.envelopesData;
-        block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
-        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
-
-        this.state = {
-            refreshing: false,
-
-            showProgress: true,
-
-            name: null,
-            address: null,
-            city: null,
-            country: null,
-            zip: null,
-            description: null,
-
-            photo: null,
-
-            usersEnvelope: [],
-
-        };
-
-    }
-
-    componentWillMount() {
-        this.getEnvelopeAppearanceAndInfo();
-        Orientation.unlockAllOrientations();
-
-
-    }
-
     componentDidMount() {
-        Orientation.lockToLandscapeLeft();
         BackHandler.addEventListener('hardwareBackPress', () => {
             this._navigateTo('EnvelopeFillingScreen', {
                 envelopesData: envelopesArray,
@@ -148,8 +108,6 @@ export default class EnvelopePreview extends Component {
                     }
                 }],
 
-
-                showProgress: false
             });
 
 
@@ -161,6 +119,42 @@ export default class EnvelopePreview extends Component {
     }
 
     async saveEnvelopeAppearance() {
+
+    }
+
+    constructor(props) {
+        super(props);
+        envelopeData = this.props.navigation.state.params.envelopesData;
+        envelopesArray = envelopeData;
+        block = this.props.navigation.state.params.block;
+        userEmails = this.props.navigation.state.params.userEmails;
+        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
+
+        this.state = {
+            refreshing: false,
+
+            showProgress: true,
+
+            name: null,
+            address: null,
+            city: null,
+            country: null,
+            zip: null,
+            description: null,
+
+            photo: null,
+
+            usersEnvelope: []
+
+        };
+
+    }
+
+    componentWillMount() {
+        Orientation.unlockAllOrientations();
+        Orientation.lockToLandscapeLeft();
+        this.getEnvelopeAppearanceAndInfo().then(this.setState({showProgress: false}));
+
 
     }
 
@@ -177,7 +171,8 @@ export default class EnvelopePreview extends Component {
 
         return (
             <View style={styles.viewPager}>
-                <Image source={{uri: envelope.item.resources.envelope, cache: 'reload'}} style={styles.envelopeImage}>
+                <CachedImage source={{uri: envelope.item.resources.envelope, cache: 'reload'}} mutable
+                             style={styles.envelopeImage}>
                     <View style={styles.topRow}>
                         <View style={styles.topLeftRow}>
                             <View
@@ -211,7 +206,7 @@ export default class EnvelopePreview extends Component {
                         </View>
                         <View style={styles.topRightRow}>
                             <Image source={{uri: imageURL}} style={styles.userPhoto}/>
-                            <Image source={{uri: envelope.item.resources.stamp}} style={{
+                            <CachedImage source={{uri: envelope.item.resources.stamp}} mutable style={{
                                 height: deviceHeight / 5,
                                 width: deviceWidth / 4,
                                 resizeMode: 'contain',
@@ -220,7 +215,7 @@ export default class EnvelopePreview extends Component {
                                 left: deviceWidth / 6,
                                 position: 'absolute'
                             }}/>
-                            <Image source={{uri: envelope.item.resources.seal}} style={{
+                            <CachedImage source={{uri: envelope.item.resources.seal}} mutable style={{
                                 height: deviceHeight / 5,
                                 width: deviceWidth / 5,
                                 resizeMode: 'contain',
@@ -253,9 +248,16 @@ export default class EnvelopePreview extends Component {
                             </Text>
                         </View>
                     </View>
-                </Image>
+                </CachedImage>
             </View>
         );
+    }
+
+    reloadResources() {
+        ImageCache.ImageCache.get().clear();
+        this.setState({refreshing: true, showProgress: true, usersEnvelope: []});
+        this.getEnvelopeAppearanceAndInfo();
+        this.setState({refreshing: false, showProgress: false});
     }
 
     render() {
@@ -286,27 +288,40 @@ export default class EnvelopePreview extends Component {
                     </RotatingView>
                 </Image>}
                 {!this.state.showProgress &&
-                <VirtualizedList
-                    horizontal
-                    pagingEnabled
-                    initialNumToRender={1}
-                    getItemCount={data => data.length}
-                    data={this.state.usersEnvelope}
-                    initialScrollIndex={0}
-                    keyExtractor={(item, index) => item.data.id}
-                    getItemLayout={(data, index) => ({
-                        length: deviceWidth,
-                        offset: deviceWidth * index,
-                        index
-                    })}
-                    maxToRenderPerBatch={1}
-                    windowSize={1}
-                    getItem={(data, index) => ( data[index])}
-                    renderItem={this.renderEnvelope}
-                    refreshing={this.state.refreshing}
-                    onRefresh={this.onRefresh}
-                    removeClippedSubviews={false}
-                />}
+                <View style={{flex: 1}}>
+                    <VirtualizedList
+                        horizontal
+                        pagingEnabled
+                        initialNumToRender={1}
+                        getItemCount={data => data.length}
+                        data={this.state.usersEnvelope}
+                        initialScrollIndex={0}
+                        keyExtractor={(item, index) => item.data.id}
+                        getItemLayout={(data, index) => ({
+                            length: deviceWidth,
+                            offset: deviceWidth * index,
+                            index
+                        })}
+                        maxToRenderPerBatch={1}
+                        windowSize={1}
+                        getItem={(data, index) => ( data[index])}
+                        renderItem={this.renderEnvelope}
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.onRefresh}
+                        removeClippedSubviews={false}
+                        style={{flex: 1}}
+                    />
+                    <TouchableOpacity style={{
+                        flex: 0,
+                        width: 50,
+                        height: 20,
+                        backgroundColor: 'white',
+                        position: 'absolute',
+                        alignSelf: 'flex-end'
+                    }} onPress={(e) => this.reloadResources()}>
+                        <Text>reload</Text>
+                    </TouchableOpacity>
+                </View>}
 
 
             </View>

@@ -20,3 +20,8 @@ npm i react-native-country-picker-modal --save
 
 npm install react-native-image-picker@latest --save
 react-native link
+
+npm install --save react-native-fetch-blob
+react-native link
+
+npm install react-native-img-cache --save

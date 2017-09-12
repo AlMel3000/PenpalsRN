@@ -11,6 +11,7 @@ import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.reactlibrary.RNCardViewPackage;
 import org.wonday.orientation.OrientationPackage;
 import com.imagepicker.ImagePickerPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +31,8 @@ public class MainApplication extends Application implements ReactApplication {
               new ReactNativeLocalizationPackage(),
               new RNCardViewPackage(),
               new OrientationPackage(),
-              new ImagePickerPackage()
+              new ImagePickerPackage(),
+              new RNFetchBlobPackage()
       );
     }
   };
