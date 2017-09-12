@@ -41,6 +41,36 @@ export default class EnvelopePreview extends Component {
         header: false
     };
 
+    constructor(props) {
+        super(props);
+        envelopeData = this.props.navigation.state.params.envelopesData;
+        envelopesArray = envelopeData;
+        block = this.props.navigation.state.params.block;
+        userEmails = this.props.navigation.state.params.userEmails;
+        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
+
+        this.state = {
+            refreshing: false,
+
+            showProgress: true,
+
+            name: null,
+            address: null,
+            city: null,
+            country: null,
+            zip: null,
+            description: null,
+
+            photo: null,
+
+            usersEnvelope: []
+
+        };
+
+        this.renderEnvelope = this.renderEnvelope.bind(this);
+
+    }
+
 
     onRefresh = () => {
         this.reloadResources();
@@ -122,38 +152,12 @@ export default class EnvelopePreview extends Component {
 
     }
 
-    constructor(props) {
-        super(props);
-        envelopeData = this.props.navigation.state.params.envelopesData;
-        envelopesArray = envelopeData;
-        block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
-        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
 
-        this.state = {
-            refreshing: false,
-
-            showProgress: true,
-
-            name: null,
-            address: null,
-            city: null,
-            country: null,
-            zip: null,
-            description: null,
-
-            photo: null,
-
-            usersEnvelope: []
-
-        };
-
-    }
 
     componentWillMount() {
         Orientation.unlockAllOrientations();
         Orientation.lockToLandscapeLeft();
-        this.getEnvelopeAppearanceAndInfo().then(this.setState({showProgress: false}));
+        this.getEnvelopeAppearanceAndInfo();
 
 
     }
@@ -172,7 +176,8 @@ export default class EnvelopePreview extends Component {
         return (
             <View style={styles.viewPager}>
                 <CachedImage source={{uri: envelope.item.resources.envelope, cache: 'reload'}} mutable
-                             style={styles.envelopeImage}>
+                             style={styles.envelopeImage}
+                             onLoadEnd={(e) => this.setState({showProgress: false})}>
                     <View style={styles.topRow}>
                         <View style={styles.topLeftRow}>
                             <View
@@ -257,7 +262,7 @@ export default class EnvelopePreview extends Component {
         ImageCache.ImageCache.get().clear();
         this.setState({refreshing: true, showProgress: true, usersEnvelope: []});
         this.getEnvelopeAppearanceAndInfo();
-        this.setState({refreshing: false, showProgress: false});
+        this.setState({refreshing: false});
     }
 
     render() {
@@ -265,29 +270,6 @@ export default class EnvelopePreview extends Component {
 
         return (
             <View style={styles.container}>
-                {this.state.showProgress &&
-                <Image source={require('./../assets/envelope_background_lanscape.png')} style={{
-                    flex: 1,
-                    width: deviceWidth,
-                    height: deviceHeight,
-                    alignSelf: "stretch",
-                    resizeMode: 'stretch',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}>
-                    <RotatingView
-                        style={{height: 48, width: 48, alignSelf: 'center'}}
-                        duration={3000}
-                        onFinishedAnimating={( (status) => {
-                            console.log(status)
-                        } )}>
-                        <Image
-                            style={{height: '100%', width: '100%', resizeMode: 'contain'}}
-                            resizeMode='contain'
-                            source={require("./../assets/enveolopes_loading_48_px.png")}/>
-                    </RotatingView>
-                </Image>}
-                {!this.state.showProgress &&
                 <View style={{flex: 1}}>
                     <VirtualizedList
                         horizontal
@@ -321,8 +303,30 @@ export default class EnvelopePreview extends Component {
                     }} onPress={(e) => this.reloadResources()}>
                         <Text>reload</Text>
                     </TouchableOpacity>
-                </View>}
-
+                </View>
+                {this.state.showProgress &&
+                <Image source={require('./../assets/envelope_background_lanscape.png')} style={{
+                    flex: 1,
+                    width: deviceWidth,
+                    height: deviceHeight,
+                    alignSelf: "stretch",
+                    resizeMode: 'stretch',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'absolute'
+                }}>
+                    <RotatingView
+                        style={{height: 48, width: 48, alignSelf: 'center'}}
+                        duration={3000}
+                        onFinishedAnimating={( (status) => {
+                            console.log(status)
+                        } )}>
+                        <Image
+                            style={{height: '100%', width: '100%', resizeMode: 'contain'}}
+                            resizeMode='contain'
+                            source={require("./../assets/enveolopes_loading_48_px.png")}/>
+                    </RotatingView>
+                </Image>}
 
             </View>
         );
