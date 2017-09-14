@@ -155,10 +155,28 @@ export default class EnvelopePreview extends Component {
 
 
     componentWillMount() {
-        Orientation.unlockAllOrientations();
-        Orientation.lockToLandscapeLeft();
+
+        this.loadresources();
         this.getEnvelopeAppearanceAndInfo();
 
+
+    }
+
+    componentDidMount() {
+        Orientation.unlockAllOrientations();
+        Orientation.lockToLandscapeLeft();
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this._navigateTo('EnvelopeFillingScreen', {
+                envelopesData: envelopesArray,
+                block: block,
+                userEmails: userEmails,
+                scrollToFirst: false
+            });
+            return true;
+        });
+    }
+
+    async loadresources() {
 
     }
 
@@ -261,6 +279,7 @@ export default class EnvelopePreview extends Component {
     reloadResources() {
         ImageCache.ImageCache.get().clear();
         this.setState({refreshing: true, showProgress: true, usersEnvelope: []});
+        this.loadresources();
         this.getEnvelopeAppearanceAndInfo();
         this.setState({refreshing: false});
     }
