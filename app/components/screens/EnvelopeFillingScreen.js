@@ -148,9 +148,23 @@ export default class EnvelopeFillingScreen extends Component {
         });
     }
 
+    _onFocusAddress(text) {
+        this.setState({
+            addressUnderlineColor: '#1ca9c9',
+        });
+    }
+
+
+
     _onChangeCity(text){
         this.setState({
             city: text,
+            cityUnderlineColor: '#1ca9c9',
+        });
+    }
+
+    _onFocusCity(text) {
+        this.setState({
             cityUnderlineColor: '#1ca9c9',
         });
     }
@@ -162,9 +176,21 @@ export default class EnvelopeFillingScreen extends Component {
         });
     }
 
+    _onFocusZip(text) {
+        this.setState({
+            zipUnderlineColor: '#1ca9c9',
+        });
+    }
+
     _onChangeEmail(text){
         this.setState({
             email: text,
+            emailUnderlineColor: '#1ca9c9',
+        });
+    }
+
+    _onFocusEmail(text) {
+        this.setState({
             emailUnderlineColor: '#1ca9c9',
         });
     }
@@ -175,6 +201,14 @@ export default class EnvelopeFillingScreen extends Component {
             descriptionUnderlineColor: '#1ca9c9',
         });
     }
+
+    _onFocusDescription(text) {
+        this.setState({
+            description: text,
+            descriptionUnderlineColor: '#1ca9c9',
+        });
+    }
+
 
     _onConfirmationCheckboxStateChanged(){
         if(this.state.checked){
@@ -429,7 +463,7 @@ export default class EnvelopeFillingScreen extends Component {
                                        <TextInput
                                            style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
                                            placeholder={'Адрес'}
-                                           onFocus={(e)=> this._onChangeAddress()}
+                                           onFocus={(e) => this._onFocusAddress()}
                                            onEndEditing={(e)=>this.setState({addressUnderlineColor: '#e4e4e4'})}
                                            onChangeText={(text) => this._onChangeAddress(text)}
                                            underlineColorAndroid={'transparent'}
@@ -447,7 +481,7 @@ export default class EnvelopeFillingScreen extends Component {
                                        <TextInput
                                            style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
                                            placeholder={'Город'}
-                                           onFocus={(e)=> this._onChangeCity()}
+                                           onFocus={(e) => this._onFocusCity()}
                                            onEndEditing={(e)=>this.setState({cityUnderlineColor: '#e4e4e4'})}
                                            onChangeText={(text) => this._onChangeCity(text)}
                                            underlineColorAndroid={'transparent'}
@@ -498,7 +532,7 @@ export default class EnvelopeFillingScreen extends Component {
                                    <TextInput
                                        style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
                                        placeholder={'Индекс'}
-                                       onFocus={(e)=> this._onChangeZip()}
+                                       onFocus={(e) => this._onFocusZip()}
                                        onEndEditing={(e)=>this.setState({zipUnderlineColor: '#e4e4e4'})}
                                        onChangeText={(text) => this._onChangeZip(text)}
                                        underlineColorAndroid={'transparent'}
@@ -517,7 +551,7 @@ export default class EnvelopeFillingScreen extends Component {
                                        style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
                                        placeholder={'Email'}
                                        keyboardType={'email-address'}
-                                       onFocus={(e)=> this._onChangeEmail()}
+                                       onFocus={(e) => this._onFocusEmail()}
                                        onEndEditing={(e)=>this.setState({emailUnderlineColor: '#e4e4e4'})}
                                        onChangeText={(text) => this._onChangeEmail(text)}
                                        underlineColorAndroid={'transparent'}
@@ -534,7 +568,7 @@ export default class EnvelopeFillingScreen extends Component {
                                placeholder={'p.s.'}
                                maxLength={150}
                                multiline={true}
-                               onFocus={(e)=> this._onChangeDescription()}
+                               onFocus={(e) => this._onFocusDescription()}
                                onEndEditing={(e)=>this.setState({descriptionUnderlineColor: '#e4e4e4'})}
                                onChangeText={(text) => this._onChangeDescription(text)}
                                underlineColorAndroid={'transparent'}
