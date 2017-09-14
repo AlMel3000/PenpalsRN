@@ -436,11 +436,19 @@ export default class Main extends Component {
                         }}/>
                     </View>
                 </View>
-                <View style={{flex: 2,  justifyContent:'center', alignItems:'center', flexDirection: 'row'}}>
+                    <View
+                        style={{flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row'}}>
                     <View style={{flex: 1, width: deviceWidth/2}}/>
                     <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:deviceHeight*0.1}}>
-                        <Image source={require('./../assets/quote.png')} style={{height: deviceHeight/25,resizeMode:'contain'}}/>
-                        <Text style={{color: '#212121', fontSize: 14, marginLeft: deviceWidth*0.003125, width: deviceWidth/2-48}}>
+                        <Image source={require('./../assets/quote.png')}
+                               style={{height: deviceHeight / 25, resizeMode: 'contain', marginTop: 25}}/>
+                        <Text style={{
+                            color: '#212121',
+                            fontSize: 14,
+                            marginLeft: deviceWidth * 0.003125,
+                            width: deviceWidth / 2 - 64,
+                            marginTop: 25
+                        }}>
                             {envelope.item.data.description}
                         </Text>
                     </View>
