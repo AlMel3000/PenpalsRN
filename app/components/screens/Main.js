@@ -7,6 +7,7 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     View,
     VirtualizedList
 } from 'react-native';
@@ -398,8 +399,8 @@ export default class Main extends Component {
 
 
         return (
-            <TouchableOpacity style={styles.viewPager}
-                              onPress={(e) => this.showButton()}>
+            <TouchableWithoutFeedback style={styles.viewPager}
+                                      onPress={(e) => this.showButton()}>
                 <Image source={{uri: envelopeURL}} style={styles.envelopeImage}>
                 <View style={styles.topRow}>
                     <View style={styles.topLeftRow}>
@@ -490,7 +491,7 @@ export default class Main extends Component {
                                           onPress={(e) => this.onClickFab()}/>
                     </View>}
                 </Image>
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
         );
     }
 
