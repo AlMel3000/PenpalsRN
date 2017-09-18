@@ -99,8 +99,8 @@ android {
         applicationId "live.eken.penpal"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 89
+        versionName "2.0.0 Pre-alpha 0.0.3"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -154,6 +154,7 @@ dependencies {
     compile project(':react-native-orientation-locker')
     compile project(':react-native-image-picker')
     compile project(':react-native-fetch-blob')
+    compile project(':react-native-billing')
 }
 
 // Run this once to be able to run the application with BUCK

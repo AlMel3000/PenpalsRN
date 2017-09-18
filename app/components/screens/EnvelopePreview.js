@@ -205,6 +205,17 @@ export default class EnvelopePreview extends Component {
         }
     }
 
+    publish() {
+        this.saveEnvelopeAppearance();
+        this._navigateTo('PublicationScreen', {
+            envelopesData: envelopesArray,
+            block: block,
+            userEmails: userEmails,
+            scrollToFirst: false,
+            photo: photo
+        })
+    }
+
     renderEnvelope(envelope) {
 
         let stampRotation = (Math.floor(Math.random() * (10) - 5)) + "deg";
@@ -370,12 +381,7 @@ export default class EnvelopePreview extends Component {
                               cornerRadius={4}>
                         <TouchableOpacity
                             style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8}}
-                            onPress={(e) => this._navigateTo('EnvelopeFillingScreen', {
-                                envelopesData: envelopesArray,
-                                block: block,
-                                userEmails: userEmails,
-                                scrollToFirst: false
-                            })}>
+                            onPress={(e) => this.publish()}>
                             <Text style={{marginBottom: 6, marginRight: 6, color: '#212121'}}>
                                 PUBLISH
                             </Text>

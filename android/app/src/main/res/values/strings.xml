@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Penpals</string>
+    <string name="RNB_GOOGLE_PLAY_LICENSE_KEY">
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlFcSajWQGhygdtFBXrsgyrwPxgVMbngtaRAOlIg2nzEoKZFojco7b37Frcqd75N/2sAahFdg+od3J0fbyZClWrD1ZpNRPznPTbpZ+GV4sbkgtQMZC7Nb6riTo6RJRZe3ePaC9mXxb3Vzdf+TF3QOTcB++ft74IdAyms4IFz1KA/6ypZaril+mbCXfPvBmwNFJJCrgITiqpFa0+ofDSNIlkP+cZE4mVfNCzKhf8HRVPKeWz0VsP42xFxNcnCB2U0REUmYX/R7CDPzH320aDJ30UewrR4PyYUa9LXZkHlRvKrAmY/nAx/q3vxULDIsXl1qLgx+6PReYTJiNXPBjbhx8QIDAQAB
+    </string>
 </resources>
