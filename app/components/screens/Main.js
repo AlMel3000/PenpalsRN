@@ -719,12 +719,12 @@ const styles = StyleSheet.create({
     },
     topLeftRow:{
         height: deviceHeight/1.9,
-        width: deviceWidth/2,
+        width: deviceWidth / 2 - 82,
         flex: 1,
         justifyContent:'flex-start',
         alignItems:'flex-start',
         flexDirection: 'column',
-        paddingLeft: deviceWidth*0.0125,
+        paddingLeft: deviceWidth * 0.0225,
         paddingTop:deviceHeight*0.15
     },
     prefix:{

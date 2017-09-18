@@ -78,7 +78,7 @@ export default class EnvelopeFillingScreen extends Component {
 
             checkboxBorderColor: 'transparent',
 
-            photo: null,
+            photoIsSet: false,
             image: defaultRobohash,
 
         };
@@ -111,10 +111,25 @@ export default class EnvelopeFillingScreen extends Component {
                 zip: JSON.parse(await AsyncStorage.getItem('zip')),
                 email: JSON.parse(await AsyncStorage.getItem('email')),
                 description: JSON.parse(await AsyncStorage.getItem('description'))
-            })
+            }).then(this.setRobohash(await this.state.name))
+
+
         } catch (message) {
         }
     }
+
+    setRobohash(name) {
+        if (name && name.length > 1) {
+            this.setState({
+                image: {uri: 'https://robohash.org/' + name}
+            });
+        } else {
+            this.setState({
+                image: defaultRobohash
+            })
+        }
+    }
+
 
     _onChangeName(text){
         this.setState({
@@ -123,7 +138,8 @@ export default class EnvelopeFillingScreen extends Component {
 
         });
 
-        if (this.state.name && this.state.name.length>1) {
+        if (!this.state.photoIsSet) {
+            if (text && text.length > 1) {
             this.setState({
                 image: {uri: 'https://robohash.org/' + text}
             });
@@ -131,6 +147,7 @@ export default class EnvelopeFillingScreen extends Component {
            this.setState({
                image: defaultRobohash
            })
+        }
         }
     }
 
@@ -223,18 +240,37 @@ export default class EnvelopeFillingScreen extends Component {
         }
     }
 
-    _checkFields(){
+
+    _checkFields() {
+
         let name = false;
-        if (!this.state.name || this.state.name.trim().length < 2) {
-            this.setState({
-                nameUnderlineColor: 'red'
-            });
-            name = false;
-        } else{
-            this.setState({
-                nameUnderlineColor: '#e4e4e4'
-            });
-            name = true;
+
+        if (!this.state.photoIsSet) {
+            if (!this.state.name || this.state.name.trim().length < 1) {
+                this.setState({
+                    nameUnderlineColor: 'red',
+                    image: defaultRobohash
+                });
+                name = false;
+            } else {
+                this.setState({
+                    nameUnderlineColor: '#e4e4e4',
+                    image: {uri: 'https://robohash.org/' + this.state.name}
+                });
+                name = true;
+            }
+        } else {
+            if (!this.state.name || this.state.name.trim().length < 1) {
+                this.setState({
+                    nameUnderlineColor: 'red',
+                });
+                name = false;
+            } else {
+                this.setState({
+                    nameUnderlineColor: '#e4e4e4',
+                });
+                name = true;
+            }
         }
 
         let address = false;
@@ -243,7 +279,7 @@ export default class EnvelopeFillingScreen extends Component {
                 addressUnderlineColor: 'red'
             });
             address = false;
-        } else{
+        } else {
             this.setState({
                 addressUnderlineColor: '#e4e4e4'
             });
@@ -251,12 +287,12 @@ export default class EnvelopeFillingScreen extends Component {
         }
 
         let city = false;
-        if (!this.state.city||this.state.city.length<2){
+        if (!this.state.city || this.state.city.length < 2) {
             this.setState({
                 cityUnderlineColor: 'red'
             });
             city = false;
-        } else{
+        } else {
             this.setState({
                 cityUnderlineColor: '#e4e4e4'
             });
@@ -269,7 +305,7 @@ export default class EnvelopeFillingScreen extends Component {
                 countryUnderlineColor: 'red'
             });
             country = false;
-        } else{
+        } else {
             this.setState({
                 countryUnderlineColor: '#e4e4e4'
             });
@@ -282,7 +318,7 @@ export default class EnvelopeFillingScreen extends Component {
                 zipUnderlineColor: 'red'
             });
             zip = false;
-        } else{
+        } else {
             this.setState({
                 zipUnderlineColor: '#e4e4e4'
             });
@@ -296,7 +332,7 @@ export default class EnvelopeFillingScreen extends Component {
                 emailUnderlineColor: 'red'
             });
             email = false;
-        } else{
+        } else {
             this.setState({
                 emailUnderlineColor: '#e4e4e4'
             });
@@ -317,17 +353,18 @@ export default class EnvelopeFillingScreen extends Component {
         }
 
         let eulaAcepted = false;
-        if (!this.state.checked){
+        if (!this.state.checked) {
             this.setState({
                 checkboxBorderColor: 'red'
             });
             eulaAcepted = false;
-        } else{
+        } else {
             this.setState({
                 checkboxBorderColor: 'transparent'
             });
             eulaAcepted = true;
         }
+
 
         if (name && address && city && country && zip && email && description && eulaAcepted) {
             this._saveFields();
@@ -335,10 +372,11 @@ export default class EnvelopeFillingScreen extends Component {
                 envelopesData: envelopesArray,
                 block: block,
                 userEmails: userEmails,
-                scrollToFirst: false
+                scrollToFirst: false,
+                photo: this.state.image
             })
 
-        } else{
+        } else {
             Vibration.vibrate();
             if (!eulaAcepted && (name && address && city && country && zip && email && description)) {
                 ToastAndroid.showWithGravity('Вы должны принять соглашение', ToastAndroid.LONG, ToastAndroid.CENTER);
@@ -350,6 +388,7 @@ export default class EnvelopeFillingScreen extends Component {
         }
 
     }
+
 
     isEmailValid(email){
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -376,7 +415,7 @@ export default class EnvelopeFillingScreen extends Component {
             await AsyncStorage.setItem('email', JSON.stringify(currentEmail));
             await AsyncStorage.setItem('userEmails', JSON.stringify(userEmails));
             await AsyncStorage.setItem('description', JSON.stringify(this.state.description));
-            await AsyncStorage.setItem('photo', JSON.stringify(this.state.photo));
+            await AsyncStorage.setItem('photo', JSON.stringify(this.state.image));
 
     } catch (error) {}
     }
@@ -408,10 +447,9 @@ export default class EnvelopeFillingScreen extends Component {
                 console.log('User tapped custom button: ', response.customButton);
             }
             else {
-                let source = { uri: response.uri };
                 this.setState({
-                    image: source,
-                    proto: response.uri
+                    photoIsSet: true,
+                    image: {uri: response.uri}
                 });
             }
         });

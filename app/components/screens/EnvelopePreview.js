@@ -19,6 +19,8 @@ import RotatingView from './../assets/RotatingView';
 import * as ImageCache from "react-native-img-cache";
 import {CachedImage} from "react-native-img-cache";
 
+import CardView from 'react-native-cardview';
+
 import Orientation from 'react-native-orientation-locker';
 
 
@@ -34,11 +36,24 @@ let block = 1;
 
 let envelopeData;
 
+let photo;
+
 
 export default class EnvelopePreview extends Component {
 
     static navigationOptions = {
         header: false
+    };
+
+    onRefresh = () => {
+        this.reloadResources();
+    };
+    _navigateTo = (routeName, params) => {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({routeName, params})]
+        });
+        this.props.navigation.dispatch(resetAction)
     };
 
     constructor(props) {
@@ -48,6 +63,7 @@ export default class EnvelopePreview extends Component {
         block = this.props.navigation.state.params.block;
         userEmails = this.props.navigation.state.params.userEmails;
         scrollToFirst = this.props.navigation.state.params.scrollToFirst;
+        photo = this.props.navigation.state.params.photo;
 
         this.state = {
             refreshing: false,
@@ -61,9 +77,13 @@ export default class EnvelopePreview extends Component {
             zip: null,
             description: null,
 
-            photo: null,
+            photo: '',
 
-            usersEnvelope: []
+            usersEnvelope: [],
+
+            envelopeN: 0,
+            stampN: 0,
+            sealN: 0
 
         };
 
@@ -71,95 +91,12 @@ export default class EnvelopePreview extends Component {
 
     }
 
-
-    onRefresh = () => {
-        this.reloadResources();
-    };
-    _navigateTo = (routeName, params) => {
-        const resetAction = NavigationActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({routeName, params})]
-        });
-        this.props.navigation.dispatch(resetAction)
-    };
-
-    componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this._navigateTo('EnvelopeFillingScreen', {
-                envelopesData: envelopesArray,
-                block: block,
-                userEmails: userEmails,
-                scrollToFirst: false
-            });
-            return true;
-        });
-    }
-
     componentWillUnmount() {
         this.saveEnvelopeAppearance();
     }
 
-    async getEnvelopeAppearanceAndInfo() {
-        try {
-            let name = JSON.parse(await AsyncStorage.getItem('name'));
-            let address = JSON.parse(await AsyncStorage.getItem('address'));
-            let city = JSON.parse(await AsyncStorage.getItem('city'));
-            let country = JSON.parse(await AsyncStorage.getItem('country'));
-            let zip = JSON.parse(await AsyncStorage.getItem('zip'));
-            let description = JSON.parse(await AsyncStorage.getItem('description'));
-            let photo = JSON.parse(await AsyncStorage.getItem('photo'));
-
-            this.setState({
-                name: name,
-                address: address,
-                city: city,
-                country: country,
-                zip: zip,
-                description: description,
-                photo: photo,
-
-
-                usersEnvelope: [{
-                    type: "card",
-                    data: {
-                        id: 1,
-                        first_name: name,
-                        address: address,
-                        city: city,
-                        country_name: country,
-                        postal: zip,
-                        description: description,
-                        photo: photo
-                    },
-                    resources: {
-                        envelope: 'http://penpal.eken.live/Api/get-resource/?type=envelope',
-                        stamp: 'http://penpal.eken.live/Api/get-resource/?type=stamp',
-                        seal: 'http://penpal.eken.live/Api/get-resource/?type=seal'
-                    }
-                }],
-
-            });
-
-
-        } catch (message) {
-            console.log(message + '  ' + JSON.stringify(this.state.usersEnvelope))
-        }
-
-
-    }
-
-    async saveEnvelopeAppearance() {
-
-    }
-
-
-
     componentWillMount() {
-
-        this.loadresources();
-        this.getEnvelopeAppearanceAndInfo();
-
-
+        this.getEnvelopeAppearanceAndInfo()
     }
 
     componentDidMount() {
@@ -176,17 +113,99 @@ export default class EnvelopePreview extends Component {
         });
     }
 
-    async loadresources() {
+    async getEnvelopeAppearanceAndInfo() {
+        try {
+
+            let envelopeNumber = (Math.floor(Math.random() * 340));
+            let envelopeURL;
+            if (envelopeNumber < 10) {
+                envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=00' + envelopeNumber;
+            } else if (envelopeNumber > 9 && envelopeNumber < 100) {
+                envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=0' + envelopeNumber;
+            } else {
+                envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=' + envelopeNumber;
+            }
+
+            let stampNumber = (Math.floor(Math.random() * 340));
+            let stampURL;
+            if (stampNumber < 10) {
+                stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=00' + stampNumber;
+            } else if (stampNumber > 9 && stampNumber < 100) {
+                stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=0' + stampNumber;
+            } else {
+                stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=' + stampNumber;
+            }
+
+            let sealNumber = (Math.floor(Math.random() * 360));
+            let sealURL;
+            if (sealNumber < 10) {
+                sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=00' + sealNumber;
+            } else if (sealNumber > 9 && sealNumber < 100) {
+                sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=0' + sealNumber;
+            } else {
+                sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=' + sealNumber;
+            }
+
+
+
+            let name = JSON.parse(await AsyncStorage.getItem('name'));
+            let address = JSON.parse(await AsyncStorage.getItem('address'));
+            let city = JSON.parse(await AsyncStorage.getItem('city'));
+            let country = JSON.parse(await AsyncStorage.getItem('country'));
+            let zip = JSON.parse(await AsyncStorage.getItem('zip'));
+            let description = JSON.parse(await AsyncStorage.getItem('description'));
+
+
+            this.setState({
+                usersEnvelope: [{
+                    type: "card",
+                    data: {
+                        id: 1,
+                        first_name: name,
+                        address: address,
+                        city: city,
+                        country_name: country,
+                        postal: zip,
+                        description: description,
+                    },
+                    resources: {
+                        envelope: envelopeURL,
+                        stamp: stampURL,
+                        seal: sealURL
+                    }
+                }],
+
+                envelopeN: envelopeNumber,
+                stampN: stampNumber,
+                sealM: sealNumber
+
+            });
+
+        } catch (message) {
+            console.log(message + '  ' + JSON.stringify(this.state.usersEnvelope))
+        }
+
 
     }
 
-    renderEnvelope(envelope) {
-        let imageURL;
-        if (envelope.item.data.photo) {
-            imageURL = envelope.item.data.photo;
-        } else {
-            imageURL = 'https://robohash.org/' + envelope.item.data.first_name;
+    reloadResources() {
+        ImageCache.ImageCache.get().clear();
+        this.setState({refreshing: true, showProgress: true, usersEnvelope: []});
+        this.getEnvelopeAppearanceAndInfo();
+        this.setState({refreshing: false});
+    }
+
+    async saveEnvelopeAppearance() {
+        try {
+            await AsyncStorage.setItem('envelope', JSON.stringify(this.state.envelopeN));
+            await AsyncStorage.setItem('stamp', JSON.stringify(this.state.stampN));
+            await AsyncStorage.setItem('seal', JSON.stringify(this.state.sealN));
+
+        } catch (error) {
         }
+    }
+
+    renderEnvelope(envelope) {
 
         let stampRotation = (Math.floor(Math.random() * (10) - 5)) + "deg";
         let sealRotation = (Math.floor(Math.random() * (10) - 5)) + "deg";
@@ -228,7 +247,7 @@ export default class EnvelopePreview extends Component {
                             </View>
                         </View>
                         <View style={styles.topRightRow}>
-                            <Image source={{uri: imageURL}} style={styles.userPhoto}/>
+                            <Image source={photo} style={styles.userPhoto}/>
                             <CachedImage source={{uri: envelope.item.resources.stamp}} mutable style={{
                                 height: deviceHeight / 5,
                                 width: deviceWidth / 4,
@@ -249,7 +268,8 @@ export default class EnvelopePreview extends Component {
                             }}/>
                         </View>
                     </View>
-                    <View style={{flex: 2, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                    <View
+                        style={{flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row'}}>
                         <View style={{flex: 1, width: deviceWidth / 2}}/>
                         <View style={{
                             flex: 1,
@@ -260,28 +280,112 @@ export default class EnvelopePreview extends Component {
                             paddingBottom: deviceHeight * 0.1
                         }}>
                             <Image source={require('./../assets/quote.png')}
-                                   style={{height: deviceHeight / 25, resizeMode: 'contain'}}/>
+                                   style={{height: deviceHeight / 25, resizeMode: 'contain', marginTop: 25}}/>
                             <Text style={{
                                 color: '#212121',
                                 fontSize: 14,
                                 marginLeft: deviceWidth * 0.003125,
-                                width: deviceWidth / 2 - 48
+                                width: deviceWidth / 2 - 64,
+                                marginTop: 25
                             }}>
                                 {envelope.item.data.description}
                             </Text>
                         </View>
                     </View>
                 </CachedImage>
+
+
+                <CardView style={{
+                    backgroundColor: '#707070',
+                    alignItems: 'center', justifyContent: 'center',
+                    paddingHorizontal: 16, paddingVertical: 4,
+                    position: 'absolute',
+                    left: 8, top: 12,
+                }}
+                          cardElevation={2}
+                          cardMaxElevation={2}
+                          cornerRadius={4}>
+                    <Text style={{color: 'white', marginBottom: 8}}>
+                        Так будет выглядеть конверт после публикации
+                    </Text>
+                </CardView>
+
+
+                <View style={{
+                    flex: 0,
+                    position: 'absolute',
+                    left: 12, bottom: 12, flexDirection: 'row'
+                }}>
+                    <CardView style={{
+                        backgroundColor: '#EEEEEE',
+                        alignItems: 'center', justifyContent: 'center'
+                    }}
+                              cardElevation={2}
+                              cardMaxElevation={2}
+                              cornerRadius={4}>
+                        <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+                                          onPress={(e) => this._navigateTo('EnvelopeFillingScreen', {
+                                              envelopesData: envelopesArray,
+                                              block: block,
+                                              userEmails: userEmails,
+                                              scrollToFirst: false
+                                          })}>
+                            <Image source={require('./../assets/back.png')}
+                                   style={{
+                                       width: 40,
+                                       height: 40,
+                                       alignSelf: 'center',
+                                       marginBottom: 6,
+                                       marginRight: 6
+                                   }}/>
+                        </TouchableOpacity>
+                    </CardView>
+
+                    <CardView style={{
+                        backgroundColor: '#EEEEEE',
+                        alignItems: 'center', justifyContent: 'center', marginHorizontal: 4
+                    }}
+                              cardElevation={2}
+                              cardMaxElevation={2}
+                              cornerRadius={4}>
+                        <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+                                          onPress={(e) => this.reloadResources()}>
+                            <Image source={require('./../assets/refresh.png')}
+                                   style={{
+                                       width: 40,
+                                       height: 40,
+                                       alignSelf: 'center',
+                                       marginBottom: 6,
+                                       marginRight: 6
+                                   }}/>
+                        </TouchableOpacity>
+                    </CardView>
+
+                    <CardView style={{
+                        backgroundColor: '#EEEEEE',
+                        alignItems: 'center', justifyContent: 'center', marginHorizontal: 4
+                    }}
+                              cardElevation={2}
+                              cardMaxElevation={2}
+                              cornerRadius={4}>
+                        <TouchableOpacity
+                            style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8}}
+                            onPress={(e) => this._navigateTo('EnvelopeFillingScreen', {
+                                envelopesData: envelopesArray,
+                                block: block,
+                                userEmails: userEmails,
+                                scrollToFirst: false
+                            })}>
+                            <Text style={{marginBottom: 6, marginRight: 6, color: '#212121'}}>
+                                PUBLISH
+                            </Text>
+
+                        </TouchableOpacity>
+                    </CardView>
+                </View>
+
             </View>
         );
-    }
-
-    reloadResources() {
-        ImageCache.ImageCache.get().clear();
-        this.setState({refreshing: true, showProgress: true, usersEnvelope: []});
-        this.loadresources();
-        this.getEnvelopeAppearanceAndInfo();
-        this.setState({refreshing: false});
     }
 
     render() {
@@ -289,7 +393,6 @@ export default class EnvelopePreview extends Component {
 
         return (
             <View style={styles.container}>
-                <View style={{flex: 1}}>
                     <VirtualizedList
                         horizontal
                         pagingEnabled
@@ -312,22 +415,12 @@ export default class EnvelopePreview extends Component {
                         removeClippedSubviews={false}
                         style={{flex: 1}}
                     />
-                    <TouchableOpacity style={{
-                        flex: 0,
-                        width: 50,
-                        height: 20,
-                        backgroundColor: 'white',
-                        position: 'absolute',
-                        alignSelf: 'flex-end'
-                    }} onPress={(e) => this.reloadResources()}>
-                        <Text>reload</Text>
-                    </TouchableOpacity>
-                </View>
+
                 {this.state.showProgress &&
                 <Image source={require('./../assets/envelope_background_lanscape.png')} style={{
                     flex: 1,
                     width: deviceWidth,
-                    height: deviceHeight,
+                    height: deviceHeight - 24,
                     alignSelf: "stretch",
                     resizeMode: 'stretch',
                     alignItems: 'center',
@@ -383,12 +476,12 @@ const styles = StyleSheet.create({
     },
     topLeftRow: {
         height: deviceHeight / 1.9,
-        width: deviceWidth / 2,
+        width: deviceWidth / 2 - 82,
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         flexDirection: 'column',
-        paddingLeft: deviceWidth * 0.0125,
+        paddingLeft: deviceWidth * 0.0225,
         paddingTop: deviceHeight * 0.15
     },
     prefix: {
