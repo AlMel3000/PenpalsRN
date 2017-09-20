@@ -108,6 +108,7 @@ export default class EnvelopeFillingScreen extends Component {
                 address: JSON.parse(await AsyncStorage.getItem('address')),
                 city: JSON.parse(await AsyncStorage.getItem('city')),
                 country: JSON.parse(await AsyncStorage.getItem('country')),
+                cca2: JSON.parse(await AsyncStorage.getItem('cca2')),
                 zip: JSON.parse(await AsyncStorage.getItem('zip')),
                 email: JSON.parse(await AsyncStorage.getItem('email')),
                 description: JSON.parse(await AsyncStorage.getItem('description'))
@@ -221,7 +222,6 @@ export default class EnvelopeFillingScreen extends Component {
 
     _onFocusDescription(text) {
         this.setState({
-            description: text,
             descriptionUnderlineColor: '#1ca9c9',
         });
     }
@@ -415,7 +415,11 @@ export default class EnvelopeFillingScreen extends Component {
             await AsyncStorage.setItem('email', JSON.stringify(currentEmail));
             await AsyncStorage.setItem('userEmails', JSON.stringify(userEmails));
             await AsyncStorage.setItem('description', JSON.stringify(this.state.description));
-            await AsyncStorage.setItem('photo', JSON.stringify(this.state.image));
+            if (this.state.photoIsSet) {
+                await AsyncStorage.setItem('photo', JSON.stringify(this.state.image));
+            } else {
+                await AsyncStorage.setItem('photo', JSON.stringify(null));
+            }
 
     } catch (error) {}
     }
@@ -619,15 +623,22 @@ export default class EnvelopeFillingScreen extends Component {
                                onClick={()=>this._onConfirmationCheckboxStateChanged()}
                                isChecked={this.state.checked}
                            />
-                           <Text style={{color: '#212121', alignSelf: 'center'}}>
+                           <View style={{
+                               alignSelf: 'center',
+                               flexDirection: 'row',
+                               alignItems: 'flex-start',
+                               justifyContent: 'flex-start'
+                           }}>
+                               <Text style={{color: '#212121'}}>
                                Я принимаю условия
                            </Text>
                            <TouchableOpacity
                                onPress={(e) => this._showEULA()}>
-                               <Text style={{color: '#1ca9c9', alignSelf: 'center', marginVertical: 4, marginLeft:3, textDecorationLine:'underline'}}>
+                               <Text style={{color: '#1ca9c9', marginLeft: 4, textDecorationLine: 'underline'}}>
                                    соглашения
                                </Text>
                            </TouchableOpacity>
+                           </View>
                        </View>
 
                        <View style={{alignSelf:'stretch', flexDirection:'row', alignItems: 'flex-end', justifyContent: 'flex-end', padding:16}}>

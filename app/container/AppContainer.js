@@ -14,7 +14,7 @@ import PublicationScreen from '../components/screens/PublicationScreen'
 
 const ApplicationNavContainer = StackNavigator(
     {
-        Loading: { screen: LoadingScreen },
+        LoadingScreen: {screen: LoadingScreen},
         Main: { screen: Main },
         EnvelopeFillingScreen: {screen: EnvelopeFillingScreen},
         EulaScreen: {screen: EulaScreen},

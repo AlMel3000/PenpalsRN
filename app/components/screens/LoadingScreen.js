@@ -53,10 +53,11 @@ export default class LoadingScreen extends Component {
             let lastCardOfUser = JSON.parse(await AsyncStorage.getItem('lastCardOfUser'));
 
             userEmails = JSON.parse(await AsyncStorage.getItem('userEmails'));
+            console.log(userEmails);
 
-            if (savedBlock !== null) {
+            if (await savedBlock !== null) {
                 block = savedBlock;
-                if (lastCardOfUser === null) {
+                if (await lastCardOfUser === null) {
                     this.getCards();
                 } else {
                     this.getLastCardOfUser(lastCardOfUser);
@@ -75,44 +76,48 @@ export default class LoadingScreen extends Component {
     }
 
     async getLastCardOfUser(email: string) {
-
+        console.log("BOOM START");
         try {
-            let response = await fetch(('http://penpal.eken.live//Api/get-last-user-envelope/?email=' + email), {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
+            let response = await fetch(('http://penpal.eken.live/Api/get-last-user-envelope/?email=' + email), {
+                method: 'GET'
             });
             let res = JSON.parse(await response.text());
             console.log(JSON.stringify(res));
             if (response.status >= 200 && response.status < 300) {
 
-                envelopesArray = [{
-                    type: "card",
-                    data: {
-                        id: res.id,
-                        first_name: res.first_name,
-                        address: res.address,
-                        city: res.city,
-                        country_name: res.country_name,
-                        postal: res.postal,
-                        description: res.description,
-                        photo: res.image_id
-                    },
-                    resources: {envelope: res.envelope, stamp: res.stamp, seal: res.seal}
-                }];
+                if (!res.result) {
+                    let tempArray = [{
+                        type: "card",
+                        data: {
+                            id: res.id,
+                            first_name: res.first_name,
+                            address: res.address,
+                            city: res.city,
+                            country_name: res.country_name,
+                            postal: res.postal,
+                            email: res.email,
+                            description: res.description,
+                            photo: res.image_id,
+                            envelope: res.envelope, stamp: res.stamp, seal: res.seal
+                        },
+                        resources: {envelope: res.envelope, stamp: res.stamp, seal: res.seal}
+                    }];
+                    tempArray.concat(envelopesArray);
+                    envelopesArray = tempArray;
+                    console.log("BOOM 4");
+                }
 
-                this.getCards();
             }
         } catch (message) {
-            console.log(message);
-            this.getCards();
+            console.log("BOOM 5");
+            console.log('catch ' + message)
+        } finally {
+            console.log("BOOM 6 main");
+            this.getCards()
         }
     }
 
     async getCards() {
-        console.log("BOOM " + block);
         try {
             let response = await fetch(('http://penpal.eken.live/api/get-cards?page=' + block + '&perPage=' + ENVELOPES_AMOUNT_PER_BLOCK), {
                 method: 'GET',

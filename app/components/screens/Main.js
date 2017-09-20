@@ -152,6 +152,7 @@ export default class Main extends Component {
         envelopesArray = this.props.navigation.state.params.envelopesData;
         block = this.props.navigation.state.params.block;
         userEmails = this.props.navigation.state.params.userEmails;
+        console.log(userEmails);
         scrollToFirst = this.props.navigation.state.params.scrollToFirst;
 
         this.state = {
@@ -206,12 +207,12 @@ export default class Main extends Component {
 
             userEmails = JSON.parse(await AsyncStorage.getItem('userEmails'));
 
-            if (savedBlock!== null){
+            if (await savedBlock !== null) {
                 block = savedBlock;
-                if (lastCardOfUser===null){
-                    this.getCards();
-                } else{
+                if (await lastCardOfUser) {
                     this.getLastCardOfUser(lastCardOfUser);
+                } else {
+                    this.getCards();
                 }
 
             } else{
@@ -232,41 +233,48 @@ export default class Main extends Component {
     }
 
     async getLastCardOfUser(email: string) {
-
+        console.log("BOOM START");
         try {
-            let response = await fetch(('http://penpal.eken.live//Api/get-last-user-envelope/?email='+email), {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
+            let response = await fetch(('http://penpal.eken.live/Api/get-last-user-envelope/?email=' + email), {
+                method: 'GET'
             });
             let res = JSON.parse(await response.text());
             console.log(JSON.stringify(res));
             if (response.status >= 200 && response.status < 300) {
-                envelopesArray = [{
-                    type: "card",
-                    data: {
-                        id: res.id,
-                        first_name: res.first_name,
-                        address: res.address,
-                        city: res.city,
-                        country_name: res.country_name,
-                        postal: res.postal,
-                        description: res.description,
-                        photo: res.image_id
-                    },
-                    resources: {envelope: res.envelope, stamp: res.stamp, seal: res.seal}
-                }];
-                this.getCards();
+
+                if (!res.result) {
+                    let tempArray = [{
+                        type: "card",
+                        data: {
+                            id: res.id,
+                            first_name: res.first_name,
+                            address: res.address,
+                            city: res.city,
+                            country_name: res.country_name,
+                            postal: res.postal,
+                            email: res.email,
+                            description: res.description,
+                            photo: res.image_id,
+                            envelope: res.envelope, stamp: res.stamp, seal: res.seal
+                        },
+                        resources: {envelope: res.envelope, stamp: res.stamp, seal: res.seal}
+                    }];
+                    tempArray.concat(envelopesArray);
+                    envelopesArray = tempArray;
+                    console.log("BOOM 4");
+                }
+
             }
         } catch (message) {
+            console.log("BOOM 5");
+            console.log('catch ' + message)
+        } finally {
+            console.log("BOOM 6 main");
             this.getCards();
         }
     }
 
     async getCards() {
-        console.log("BOOM " +block);
         try {
             let response = await fetch(('http://penpal.eken.live/api/get-cards?page='+block+'&perPage='+ENVELOPES_AMOUNT_PER_BLOCK), {
                 method: 'GET',
@@ -336,9 +344,15 @@ export default class Main extends Component {
 
         let buttonIconColor = '#9e9e9e';
         let buttonTextColor = '#9e9e9e';
-        if (userEmails !== null && userEmails.indexOf(envelope.item.data.email) >= 0) {
+        let isButtonDisabled = true;
+        if (userEmails !== null && userEmails.includes(envelope.item.data.email)) {
             buttonIconColor = 'red';
             buttonTextColor = 'red';
+            isButtonDisabled = false;
+        } else {
+            buttonIconColor = '#9e9e9e';
+            buttonTextColor = '#9e9e9e';
+            isButtonDisabled = true;
         }
         let imageURL;
         if(envelope.item.data.photo < 0){
@@ -399,7 +413,7 @@ export default class Main extends Component {
 
 
         return (
-            <TouchableWithoutFeedback style={styles.viewPager}
+            <TouchableWithoutFeedback style={styles.viewPager} key={envelope.item.data.id}
                                       onPress={(e) => this.showButton()}>
                 <Image source={{uri: envelopeURL}} style={styles.envelopeImage}>
                 <View style={styles.topRow}>
@@ -474,7 +488,8 @@ export default class Main extends Component {
                                     <Icon2 name="envelope-o" style={styles.actionButtonIcon} />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
+                                              disabled={isButtonDisabled}>
                                 <Text style={{color: buttonTextColor, fontSize: 16, marginRight: deviceWidth*0.03125}}>{strings.delete_envelope}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="trash-o" style={{ fontSize: 22, color: buttonIconColor}} />
