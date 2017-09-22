@@ -188,6 +188,7 @@ export default class PublicationScreen extends Component {
                     .then((details) => {
                         console.log('DETAILS try' + JSON.stringify(details));
                         this.setState({details});
+                        this.publish(tariffID);
                         return InAppBilling.consumePurchase(tariffID)
                     })
                     .then((consumed) => {
@@ -368,20 +369,24 @@ export default class PublicationScreen extends Component {
                                             </Text>
 
                                         </CardView>
-                                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={require('./../assets/clock_757575.png')} style={{
-                                                flex: 1, marginVertical: 28
+                                                flex: 1, resizeMode: 'contain'
                                             }}/>
                                         </View>
+                                        <View style={{flex: 1}}/>
                                     </View>
 
                                     <View style={{height: 1, width: 144, marginRight: 2, backgroundColor: '#e0e0e0'}}/>
                                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={require('./../assets/credit-card-off_757575.png')} style={{
-                                                flex: 1, marginVertical: 28
+                                                flex: 1, resizeMode: 'contain'
                                             }}/>
                                         </View>
+                                        <View style={{flex: 1}}/>
                                         <Text style={{
                                             color: '#757575',
                                             fontSize: 20,
@@ -439,20 +444,24 @@ export default class PublicationScreen extends Component {
                                             </Text>
 
                                         </CardView>
-                                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={require('./../assets/clock_ad944a.png')} style={{
-                                                flex: 1, marginVertical: 28
+                                                flex: 1, resizeMode: 'contain'
                                             }}/>
                                         </View>
+                                        <View style={{flex: 1}}/>
                                     </View>
 
                                     <View style={{height: 1, width: 144, marginRight: 2, backgroundColor: '#e0e0e0'}}/>
                                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={require('./../assets/credit-card_ad944a.png')} style={{
-                                                flex: 1, marginVertical: 28
+                                                flex: 1, resizeMode: 'contain'
                                             }}/>
                                         </View>
+                                        <View style={{flex: 1}}/>
                                         <Text style={{
                                             color: '#ad944a',
                                             fontSize: 20,
@@ -510,20 +519,24 @@ export default class PublicationScreen extends Component {
                                             </Text>
 
                                         </CardView>
-                                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={require('./../assets/clock_cfa72e.png')} style={{
-                                                flex: 1, marginVertical: 28
+                                                flex: 1, resizeMode: 'contain'
                                             }}/>
                                         </View>
+                                        <View style={{flex: 1}}/>
                                     </View>
 
                                     <View style={{height: 1, width: 144, marginRight: 2, backgroundColor: '#e0e0e0'}}/>
                                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={require('./../assets/credit-card_cfa72e.png')} style={{
-                                                flex: 1, marginVertical: 28
+                                                flex: 1, resizeMode: 'contain'
                                             }}/>
                                         </View>
+                                        <View style={{flex: 1}}/>
                                         <Text style={{
                                             color: '#cfa72e',
                                             fontSize: 20,
@@ -581,20 +594,24 @@ export default class PublicationScreen extends Component {
                                             </Text>
 
                                         </CardView>
-                                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={require('./../assets/clock_f0bd24.png')} style={{
-                                                flex: 1, marginVertical: 28
+                                                flex: 1, resizeMode: 'contain'
                                             }}/>
                                         </View>
+                                        <View style={{flex: 1}}/>
                                     </View>
 
                                     <View style={{height: 1, width: 144, marginRight: 2, backgroundColor: '#e0e0e0'}}/>
                                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={require('./../assets/credit-card_f0bd24.png')} style={{
-                                                flex: 1, marginVertical: 28
+                                                flex: 1, resizeMode: 'contain'
                                             }}/>
                                         </View>
+                                        <View style={{flex: 1}}/>
                                         <Text style={{
                                             color: '#f0bd24',
                                             fontSize: 20,
@@ -653,20 +670,24 @@ export default class PublicationScreen extends Component {
                                             </Text>
 
                                         </CardView>
-                                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={require('./../assets/clock_ffc107.png')} style={{
-                                                flex: 1, marginVertical: 28
+                                                flex: 1, resizeMode: 'contain'
                                             }}/>
                                         </View>
+                                        <View style={{flex: 1}}/>
                                     </View>
 
                                     <View style={{height: 1, width: 144, marginRight: 2, backgroundColor: '#e0e0e0'}}/>
                                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={require('./../assets/credit-card_ffc107.png')} style={{
-                                                flex: 1, marginVertical: 28
+                                                flex: 1, resizeMode: 'contain'
                                             }}/>
                                         </View>
+                                        <View style={{flex: 1}}/>
                                         <Text style={{
                                             color: '#ffc107',
                                             fontSize: 20,
