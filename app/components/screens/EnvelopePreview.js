@@ -24,6 +24,8 @@ import CardView from 'react-native-cardview';
 import Orientation from 'react-native-orientation-locker';
 
 
+var TimerMixin = require('react-timer-mixin');
+
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 let envelopesArray = [];
@@ -200,10 +202,12 @@ export default class EnvelopePreview extends Component {
     }
 
     reloadResources() {
-        ImageCache.ImageCache.get().clear();
-        this.setState({refreshing: true, showProgress: true, usersEnvelope: []});
-        this.getEnvelopeAppearanceAndInfo();
-        this.setState({refreshing: false});
+        TimerMixin.requestAnimationFrame(() => {
+            ImageCache.ImageCache.get().clear();
+            this.setState({refreshing: true, showProgress: true, usersEnvelope: []});
+            this.getEnvelopeAppearanceAndInfo();
+            this.setState({refreshing: false});
+        })
     }
 
     async saveEnvelopeAppearance() {

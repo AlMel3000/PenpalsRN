@@ -28,6 +28,10 @@ import CheckBox from 'react-native-check-box'
 
 var ImagePicker = require('react-native-image-picker');
 
+
+var TimerMixin = require('react-timer-mixin');
+
+
 let defaultRobohash = require('./../assets/default_robohash.png');
 
 let options = {
@@ -245,158 +249,160 @@ export default class EnvelopeFillingScreen extends Component {
 
 
     _checkFields() {
+        TimerMixin.requestAnimationFrame(() => {
 
-        let name = false;
+            let name = false;
 
-        if (!this.state.photoIsSet) {
-            if (!this.state.name || this.state.name.trim().length < 1) {
+            if (!this.state.photoIsSet) {
+                if (!this.state.name || this.state.name.trim().length < 1) {
+                    this.setState({
+                        nameUnderlineColor: 'red',
+                        image: defaultRobohash
+                    });
+                    name = false;
+                } else {
+                    this.setState({
+                        nameUnderlineColor: '#e4e4e4',
+                        image: {uri: 'https://robohash.org/' + this.state.name}
+                    });
+                    name = true;
+                }
+            } else {
+                if (!this.state.name || this.state.name.trim().length < 1) {
+                    this.setState({
+                        nameUnderlineColor: 'red',
+                    });
+                    name = false;
+                } else {
+                    this.setState({
+                        nameUnderlineColor: '#e4e4e4',
+                    });
+                    name = true;
+                }
+            }
+
+            let address = false;
+            if (!this.state.address || this.state.address.trim().length < 3) {
                 this.setState({
-                    nameUnderlineColor: 'red',
-                    image: defaultRobohash
+                    addressUnderlineColor: 'red'
                 });
-                name = false;
+                address = false;
             } else {
                 this.setState({
-                    nameUnderlineColor: '#e4e4e4',
-                    image: {uri: 'https://robohash.org/' + this.state.name}
+                    addressUnderlineColor: '#e4e4e4'
                 });
-                name = true;
+                address = true;
             }
-        } else {
-            if (!this.state.name || this.state.name.trim().length < 1) {
+
+            let city = false;
+            if (!this.state.city || this.state.city.length < 2) {
                 this.setState({
-                    nameUnderlineColor: 'red',
+                    cityUnderlineColor: 'red'
                 });
-                name = false;
+                city = false;
             } else {
                 this.setState({
-                    nameUnderlineColor: '#e4e4e4',
+                    cityUnderlineColor: '#e4e4e4'
                 });
-                name = true;
+                city = true;
             }
-        }
 
-        let address = false;
-        if (!this.state.address || this.state.address.trim().length < 3) {
-            this.setState({
-                addressUnderlineColor: 'red'
-            });
-            address = false;
-        } else {
-            this.setState({
-                addressUnderlineColor: '#e4e4e4'
-            });
-            address = true;
-        }
-
-        let city = false;
-        if (!this.state.city || this.state.city.length < 2) {
-            this.setState({
-                cityUnderlineColor: 'red'
-            });
-            city = false;
-        } else {
-            this.setState({
-                cityUnderlineColor: '#e4e4e4'
-            });
-            city = true;
-        }
-
-        let country = false;
-        if (!this.state.country || this.state.country.trim().length < 2) {
-            this.setState({
-                countryUnderlineColor: 'red'
-            });
-            country = false;
-        } else {
-            this.setState({
-                countryUnderlineColor: '#e4e4e4'
-            });
-            country = true;
-        }
-
-        let zip = false;
-        if (!this.state.zip || this.state.zip.trim().length < 2) {
-            this.setState({
-                zipUnderlineColor: 'red'
-            });
-            zip = false;
-        } else {
-            this.setState({
-                zipUnderlineColor: '#e4e4e4'
-            });
-            zip = true;
-        }
-
-        let email = false;
-        let emailFieldText = this.state.email;
-        if (!emailFieldText || emailFieldText.trim().length < 2 || !this.isEmailValid(emailFieldText)) {
-            this.setState({
-                emailUnderlineColor: 'red'
-            });
-            email = false;
-        } else {
-            this.setState({
-                emailUnderlineColor: '#e4e4e4'
-            });
-            email = true;
-        }
-
-        let description = false;
-        if (!this.state.description || this.state.description.trim().length < 2) {
-            this.setState({
-                descriptionUnderlineColor: 'red'
-            });
-            description = false;
-        } else {
-            this.setState({
-                descriptionUnderlineColor: '#e4e4e4'
-            });
-            description = true;
-        }
-
-        let eulaAcepted = false;
-        if (!this.state.checked) {
-            this.setState({
-                checkboxBorderColor: 'red'
-            });
-            eulaAcepted = false;
-        } else {
-            this.setState({
-                checkboxBorderColor: 'transparent'
-            });
-            eulaAcepted = true;
-        }
-
-
-        if (name && address && city && country && zip && email && description && eulaAcepted) {
-            this._saveFields();
-            this._navigateTo('EnvelopePreview', {
-                envelopesData: envelopesArray,
-                block: block,
-                userEmails: userEmails,
-                scrollToFirst: false,
-                photo: this.state.image,
-                name: this.state.name,
-                address: this.state.address,
-                city: this.state.city,
-                country: this.state.country,
-                cca2: this.state.cca2,
-                zip: this.state.zip,
-                email: this.state.email,
-                description: this.state.description
-            })
-
-        } else {
-            Vibration.vibrate();
-            if (!eulaAcepted && (name && address && city && country && zip && email && description)) {
-                ToastAndroid.showWithGravity('Вы должны принять соглашение', ToastAndroid.LONG, ToastAndroid.CENTER);
-            } else if (!eulaAcepted && !(name && address && country && zip && email && description)) {
-                ToastAndroid.showWithGravity('Вы должны принять соглашение и корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
+            let country = false;
+            if (!this.state.country || this.state.country.trim().length < 2) {
+                this.setState({
+                    countryUnderlineColor: 'red'
+                });
+                country = false;
             } else {
-                ToastAndroid.showWithGravity('Вы должны корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
+                this.setState({
+                    countryUnderlineColor: '#e4e4e4'
+                });
+                country = true;
             }
-        }
+
+            let zip = false;
+            if (!this.state.zip || this.state.zip.trim().length < 2) {
+                this.setState({
+                    zipUnderlineColor: 'red'
+                });
+                zip = false;
+            } else {
+                this.setState({
+                    zipUnderlineColor: '#e4e4e4'
+                });
+                zip = true;
+            }
+
+            let email = false;
+            let emailFieldText = this.state.email;
+            if (!emailFieldText || emailFieldText.trim().length < 2 || !this.isEmailValid(emailFieldText)) {
+                this.setState({
+                    emailUnderlineColor: 'red'
+                });
+                email = false;
+            } else {
+                this.setState({
+                    emailUnderlineColor: '#e4e4e4'
+                });
+                email = true;
+            }
+
+            let description = false;
+            if (!this.state.description || this.state.description.trim().length < 2) {
+                this.setState({
+                    descriptionUnderlineColor: 'red'
+                });
+                description = false;
+            } else {
+                this.setState({
+                    descriptionUnderlineColor: '#e4e4e4'
+                });
+                description = true;
+            }
+
+            let eulaAcepted = false;
+            if (!this.state.checked) {
+                this.setState({
+                    checkboxBorderColor: 'red'
+                });
+                eulaAcepted = false;
+            } else {
+                this.setState({
+                    checkboxBorderColor: 'transparent'
+                });
+                eulaAcepted = true;
+            }
+
+
+            if (name && address && city && country && zip && email && description && eulaAcepted) {
+                this._saveFields();
+                this._navigateTo('EnvelopePreview', {
+                    envelopesData: envelopesArray,
+                    block: block,
+                    userEmails: userEmails,
+                    scrollToFirst: false,
+                    photo: this.state.image,
+                    name: this.state.name,
+                    address: this.state.address,
+                    city: this.state.city,
+                    country: this.state.country,
+                    cca2: this.state.cca2,
+                    zip: this.state.zip,
+                    email: this.state.email,
+                    description: this.state.description
+                })
+
+            } else {
+                Vibration.vibrate();
+                if (!eulaAcepted && (name && address && city && country && zip && email && description)) {
+                    ToastAndroid.showWithGravity('Вы должны принять соглашение', ToastAndroid.LONG, ToastAndroid.CENTER);
+                } else if (!eulaAcepted && !(name && address && country && zip && email && description)) {
+                    ToastAndroid.showWithGravity('Вы должны принять соглашение и корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
+                } else {
+                    ToastAndroid.showWithGravity('Вы должны корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
+                }
+            }
+        })
 
     }
 

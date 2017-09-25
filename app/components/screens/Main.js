@@ -10,12 +10,12 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View,
-    VirtualizedList
+    VirtualizedList,
 } from 'react-native';
 
 import React, {Component} from 'react';
-
 import CardView from 'react-native-cardview';
+
 
 import {NavigationActions} from 'react-navigation';
 
@@ -26,6 +26,9 @@ import RotatingView from './../assets/RotatingView';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
 import LocalizedStrings from 'react-native-localization';
+
+var TimerMixin = require('react-timer-mixin');
+
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
@@ -170,6 +173,7 @@ export default class Main extends Component {
         this.onScroll = this.onScroll.bind(this);
         this.saveStatus = this.saveStatus.bind(this);
         this.getUserStatus = this.getUserStatus.bind(this);
+        this.showButton = this.showButton.bind(this);
     }
 
 
@@ -513,18 +517,22 @@ export default class Main extends Component {
     }
 
     showButton(){
-        if (!this.state.showButton){
+
+        TimerMixin.requestAnimationFrame(() => {
+            if (!this.state.showButton) {
+                this.setState({
+                    showButton: true
+                })
+            } else {
+                this.setState({
+                    showButton: false
+                })
+            }
             this.setState({
-                showButton: true
+                showMenu: false
             })
-        } else{
-            this.setState({
-                showButton: false
-            })
-        }
-        this.setState({
-            showMenu: false
         })
+
     }
 
     onScroll(e) {
@@ -541,15 +549,17 @@ export default class Main extends Component {
     }
 
     onClickFab(){
-        if (!this.state.showMenu){
-            this.setState({
-                showMenu: true
-            })
-        } else{
-            this.setState({
-                showMenu: false
-            })
-        }
+        TimerMixin.requestAnimationFrame(() => {
+            if (!this.state.showMenu) {
+                this.setState({
+                    showMenu: true
+                })
+            } else {
+                this.setState({
+                    showMenu: false
+                })
+            }
+        })
     }
 
     async deleteOwnEnvelope(id: number) {
