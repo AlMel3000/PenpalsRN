@@ -38,6 +38,14 @@ let envelopeData;
 
 let photo;
 
+let name;
+let address;
+let city;
+let country;
+let cca2;
+let zip;
+let email;
+let description;
 
 export default class EnvelopePreview extends Component {
 
@@ -64,6 +72,15 @@ export default class EnvelopePreview extends Component {
         userEmails = this.props.navigation.state.params.userEmails;
         scrollToFirst = this.props.navigation.state.params.scrollToFirst;
         photo = this.props.navigation.state.params.photo;
+
+        name = this.props.navigation.state.params.name;
+        address = this.props.navigation.state.params.address;
+        city = this.props.navigation.state.params.city;
+        country = this.props.navigation.state.params.country;
+        cca2 = this.props.navigation.state.params.cca2;
+        zip = this.props.navigation.state.params.zip;
+        email = this.props.navigation.state.params.email;
+        description = this.props.navigation.state.params.description;
 
         this.state = {
             refreshing: false,
@@ -148,12 +165,6 @@ export default class EnvelopePreview extends Component {
 
 
 
-            let name = JSON.parse(await AsyncStorage.getItem('name'));
-            let address = JSON.parse(await AsyncStorage.getItem('address'));
-            let city = JSON.parse(await AsyncStorage.getItem('city'));
-            let country = JSON.parse(await AsyncStorage.getItem('country'));
-            let zip = JSON.parse(await AsyncStorage.getItem('zip'));
-            let description = JSON.parse(await AsyncStorage.getItem('description'));
 
 
             this.setState({
@@ -177,7 +188,7 @@ export default class EnvelopePreview extends Component {
 
                 envelopeN: envelopeNumber,
                 stampN: stampNumber,
-                sealM: sealNumber
+                sealN: sealNumber
 
             });
 

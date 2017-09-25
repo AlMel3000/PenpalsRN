@@ -1,4 +1,5 @@
 import {
+    Alert,
     AsyncStorage,
     BackHandler,
     Dimensions,
@@ -489,7 +490,8 @@ export default class Main extends Component {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
-                                              disabled={isButtonDisabled}>
+                                              disabled={isButtonDisabled}
+                                              onPress={(e) => this.showDeletionWarning(envelope.item.data.id)}>
                                 <Text style={{color: buttonTextColor, fontSize: 16, marginRight: deviceWidth*0.03125}}>{strings.delete_envelope}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="trash-o" style={{ fontSize: 22, color: buttonIconColor}} />
@@ -548,6 +550,49 @@ export default class Main extends Component {
                 showMenu: false
             })
         }
+    }
+
+    async deleteOwnEnvelope(id: number) {
+        try {
+            this.setState({
+                showButton: false,
+                showMenu: false
+            });
+            let response = await fetch(('http://penpal.eken.live/Api/delete/?id=' + id), {
+                method: 'GET'
+            });
+            let res = JSON.parse(await response.text());
+            console.log(JSON.stringify(res));
+            if (response.status >= 200 && response.status < 300) {
+
+                if (res.result === 0) {
+                    this.setState({
+                        showProgress: true,
+                    });
+                    envelopesArray = [];
+                    if (page > 0) {
+                        page--;
+                    }
+                    this.getCards();
+                }
+
+            }
+        } catch (message) {
+            console.log("BOOM 5");
+            console.log('catch ' + message)
+        }
+    }
+
+    showDeletionWarning(id: number) {
+        Alert.alert(
+            'Удалить конверт?',
+            'Восстановить конверт будет невозможно, даже если он был оплачен.',
+            [
+                {text: 'ДА', onPress: () => this.deleteOwnEnvelope(id)},
+                {text: 'ОТМЕНА'},
+            ],
+            {cancelable: true}
+        )
     }
 
     _onScrollEnd() {

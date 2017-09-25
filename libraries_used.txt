@@ -27,3 +27,6 @@ react-native link
 npm install react-native-img-cache --save
 
 npm install --save react-native-billing
+
+
+npm i babel-plugin-transform-remove-console --save

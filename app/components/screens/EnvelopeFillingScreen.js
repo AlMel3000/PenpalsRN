@@ -12,9 +12,12 @@ import {
     TextInput,
     ToastAndroid,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     Vibration,
     View
 } from 'react-native';
+
+import DismissKeyboard from 'dismissKeyboard';
 
 import Orientation from 'react-native-orientation-locker';
 
@@ -373,7 +376,15 @@ export default class EnvelopeFillingScreen extends Component {
                 block: block,
                 userEmails: userEmails,
                 scrollToFirst: false,
-                photo: this.state.image
+                photo: this.state.image,
+                name: this.state.name,
+                address: this.state.address,
+                city: this.state.city,
+                country: this.state.country,
+                cca2: this.state.cca2,
+                zip: this.state.zip,
+                email: this.state.email,
+                description: this.state.description
             })
 
         } else {
@@ -471,7 +482,18 @@ export default class EnvelopeFillingScreen extends Component {
         return (
                <Image source={require('./../assets/envelope_background.png')} style={{ flex: 1, width: null, height: null, resizeMode: 'stretch'}}>
                <ScrollView showsVerticalScrollIndicator={false}>
-                   <View style={{flex: 1, padding: 16, justifyContent: 'center', alignItems:'flex-start', alignSelf:'stretch'}}>
+                   <TouchableWithoutFeedback
+                       style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start', alignSelf: 'stretch'}}
+                       onPress={() => {
+                           DismissKeyboard()
+                       }}>
+                       <View style={{
+                           flex: 1,
+                           padding: 16,
+                           justifyContent: 'center',
+                           alignItems: 'flex-start',
+                           alignSelf: 'stretch'
+                       }}>
                        <Text style={{color: '#212121', alignSelf: 'center', marginVertical:16}}>
                            Specify correct mailing address to receive letters
                        </Text>
@@ -651,7 +673,8 @@ export default class EnvelopeFillingScreen extends Component {
                                <Text style={{fontSize:16, color:'#7299BF'}}>ДАЛЕЕ</Text>
                            </TouchableOpacity>
                        </View>
-                   </View>
+                       </View>
+                   </TouchableWithoutFeedback>
                </ScrollView>
                </Image>
         );

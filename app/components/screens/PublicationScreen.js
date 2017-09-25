@@ -269,7 +269,6 @@ export default class PublicationScreen extends Component {
     }
 
     async getLastCardOfUser(email: string) {
-        console.log("BOOM START");
         try {
             let response = await fetch(('http://penpal.eken.live/Api/get-last-user-envelope/?email=' + email), {
                 method: 'GET'
@@ -297,15 +296,13 @@ export default class PublicationScreen extends Component {
                     }];
                     tempArray.concat(envelopesArray);
                     envelopesArray = tempArray;
-                    console.log("BOOM 4");
+
                 }
 
             }
         } catch (message) {
-            console.log("BOOM 5");
             console.log('catch ' + message)
         } finally {
-            console.log("BOOM 6 main");
             this._navigateTo('Main', {
                 envelopesData: envelopesArray,
                 block: block,
