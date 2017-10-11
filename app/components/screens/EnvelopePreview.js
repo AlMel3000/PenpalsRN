@@ -227,7 +227,15 @@ export default class EnvelopePreview extends Component {
             block: block,
             userEmails: userEmails,
             scrollToFirst: false,
-            photo: photo
+            photo: photo,
+            name: name,
+            address: address,
+            city: city,
+            country: country,
+            cca2: cca2,
+            zip: zip,
+            email: email,
+            description: description
         })
     }
 

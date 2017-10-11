@@ -46,6 +46,16 @@ let envelopeData;
 
 let photo;
 
+let name;
+let address;
+let city;
+let country;
+let cca2;
+let zip;
+let email;
+let description;
+
+
 
 export default class PublicationScreen extends Component {
 
@@ -66,25 +76,6 @@ export default class PublicationScreen extends Component {
         this.getEnvelopeAppearanceAndInfo();
     }
 
-    componentDidMount() {
-        Orientation.unlockAllOrientations();
-        Orientation.lockToLandscapeLeft();
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this._navigateTo('EnvelopePreview', {
-                envelopesData: envelopesArray,
-                block: block,
-                userEmails: userEmails,
-                scrollToFirst: false,
-                photo: photo
-            });
-            return true;
-        });
-    }
-
-    componentWillUnmount() {
-        InAppBilling.close();
-    }
-
     constructor(props) {
         super(props);
         envelopeData = this.props.navigation.state.params.envelopesData;
@@ -93,6 +84,15 @@ export default class PublicationScreen extends Component {
         userEmails = this.props.navigation.state.params.userEmails;
         scrollToFirst = this.props.navigation.state.params.scrollToFirst;
         photo = this.props.navigation.state.params.photo;
+
+        name = this.props.navigation.state.params.name;
+        address = this.props.navigation.state.params.address;
+        city = this.props.navigation.state.params.city;
+        country = this.props.navigation.state.params.country;
+        cca2 = this.props.navigation.state.params.cca2;
+        zip = this.props.navigation.state.params.zip;
+        email = this.props.navigation.state.params.email;
+        description = this.props.navigation.state.params.description;
 
         this.state = {
 
@@ -109,6 +109,34 @@ export default class PublicationScreen extends Component {
 
         };
 
+    }
+
+    componentWillUnmount() {
+        InAppBilling.close();
+    }
+
+    componentDidMount() {
+        Orientation.unlockAllOrientations();
+        Orientation.lockToLandscapeLeft();
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this._navigateTo('EnvelopePreview', {
+                envelopesData: envelopesArray,
+                block: block,
+                userEmails: userEmails,
+                scrollToFirst: false,
+                photo: photo,
+
+                name: name,
+                address: address,
+                city: city,
+                country: country,
+                cca2: cca2,
+                zip: zip,
+                email: email,
+                description: description
+            });
+            return true;
+        });
     }
 
     getProductPrice() {
@@ -159,16 +187,9 @@ export default class PublicationScreen extends Component {
         try {
             this.setState({
                 id: 1,
-                first_name: JSON.parse(await AsyncStorage.getItem('name')),
-                address: JSON.parse(await AsyncStorage.getItem('address')),
-                city: JSON.parse(await AsyncStorage.getItem('city')),
-                cca2: JSON.parse(await AsyncStorage.getItem('cca2')),
-                postal: JSON.parse(await AsyncStorage.getItem('zip')),
-                description: JSON.parse(await AsyncStorage.getItem('description')),
 
                 pic: JSON.parse(await AsyncStorage.getItem('photo')),
 
-                email: JSON.parse(await AsyncStorage.getItem('email')),
                 envelope: JSON.parse(await AsyncStorage.getItem('envelope')),
                 stamp: JSON.parse(await AsyncStorage.getItem('stamp')),
                 seal: JSON.parse(await AsyncStorage.getItem('seal')),
@@ -222,14 +243,14 @@ export default class PublicationScreen extends Component {
                 showProgress: true
             });
             const data = new FormData();
-            data.append('first_name', this.state.first_name);
+            data.append('first_name', name);
             data.append('gender', 2);
-            data.append('address', this.state.address);
-            data.append('city', this.state.city);
-            data.append('country', this.state.cca2);
-            data.append('postal', this.state.postal);
-            data.append('description', this.state.description);
-            data.append('email', this.state.email);
+            data.append('address', address);
+            data.append('city', city);
+            data.append('country', cca2);
+            data.append('postal', zip);
+            data.append('description', description);
+            data.append('email', email);
             data.append('envelope', this.state.envelope);
             data.append('stamp', this.state.stamp);
             data.append('seal', this.state.seal);
@@ -256,14 +277,14 @@ export default class PublicationScreen extends Component {
 
         } finally {
             this.saveAndGo()
-                .then(this.getLastCardOfUser(this.state.email))
+                .then(this.getLastCardOfUser(email))
         }
     }
 
     async saveAndGo() {
         console.log('saveAndGo ' + this.state.email);
-        await AsyncStorage.setItem('lastCardOfUser', JSON.stringify(this.state.email));
-        userEmails = userEmails + ',' + this.state.email;
+        await AsyncStorage.setItem('lastCardOfUser', JSON.stringify(email));
+        userEmails = userEmails + ',' + email;
         await AsyncStorage.setItem('userEmails', JSON.stringify(userEmails));
 
     }
