@@ -480,7 +480,13 @@ export default class Main extends Component {
                                   cardElevation={2}
                                   cardMaxElevation={2}
                                   cornerRadius={2}>
-                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
+                                              onPress={(e) => this._navigateTo('SendingDeparture', {
+                                                  envelopesData: envelopesArray,
+                                                  block: block,
+                                                  userEmails: userEmails,
+                                                  scrollToFirst: false
+                                              })}>
                                 <Text style={styles.actionButtonText}>{strings.send_letter}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="send-o" style={styles.actionButtonIcon} />

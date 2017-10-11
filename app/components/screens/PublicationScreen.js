@@ -268,7 +268,10 @@ export default class PublicationScreen extends Component {
                 method: 'post',
                 body: data
             }).then(res => {
-                console.log(res._bodyText);
+                if (res.status === 200) {
+                    AsyncStorage.multiRemove(['name', 'address', 'city', 'country', 'cca2', 'zip', 'description', 'email', 'photo']);
+                }
+
             });
 
 
