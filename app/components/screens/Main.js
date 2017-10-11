@@ -1,23 +1,34 @@
 import {
-    View,
-    Text,
-    Image,
-    Dimensions,
-    StyleSheet,
-    ActivityIndicator,
+    Alert,
     AsyncStorage,
+    BackHandler,
+    Dimensions,
+    Image,
+    Linking,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
     VirtualizedList,
-    TouchableOpacity
 } from 'react-native';
 
 import React, {Component} from 'react';
+import CardView from 'react-native-cardview';
 
-import CardView from 'react-native-cardview'
 
-import Icon from 'react-native-vector-icons/Ionicons';
+import {NavigationActions} from 'react-navigation';
+
+import Orientation from 'react-native-orientation-locker';
+
+import RotatingView from './../assets/RotatingView';
+
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
 import LocalizedStrings from 'react-native-localization';
+
+var TimerMixin = require('react-timer-mixin');
+
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
@@ -31,7 +42,9 @@ const ENVELOPES_AMOUNT_PER_BLOCK = 50;
 let savedBlock;
 let blocksAvailable;
 
-let userEmails;
+let scrollToFirst = false;
+
+let userEmails = [];
 
 let page = 0;
 let block = 1;
@@ -140,12 +153,18 @@ export default class Main extends Component {
 
     constructor(props){
         super(props);
+        envelopesArray = this.props.navigation.state.params.envelopesData;
+        block = this.props.navigation.state.params.block;
+        userEmails = this.props.navigation.state.params.userEmails;
+        console.log(userEmails);
+        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
 
         this.state = {
             showProgress: true,
+            showError: false,
             refreshing: false,
             showButton: false,
-            showMenu: false
+            showMenu: false,
         };
 
 
@@ -154,13 +173,31 @@ export default class Main extends Component {
         this.onScroll = this.onScroll.bind(this);
         this.saveStatus = this.saveStatus.bind(this);
         this.getUserStatus = this.getUserStatus.bind(this);
+        this.showButton = this.showButton.bind(this);
     }
 
 
 
     componentWillMount() {
-        this.getUserStatus();
+        if (envelopesArray.length<=0){
+            this.getUserStatus();
+        } else {
+            this.setState({
+                showProgress: false
+            })
+        }
+        if (scrollToFirst){
+            page = 0;
+        }
 
+    }
+
+    componentDidMount(){
+        Orientation.lockToLandscapeLeft();
+        BackHandler.addEventListener('hardwareBackPress', () =>{
+            BackHandler.exitApp();
+            return true;
+        });
     }
 
     componentWillUnmount(){
@@ -175,12 +212,12 @@ export default class Main extends Component {
 
             userEmails = JSON.parse(await AsyncStorage.getItem('userEmails'));
 
-            if (savedBlock!== null){
+            if (await savedBlock !== null) {
                 block = savedBlock;
-                if (lastCardOfUser===null){
-                    this.getCards();
-                } else{
+                if (await lastCardOfUser) {
                     this.getLastCardOfUser(lastCardOfUser);
+                } else {
+                    this.getCards();
                 }
 
             } else{
@@ -189,7 +226,7 @@ export default class Main extends Component {
             }
 
         } catch (message) {
-            console.log(message)
+            this.getCards();
         }
 
     }
@@ -201,30 +238,48 @@ export default class Main extends Component {
     }
 
     async getLastCardOfUser(email: string) {
-
+        console.log("BOOM START");
         try {
-            let response = await fetch(('http://penpal.eken.live//Api/get-last-user-envelope/?email='+email), {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
+            let response = await fetch(('http://penpal.eken.live/Api/get-last-user-envelope/?email=' + email), {
+                method: 'GET'
             });
             let res = JSON.parse(await response.text());
             console.log(JSON.stringify(res));
             if (response.status >= 200 && response.status < 300) {
 
-                envelopesArray = [{type: "card", data:{id: res.id, first_name: res.first_name, address: res.address, city: res.city, country_name: res.country_name, postal: res.postal, description: res.description,  photo: res.image_id}, resources:{envelope: res.envelope, stamp: res.stamp, seal: res.seal}}];
+                if (!res.result) {
+                    let tempArray = [{
+                        type: "card",
+                        data: {
+                            id: res.id,
+                            first_name: res.first_name,
+                            address: res.address,
+                            city: res.city,
+                            country_name: res.country_name,
+                            postal: res.postal,
+                            email: res.email,
+                            description: res.description,
+                            photo: res.image_id,
+                            envelope: res.envelope, stamp: res.stamp, seal: res.seal
+                        },
+                        resources: {envelope: res.envelope, stamp: res.stamp, seal: res.seal}
+                    }];
+                    tempArray.concat(envelopesArray);
+                    envelopesArray = tempArray;
+                    console.log("BOOM 4");
+                }
 
-                this.getCards();
             }
         } catch (message) {
-            console.log(message)
+            console.log("BOOM 5");
+            console.log('catch ' + message)
+        } finally {
+            console.log("BOOM 6 main");
+            this.getCards();
         }
     }
 
     async getCards() {
-        console.log("BOOM " +block);
         try {
             let response = await fetch(('http://penpal.eken.live/api/get-cards?page='+block+'&perPage='+ENVELOPES_AMOUNT_PER_BLOCK), {
                 method: 'GET',
@@ -262,11 +317,20 @@ export default class Main extends Component {
                 }
 
                 this.setState({
-                    showProgress: false
+                    showProgress: false,
+                    showError: false
+                });
+            } else {
+                this.setState({
+                    showProgress: false,
+                    showError: true
                 });
             }
         } catch (message) {
-            console.log(message)
+            this.setState({
+                showProgress: false,
+                showError: true
+            });
         }
     }
 
@@ -285,9 +349,15 @@ export default class Main extends Component {
 
         let buttonIconColor = '#9e9e9e';
         let buttonTextColor = '#9e9e9e';
-        if (userEmails!== null && userEmails.includes(envelope.data.email)>=0){
+        let isButtonDisabled = true;
+        if (userEmails !== null && userEmails.includes(envelope.item.data.email)) {
             buttonIconColor = 'red';
             buttonTextColor = 'red';
+            isButtonDisabled = false;
+        } else {
+            buttonIconColor = '#9e9e9e';
+            buttonTextColor = '#9e9e9e';
+            isButtonDisabled = true;
         }
         let imageURL;
         if(envelope.item.data.photo < 0){
@@ -348,9 +418,9 @@ export default class Main extends Component {
 
 
         return (
-            <TouchableOpacity style={styles.viewPager}
-                              onPress={(e) => this.showButton()}>
-                <Image source={{uri: envelopeURL}} style={styles.envelopeImage}/>
+            <TouchableWithoutFeedback style={styles.viewPager} key={envelope.item.data.id}
+                                      onPress={(e) => this.showButton()}>
+                <Image source={{uri: envelopeURL}} style={styles.envelopeImage}>
                 <View style={styles.topRow}>
                     <View style={styles.topLeftRow}>
                         <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', }}>
@@ -386,11 +456,19 @@ export default class Main extends Component {
                         }}/>
                     </View>
                 </View>
-                <View style={{flex: 1,  justifyContent:'center', alignItems:'center', flexDirection: 'row'}}>
+                    <View
+                        style={{flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row'}}>
                     <View style={{flex: 1, width: deviceWidth/2}}/>
-                    <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:deviceHeight*0.1, paddingRight:deviceWidth*0.0125}}>
-                        <Image source={require('./../assets/quote.png')} style={{height: deviceHeight/25,resizeMode:'contain'}}/>
-                        <Text style={{color: '#212121', fontSize: 14, marginRight:deviceWidth*0.02, marginLeft: deviceWidth*0.003125}}>
+                    <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:deviceHeight*0.1}}>
+                        <Image source={require('./../assets/quote.png')}
+                               style={{height: deviceHeight / 25, resizeMode: 'contain', marginTop: 25}}/>
+                        <Text style={{
+                            color: '#212121',
+                            fontSize: 14,
+                            marginLeft: deviceWidth * 0.003125,
+                            width: deviceWidth / 2 - 64,
+                            marginTop: 25
+                        }}>
                             {envelope.item.data.description}
                         </Text>
                     </View>
@@ -408,13 +486,16 @@ export default class Main extends Component {
                                     <Icon2 name="send-o" style={styles.actionButtonIcon} />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}
+                                              onPress={(e) => this._navigateTo('EnvelopeFillingScreen', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false})}>
                                 <Text style={styles.actionButtonText}>{strings.create_envelope}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="envelope-o" style={styles.actionButtonIcon} />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
+                                              disabled={isButtonDisabled}
+                                              onPress={(e) => this.showDeletionWarning(envelope.item.data.id)}>
                                 <Text style={{color: buttonTextColor, fontSize: 16, marginRight: deviceWidth*0.03125}}>{strings.delete_envelope}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="trash-o" style={{ fontSize: 22, color: buttonIconColor}} />
@@ -430,23 +511,28 @@ export default class Main extends Component {
                         <TouchableOpacity style={{backgroundColor:'#ff4444', borderRadius: 64, height:deviceHeight*0.155, width: deviceHeight*0.155}}
                                           onPress={(e) => this.onClickFab()}/>
                     </View>}
-            </TouchableOpacity>
+                </Image>
+            </TouchableWithoutFeedback>
         );
     }
 
     showButton(){
-        if (!this.state.showButton){
+
+        TimerMixin.requestAnimationFrame(() => {
+            if (!this.state.showButton) {
+                this.setState({
+                    showButton: true
+                })
+            } else {
+                this.setState({
+                    showButton: false
+                })
+            }
             this.setState({
-                showButton: true
+                showMenu: false
             })
-        } else{
-            this.setState({
-                showButton: false
-            })
-        }
-        this.setState({
-            showMenu: false
         })
+
     }
 
     onScroll(e) {
@@ -463,15 +549,60 @@ export default class Main extends Component {
     }
 
     onClickFab(){
-        if (!this.state.showMenu){
+        TimerMixin.requestAnimationFrame(() => {
+            if (!this.state.showMenu) {
+                this.setState({
+                    showMenu: true
+                })
+            } else {
+                this.setState({
+                    showMenu: false
+                })
+            }
+        })
+    }
+
+    async deleteOwnEnvelope(id: number) {
+        try {
             this.setState({
-                showMenu: true
-            })
-        } else{
-            this.setState({
+                showButton: false,
                 showMenu: false
-            })
+            });
+            let response = await fetch(('http://penpal.eken.live/Api/delete/?id=' + id), {
+                method: 'GET'
+            });
+            let res = JSON.parse(await response.text());
+            console.log(JSON.stringify(res));
+            if (response.status >= 200 && response.status < 300) {
+
+                if (res.result === 0) {
+                    this.setState({
+                        showProgress: true,
+                    });
+                    envelopesArray = [];
+                    if (page > 0) {
+                        page--;
+                    }
+                    this.getCards();
+                }
+
+            }
+        } catch (message) {
+            console.log("BOOM 5");
+            console.log('catch ' + message)
         }
+    }
+
+    showDeletionWarning(id: number) {
+        Alert.alert(
+            'Удалить конверт?',
+            'Восстановить конверт будет невозможно, даже если он был оплачен.',
+            [
+                {text: 'ДА', onPress: () => this.deleteOwnEnvelope(id)},
+                {text: 'ОТМЕНА'},
+            ],
+            {cancelable: true}
+        )
     }
 
     _onScrollEnd() {
@@ -501,16 +632,99 @@ export default class Main extends Component {
             .catch((e)=> console.log.e)
     };
 
+    _navigateTo = (routeName, params) => {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({routeName, params})]
+        });
+        this.props.navigation.dispatch(resetAction)
+    };
 
 
     render() {
         return (
             <View style={styles.container}>
                 {this.state.showProgress&&
-                <View style = {{alignItems: 'center', justifyContent: 'center', flex:1, flexDirection: 'row'}}>
-                    <ActivityIndicator size={55} style = {{alignItems: 'center', justifyContent: 'center', flex:1}}/>
-                </View>}
-                {! this.state.showProgress&&
+                <Image source={require('./../assets/envelope_background_lanscape.png')} style={{
+                    flex: 1,
+                    width: deviceWidth,
+                    height: deviceHeight,
+                    alignSelf: "stretch",
+                    resizeMode: 'stretch',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <RotatingView
+                        style={{height: 48, width: 48, alignSelf: 'center'}}
+                        duration={3000}
+                        onFinishedAnimating={( (status) => {
+                            console.log(status)
+                        } )}>
+                        <Image
+                            style={{height: '100%', width: '100%', resizeMode: 'contain'}}
+                            resizeMode='contain'
+                            source={require("./../assets/enveolopes_loading_48_px.png")}/>
+                    </RotatingView>
+                </Image>}
+                {this.state.showError &&
+                <Image source={require('./../assets/envelope_background_lanscape.png')} style={{
+                    flex: 1,
+                    width: deviceWidth,
+                    height: deviceHeight,
+                    alignSelf: "stretch",
+                    resizeMode: 'stretch',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <View style={{
+                        flex: 1,
+                        alignSelf: 'center',
+                        width: deviceWidth - 64,
+                        margin: 64,
+                        flexDirection: 'column',
+                        justifyContent: 'flex-start',
+                        alignItems: 'flex-start'
+                    }}>
+                        <Text
+                            style={{color: '#212121', flex: 1, fontSize: 16,}}>
+                            {'Что-то пошло не так.\n\nПожалуйста проверьте интернет соединение или зайдите к нам позже'}
+                        </Text>
+                        <TouchableOpacity
+                            style={{flex: 1, flexDirection: 'row', alignSelf: 'center'}}
+                            onPress={(e) => Linking.openURL('mailto:119@penpal.eken.live?subject=From Penpals app&body=Здравствуйте!\n' +
+                                '\n' +
+                                'Пожалуйста не изменяйте тему письма.\n' +
+                                '\n' +
+                                'Мы как и все очень любим Google Translate :)\n' +
+                                'И как и все умеем им пользоваться.\n' +
+                                'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n' +
+                                '\n' +
+                                'С наилучшими пожеланиями, Ваш Penpals.\n' +
+                                '\n---------------------------------------------------------------')}>
+                            <Text
+                                style={{
+                                    flex: 3,
+                                    alignSelf: 'center',
+                                    color: '#212121',
+                                    width: deviceWidth,
+                                    fontSize: 16
+                                }}>
+                                {'По любым вопросам Вы можете написать нам:'}
+                            </Text>
+                            <Text
+                                style={{
+                                    flex: 2,
+                                    alignSelf: 'center',
+                                    color: '#1ca9c9',
+                                    width: deviceWidth,
+                                    fontSize: 16
+                                }}>
+                                {'119@penpal.eken.live'}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </Image>}
+                {!( this.state.showProgress || this.state.showError) &&
                 <VirtualizedList
                     horizontal
                     pagingEnabled
@@ -552,38 +766,35 @@ const styles = StyleSheet.create({
         backgroundColor:'#e4e4e4',
     },
     viewPager: {
-        width: deviceWidth,
-        height: deviceHeight,
+        flex:1,
+        width: null, height: null,
         alignSelf: 'center',
         paddingVertical:deviceHeight*0.025,
-        paddingHorizontal: deviceWidth*0.034,
 
     },
     page:{
-        width: (deviceWidth - (deviceWidth*0.00625)),
-        height: deviceHeight - (deviceHeight*0.0445),
+        flex:1,
     },
     topRow:{
-        height: deviceHeight/1.9,
+        flex:3,
         justifyContent:'center',
         alignItems:'center',
         flexDirection: 'row'
     },
     envelopeImage: {
-        width: deviceWidth* 0.994,
-        height: deviceHeight,
+        flex:1,
+        width: null,
+        height: null,
         resizeMode: 'contain',
-        position:'absolute',
-        marginLeft: deviceWidth*0.003125,
-        marginRight:deviceWidth*0.003125
     },
     topLeftRow:{
         height: deviceHeight/1.9,
+        width: deviceWidth / 2 - 82,
         flex: 1,
         justifyContent:'flex-start',
         alignItems:'flex-start',
         flexDirection: 'column',
-        paddingLeft: deviceWidth*0.0125,
+        paddingLeft: deviceWidth * 0.0225,
         paddingTop:deviceHeight*0.15
     },
     prefix:{
