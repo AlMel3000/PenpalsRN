@@ -44,7 +44,7 @@ let block = 1;
 let envelopeData;
 
 
-export default class SendingDeparture extends Component {
+export default class LetterDeparture extends Component {
 
     static navigationOptions = {
         header: false

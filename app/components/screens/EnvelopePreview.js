@@ -222,7 +222,7 @@ export default class EnvelopePreview extends Component {
 
     publish() {
         this.saveEnvelopeAppearance();
-        this._navigateTo('PublicationScreen', {
+        this._navigateTo('EnvelopePublication', {
             envelopesData: envelopesArray,
             block: block,
             userEmails: userEmails,

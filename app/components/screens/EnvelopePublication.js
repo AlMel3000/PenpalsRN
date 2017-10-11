@@ -56,8 +56,7 @@ let email;
 let description;
 
 
-
-export default class PublicationScreen extends Component {
+export default class EnvelopePublication extends Component {
 
     static navigationOptions = {
         header: false
@@ -70,11 +69,6 @@ export default class PublicationScreen extends Component {
         });
         this.props.navigation.dispatch(resetAction)
     };
-
-    componentWillMount() {
-        InAppBilling.open().then(() => this.getProductPrice());
-        this.getEnvelopeAppearanceAndInfo();
-    }
 
     constructor(props) {
         super(props);
@@ -109,6 +103,11 @@ export default class PublicationScreen extends Component {
 
         };
 
+    }
+
+    componentWillMount() {
+        InAppBilling.open().then(() => this.getProductPrice());
+        this.getEnvelopeAppearanceAndInfo();
     }
 
     componentWillUnmount() {

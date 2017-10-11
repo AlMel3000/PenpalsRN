@@ -481,7 +481,7 @@ export default class Main extends Component {
                                   cardMaxElevation={2}
                                   cornerRadius={2}>
                             <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
-                                              onPress={(e) => this._navigateTo('SendingDeparture', {
+                                              onPress={(e) => this._navigateTo('LetterDeparture', {
                                                   envelopesData: envelopesArray,
                                                   block: block,
                                                   userEmails: userEmails,

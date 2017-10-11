@@ -10,9 +10,12 @@ import Main from '../components/screens/Main'
 import EnvelopeFillingScreen from '../components/screens/EnvelopeFillingScreen'
 import EulaScreen from '../components/screens/EulaScreen'
 import EnvelopePreview from '../components/screens/EnvelopePreview'
-import PublicationScreen from '../components/screens/PublicationScreen'
-import SendingDeparture from '../components/screens/SendingDeparture'
+import EnvelopePublication from '../components/screens/EnvelopePublication'
+import LetterDeparture from '../components/screens/LetterDeparture'
 import LetterText from '../components/screens/LetterText'
+import LetterAddress from '../components/screens/LetterAddress'
+import LetterPurchasingAndSending from '../components/screens/LetterPurchasingAndSending'
+
 
 const ApplicationNavContainer = StackNavigator(
     {
@@ -21,9 +24,11 @@ const ApplicationNavContainer = StackNavigator(
         EnvelopeFillingScreen: {screen: EnvelopeFillingScreen},
         EulaScreen: {screen: EulaScreen},
         EnvelopePreview: {screen: EnvelopePreview},
-        PublicationScreen: {screen: PublicationScreen},
-        SendingDeparture: {screen: SendingDeparture},
-        LetterText: {screen: LetterText}
+        EnvelopePublication: {screen: EnvelopePublication},
+        LetterDeparture: {screen: LetterDeparture},
+        LetterText: {screen: LetterText},
+        LetterAddress: {screen: LetterAddress},
+        LetterPurchasingAndSending: {screen: LetterPurchasingAndSending}
     },
     { headerMode: 'screen' }
 );
