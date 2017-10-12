@@ -1,13 +1,23 @@
-import {AsyncStorage, BackHandler, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+    AsyncStorage,
+    BackHandler,
+    Dimensions,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 
 import React, {Component} from 'react';
 
 import {NavigationActions} from 'react-navigation';
 
 import RotatingView from './../assets/RotatingView';
-
-
 import Orientation from 'react-native-orientation-locker';
+
+let deviceWidth = Dimensions.get('window').width;
 
 const InAppBilling = require("react-native-billing");
 
@@ -26,7 +36,7 @@ let envelopeData;
 let recipientData = [];
 
 let departureCountryID = null;
-let text = null;
+let text = '';
 
 
 let avatarURL;
@@ -69,6 +79,7 @@ export default class LetterPurchasingAndSending extends Component {
             sender_zip: this.props.navigation.state.params.sender_zip,
             sender_email: this.props.navigation.state.params.sender_email,
 
+            text: this.props.navigation.state.params.text,
 
             departureCountry: '',
             picture: null,
@@ -117,12 +128,12 @@ export default class LetterPurchasingAndSending extends Component {
             // do not translate country name
             this.setState({
                 departureCountry: 'Russia',
-                picture: './../assets/russia_land.png'
+                picture: require("./../assets/russia_land.png")
             });
         } else {
             this.setState({
                 departureCountry: 'Japan',
-                picture: './../assets/japan_land.png'
+                picture: require("./../assets/japan_land.png")
             });
         }
     }
@@ -318,9 +329,82 @@ export default class LetterPurchasingAndSending extends Component {
                                         </View>
                                     </View>
 
+                                    <View/>
+
+                                    <View style={{
+                                        alignSelf: 'stretch',
+                                        height: 1,
+                                        backgroundColor: '#e4e4e4'
+                                    }}/>
+
+                                    <View style={{
+                                        flex: 1,
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'flex-start',
+                                        flexDirection: 'row',
+                                        paddingVertical: 14
+                                    }}>
+                                        <Text style={{flex: 1, color: '#212121'}}>
+                                            Текст
+                                        </Text>
+
+                                        <View style={{flex: 3}}>
+                                            <Text style={{color: '#212121'}}>{this.state.text}</Text>
+                                        </View>
+
+                                    </View>
+
+                                    <View style={{
+                                        alignSelf: 'stretch',
+                                        height: 1,
+                                        backgroundColor: '#e4e4e4'
+                                    }}/>
+
+                                    <View style={{
+                                        flex: 1,
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'flex-start',
+                                        flexDirection: 'row',
+                                        paddingVertical: 14
+                                    }}>
+                                        <Text style={{flex: 1, color: '#212121'}}>
+                                            Oт
+                                        </Text>
+
+                                        <View style={{flex: 3}}>
+                                            <Text style={{color: '#212121'}}>{this.state.sender_name}</Text>
+                                            <Text style={{color: '#212121'}}>{this.state.sender_address}</Text>
+                                            <Text style={{color: '#212121'}}>{this.state.sender_city}</Text>
+                                            <Text style={{color: '#212121'}}>{this.state.sender_country}</Text>
+                                            <Text style={{color: '#212121'}}>{this.state.sender_zip}</Text>
+                                        </View>
+
+                                    </View>
+
+                                    <View style={{
+                                        alignSelf: 'stretch',
+                                        height: 1,
+                                        backgroundColor: '#e4e4e4'
+                                    }}/>
+
+                                    <View style={{
+                                        flex: 1,
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'flex-start',
+                                        flexDirection: 'row',
+                                        paddingVertical: 14
+                                    }}>
+                                        <Text style={{flex: 1, color: '#212121'}}>
+                                            {'Отправить\nиз:'}
+                                        </Text>
+                                        <Image source={this.state.picture} style={{flex: 3}}/>
+                                    </View>
+
+                                    <View/>
+
                                 </View>
                             </ScrollView>
-                            <View style={{alignSelf: 'stretch', bottom: 10}}>
+                            <View style={{alignSelf: 'stretch', bottom: 10, backgroundColor: 'white'}}>
                                 <View style={{
                                     alignSelf: 'stretch',
                                     height: 1,

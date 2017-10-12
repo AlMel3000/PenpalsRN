@@ -296,7 +296,7 @@ export default class LetterAddress extends Component {
                     scrollToFirst: false,
                     recipientData: recipientData,
                     departureCountryID: departureCountryID,
-                    text: this.state.text,
+                    text: text,
 
                     sender_name: this.state.sender_name,
                     sender_address: this.state.sender_address,
