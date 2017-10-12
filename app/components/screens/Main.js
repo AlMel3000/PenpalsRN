@@ -485,7 +485,8 @@ export default class Main extends Component {
                                                   envelopesData: envelopesArray,
                                                   block: block,
                                                   userEmails: userEmails,
-                                                  scrollToFirst: false
+                                                  scrollToFirst: false,
+                                                  recipientData: envelope.item.data
                                               })}>
                                 <Text style={styles.actionButtonText}>{strings.send_letter}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>

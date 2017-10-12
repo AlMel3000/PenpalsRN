@@ -23,9 +23,6 @@ import Orientation from 'react-native-orientation-locker';
 const InAppBilling = require("react-native-billing");
 
 
-const PUBLICATION_FREE_STATUS = 0;
-const PUBLICATION_PAID_STATUS = 1;
-
 
 const RUSSIAN_LETTER_ID = 'russianletter';
 const JAPANESE_LETTER_ID = 'japanletter';
@@ -41,8 +38,9 @@ let userEmails = [];
 
 let block = 1;
 
-let envelopeData;
+let envelopeData = [];
 
+let recipientData = [];
 
 export default class LetterDeparture extends Component {
 
@@ -60,11 +58,12 @@ export default class LetterDeparture extends Component {
 
     constructor(props) {
         super(props);
-        /*envelopeData = this.props.navigation.state.params.envelopesData;
+        envelopeData = this.props.navigation.state.params.envelopesData;
         envelopesArray = envelopeData;
         block = this.props.navigation.state.params.block;
         userEmails = this.props.navigation.state.params.userEmails;
-        scrollToFirst = this.props.navigation.state.params.scrollToFirst;*/
+        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
+        recipientData = this.props.navigation.state.params.recipientData;
 
         this.state = {
 
@@ -86,7 +85,6 @@ export default class LetterDeparture extends Component {
     }
 
     componentDidMount() {
-        Orientation.unlockAllOrientations();
         Orientation.lockToLandscapeLeft();
         BackHandler.addEventListener('hardwareBackPress', () => {
             this.backToMain();
@@ -144,7 +142,9 @@ export default class LetterDeparture extends Component {
             block: block,
             userEmails: userEmails,
             scrollToFirst: false,
+            recipientData: recipientData,
             departureCountryID: selectedCountry
+
         });
     }
 

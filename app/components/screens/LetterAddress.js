@@ -49,6 +49,8 @@ let departureCountryID = null;
 
 let text = null;
 
+let recipientData = [];
+
 export default class LetterAddress extends Component {
 
     static navigationOptions = {
@@ -70,6 +72,7 @@ export default class LetterAddress extends Component {
         userEmails = this.props.navigation.state.params.userEmails;
         departureCountryID = this.props.navigation.state.params.departureCountryID;
         text = this.props.navigation.state.params.text;
+        recipientData = this.props.navigation.state.params.recipientData;
 
         this.state = {
             sender_name: ' ',
@@ -112,6 +115,7 @@ export default class LetterAddress extends Component {
             block: block,
             userEmails: userEmails,
             scrollToFirst: false,
+            recipientData: recipientData,
             departureCountryID: departureCountryID
         });
     }
@@ -285,15 +289,23 @@ export default class LetterAddress extends Component {
 
 
             if (sender_name && sender_address && sender_city && sender_country && sender_zip && sender_email) {
-                this._saveFields();
-                this._navigateTo('LetterPurchasingAndSending', {
+                this._saveFields().then(this._navigateTo('LetterPurchasingAndSending', {
                     envelopesData: envelopesArray,
                     block: block,
                     userEmails: userEmails,
                     scrollToFirst: false,
+                    recipientData: recipientData,
                     departureCountryID: departureCountryID,
-                    text: this.state.text
-                })
+                    text: this.state.text,
+
+                    sender_name: this.state.sender_name,
+                    sender_address: this.state.sender_address,
+                    sender_city: this.state.sender_city,
+                    sender_country: this.state.sender_country,
+                    sender_cca2: this.state.sender_cca2,
+                    sender_zip: this.state.sender_zip,
+                    sender_email: this.state.sender_email
+                }))
 
             } else {
                 Vibration.vibrate();

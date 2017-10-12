@@ -286,9 +286,6 @@ export default class EnvelopePublication extends Component {
     async saveAndGo() {
         console.log('saveAndGo ' + this.state.email);
         await AsyncStorage.setItem('lastCardOfUser', JSON.stringify(email));
-        userEmails = userEmails + ',' + email;
-        await AsyncStorage.setItem('userEmails', JSON.stringify(userEmails));
-
     }
 
     async getLastCardOfUser(email: string) {

@@ -14,6 +14,8 @@ let block = 1;
 
 let departureCountryID = null;
 
+let recipientData = [];
+
 export default class LetterText extends Component {
 
     static navigationOptions = {
@@ -34,7 +36,9 @@ export default class LetterText extends Component {
         envelopesArray = this.props.navigation.state.params.envelopesData;
         block = this.props.navigation.state.params.block;
         userEmails = this.props.navigation.state.params.userEmails;
+        recipientData = this.props.navigation.state.params.recipientData;
         departureCountryID = this.props.navigation.state.params.departureCountryID;
+
 
         this.state = {
             text: null
@@ -59,7 +63,8 @@ export default class LetterText extends Component {
             envelopesData: envelopesArray,
             block: block,
             userEmails: userEmails,
-            scrollToFirst: false
+            scrollToFirst: false,
+            recipientData: recipientData
         });
     }
 
@@ -124,6 +129,7 @@ export default class LetterText extends Component {
                             block: block,
                             userEmails: userEmails,
                             scrollToFirst: false,
+                            recipientData: recipientData,
                             departureCountryID: departureCountryID,
                             text: this.state.text
                         })}>
