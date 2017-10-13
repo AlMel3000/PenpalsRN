@@ -651,22 +651,21 @@ export default class EnvelopeFillingScreen extends Component {
                                onClick={()=>this._onConfirmationCheckboxStateChanged()}
                                isChecked={this.state.checked}
                            />
-                           <View style={{
-                               alignSelf: 'center',
-                               flexDirection: 'row',
-                               alignItems: 'flex-start',
-                               justifyContent: 'flex-start'
-                           }}>
-                               <Text style={{color: '#212121'}}>
+                           <Text style={{color: '#212121', marginTop: 6}}>
                                Я принимаю условия
                            </Text>
                            <TouchableOpacity
                                onPress={(e) => this._showEULA()}>
-                               <Text style={{color: '#1ca9c9', marginLeft: 4, textDecorationLine: 'underline'}}>
+                               <Text style={{
+                                   color: '#1ca9c9',
+                                   marginLeft: 2,
+                                   textDecorationLine: 'underline',
+                                   marginTop: 6
+                               }}>
                                    соглашения
                                </Text>
                            </TouchableOpacity>
-                           </View>
+
                        </View>
 
                        <View style={{alignSelf:'stretch', flexDirection:'row', alignItems: 'flex-end', justifyContent: 'flex-end', padding:16}}>

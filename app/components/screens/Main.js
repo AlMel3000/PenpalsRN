@@ -480,7 +480,14 @@ export default class Main extends Component {
                                   cardElevation={2}
                                   cardMaxElevation={2}
                                   cornerRadius={2}>
-                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
+                                              onPress={(e) => this._navigateTo('LetterDeparture', {
+                                                  envelopesData: envelopesArray,
+                                                  block: block,
+                                                  userEmails: userEmails,
+                                                  scrollToFirst: false,
+                                                  recipientData: envelope.item.data
+                                              })}>
                                 <Text style={styles.actionButtonText}>{strings.send_letter}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="send-o" style={styles.actionButtonIcon} />
@@ -689,6 +696,19 @@ export default class Main extends Component {
                             style={{color: '#212121', flex: 1, fontSize: 16,}}>
                             {'Что-то пошло не так.\n\nПожалуйста проверьте интернет соединение или зайдите к нам позже'}
                         </Text>
+                        <TouchableOpacity style={{
+                            flex: 1,
+                            alignSelf: 'center',
+                            borderColor: '#257492',
+                            borderWidth: 0.5,
+                            borderRadius: 2,
+                            padding: 8,
+                            margin: 8
+                        }}
+                                          onPress={(e) => this.getUserStatus()}>
+                            <Image source={require('./../assets/refresh_blue.png')}
+                                   style={{flex: 1}}/>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={{flex: 1, flexDirection: 'row', alignSelf: 'center'}}
                             onPress={(e) => Linking.openURL('mailto:119@penpal.eken.live?subject=From Penpals app&body=Здравствуйте!\n' +

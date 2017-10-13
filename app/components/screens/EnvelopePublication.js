@@ -56,8 +56,7 @@ let email;
 let description;
 
 
-
-export default class PublicationScreen extends Component {
+export default class EnvelopePublication extends Component {
 
     static navigationOptions = {
         header: false
@@ -70,11 +69,6 @@ export default class PublicationScreen extends Component {
         });
         this.props.navigation.dispatch(resetAction)
     };
-
-    componentWillMount() {
-        InAppBilling.open().then(() => this.getProductPrice());
-        this.getEnvelopeAppearanceAndInfo();
-    }
 
     constructor(props) {
         super(props);
@@ -109,6 +103,11 @@ export default class PublicationScreen extends Component {
 
         };
 
+    }
+
+    componentWillMount() {
+        InAppBilling.open().then(() => this.getProductPrice());
+        this.getEnvelopeAppearanceAndInfo();
     }
 
     componentWillUnmount() {
@@ -268,7 +267,10 @@ export default class PublicationScreen extends Component {
                 method: 'post',
                 body: data
             }).then(res => {
-                console.log(res._bodyText);
+                if (res.status === 200) {
+                    AsyncStorage.multiRemove(['name', 'address', 'city', 'country', 'cca2', 'zip', 'description', 'email', 'photo']);
+                }
+
             });
 
 
@@ -284,9 +286,6 @@ export default class PublicationScreen extends Component {
     async saveAndGo() {
         console.log('saveAndGo ' + this.state.email);
         await AsyncStorage.setItem('lastCardOfUser', JSON.stringify(email));
-        userEmails = userEmails + ',' + email;
-        await AsyncStorage.setItem('userEmails', JSON.stringify(userEmails));
-
     }
 
     async getLastCardOfUser(email: string) {
