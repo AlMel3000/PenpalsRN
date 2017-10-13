@@ -696,6 +696,19 @@ export default class Main extends Component {
                             style={{color: '#212121', flex: 1, fontSize: 16,}}>
                             {'Что-то пошло не так.\n\nПожалуйста проверьте интернет соединение или зайдите к нам позже'}
                         </Text>
+                        <TouchableOpacity style={{
+                            flex: 1,
+                            alignSelf: 'center',
+                            borderColor: '#257492',
+                            borderWidth: 0.5,
+                            borderRadius: 2,
+                            padding: 8,
+                            margin: 8
+                        }}
+                                          onPress={(e) => this.getUserStatus()}>
+                            <Image source={require('./../assets/refresh_blue.png')}
+                                   style={{flex: 1}}/>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={{flex: 1, flexDirection: 'row', alignSelf: 'center'}}
                             onPress={(e) => Linking.openURL('mailto:119@penpal.eken.live?subject=From Penpals app&body=Здравствуйте!\n' +
