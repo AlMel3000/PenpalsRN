@@ -348,8 +348,6 @@ export default class Main extends Component {
 
     renderEnvelope( envelope){
         console.log("item "+ JSON.stringify(envelope.index));
-        const { data } = envelope.item;
-        page = envelope.index;
 
         let buttonIconColor = '#9e9e9e';
         let buttonTextColor = '#9e9e9e';
@@ -618,14 +616,12 @@ export default class Main extends Component {
         let viewSize = e.nativeEvent.layoutMeasurement;
 
         // Divide the horizontal offset by the width of the view to see which page is visible
-        let pageNum = Math.floor(contentOffset.x / viewSize.width);
-        console.log('scrolled to page ', pageNum);
+        page = Math.floor(contentOffset.x / viewSize.width);
 
-        this.incrementViews(pageNum);
-
+        this.incrementViews(page);
         this.setState({
             showButton: false
-        })
+        });
     }
 
     onClickFab(){
