@@ -8,7 +8,6 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View,
     VirtualizedList,
 } from 'react-native';
@@ -35,6 +34,10 @@ let deviceHeight = Dimensions.get('window').height;
 let envelopesArray = [];
 let stampRotationArray = [];
 let sealRotationArray = [];
+
+let viewStampRotationArray = [];
+
+let viewsById = {};
 
 const BLOCKS_RANGE_FOR_RANDOMIZATION = 100;
 const ENVELOPES_AMOUNT_PER_BLOCK = 50;
@@ -202,6 +205,7 @@ export default class Main extends Component {
 
     componentWillUnmount(){
         this.saveStatus();
+        this.updateViews();
     }
 
     async getUserStatus(){
@@ -397,15 +401,18 @@ export default class Main extends Component {
 
         let stampRotation;
         let sealRotation;
-
-        if (stampRotationArray.hasOwnProperty(envelope.item.data.id)){
-            stampRotation = stampRotationArray[envelope.item.data.id];
-        } else{
-            stampRotation = (Math.floor(Math.random() * (10) - 5))+"deg";
-            stampRotationArray[envelope.item.data.id] = stampRotation;
-        }
+        let viewStampRotation;
 
         let id = envelope.item.data.id;
+
+        if (stampRotationArray.hasOwnProperty(id)) {
+            stampRotation = stampRotationArray[id];
+        } else{
+            stampRotation = (Math.floor(Math.random() * (10) - 5))+"deg";
+            stampRotationArray[id] = stampRotation;
+        }
+
+
 
         if (id in sealRotationArray){
             sealRotation = sealRotationArray[id];
@@ -414,66 +421,130 @@ export default class Main extends Component {
             sealRotationArray[id] = sealRotation;
         }
 
+        if (id in viewStampRotationArray) {
+            viewStampRotation = viewStampRotationArray[id];
+        } else {
+            viewStampRotation = (Math.floor(Math.random() * (10) - 5)) + "deg";
+            viewStampRotationArray[id] = viewStampRotation;
+        }
+
 
 
 
         return (
-            <TouchableWithoutFeedback style={styles.viewPager} key={envelope.item.data.id}
-                                      onPress={(e) => this.showButton()}>
+            <TouchableOpacity style={styles.viewPager} key={envelope.item.data.id}
+                              activeOpacity={0.8}
+                              onPress={(e) => this.showButton()}>
                 <Image source={{uri: envelopeURL}} style={styles.envelopeImage}>
-                <View style={styles.topRow}>
-                    <View style={styles.topLeftRow}>
-                        <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', }}>
-                            <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
-                            <Text style={styles.name}>
-                                {envelope.item.data.first_name}
-                            </Text>
+                    <View style={styles.topRow}>
+                        <View style={styles.topLeftRow}>
+                            <View
+                                style={{justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row',}}>
+                                <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
+                                <Text style={styles.name}>
+                                    {envelope.item.data.first_name}
+                                </Text>
+                            </View>
+                            <View
+                                style={{justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row'}}>
+                                <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
+                                <Text style={styles.address}>
+                                    {envelope.item.data.address}
+                                </Text>
+                            </View>
+                            <View
+                                style={{justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row'}}>
+                                <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
+                                <Text style={styles.address}>
+                                    {envelope.item.data.city}
+                                </Text>
+                            </View>
+                            <View
+                                style={{justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row'}}>
+                                <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
+                                <Text style={styles.address}>
+                                    {envelope.item.data.country_name + ', ' + envelope.item.data.postal}
+                                </Text>
+                            </View>
                         </View>
-                        <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row'}}>
-                            <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
-                            <Text style={styles.address}>
-                                {envelope.item.data.address}
-                            </Text>
+                        <View style={styles.topRightRow}>
+                            <Image source={{uri: imageURL}} style={styles.userPhoto}/>
+                            <Image source={{uri: stampURL}} style={{
+                                height: deviceHeight / 5,
+                                width: deviceWidth / 4,
+                                resizeMode: 'contain',
+                                transform: [{rotate: stampRotation}],
+                                alignSelf: 'center',
+                                left: deviceWidth / 6,
+                                position: 'absolute'
+                            }}/>
+                            <Image source={{uri: sealURL}} style={{
+                                height: deviceHeight / 5,
+                                width: deviceWidth / 5,
+                                resizeMode: 'contain',
+                                alignSelf: 'center',
+                                left: deviceWidth / 6,
+                                position: 'absolute',
+                                transform: [{rotate: sealRotation}]
+                            }}/>
                         </View>
-                        <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row'}}>
-                            <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
-                            <Text style={styles.address}>
-                                {envelope.item.data.city}
-                            </Text>
-                        </View>
-                        <View style={{justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row'}}>
-                            <Image source={require('./../assets/prefix.png')} style={styles.prefix}/>
-                            <Text style={styles.address}>
-                                {envelope.item.data.country_name+', '+envelope.item.data.postal}
-                            </Text>
+
+                        <View style={{
+                            height: 65,
+                            width: 124,
+                            borderColor: 'black',
+                            borderWidth: 1.5,
+                            position: 'absolute',
+                            right: deviceWidth / 13,
+                            alignSelf: 'flex-end',
+                            transform: [{rotate: viewStampRotation}]
+                        }}>
+                            <View style={{
+                                height: 39,
+                                width: 100,
+                                borderColor: 'black',
+                                borderWidth: 1.5,
+                                position: 'absolute',
+                                alignSelf: 'center',
+                                marginTop: 13,
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <Text style={{
+                                    color: 'black',
+                                    fontSize: 14,
+                                    alignSelf: 'center'
+                                }}>{envelope.item.data.views}</Text>
+                            </View>
+                            <Text style={{color: 'black', fontSize: 10, alignSelf: 'center'}}>ПРОСМОТРЫ</Text>
+
                         </View>
                     </View>
-                    <View style={styles.topRightRow}>
-                        <Image source={{uri: imageURL}} style={styles.userPhoto}/>
-                        <Image source={{uri: stampURL}} style={{height: deviceHeight/5, width: deviceWidth/4, resizeMode:'contain', transform:[{rotate: stampRotation}], alignSelf:'center', left: deviceWidth/6, position: 'absolute'
-                        }}/>
-                        <Image source={{uri: sealURL}} style={{height: deviceHeight/5, width: deviceWidth/5, resizeMode:'contain', alignSelf:'center', left: deviceWidth/6, position: 'absolute', transform:[{rotate: sealRotation}]
-                        }}/>
-                    </View>
-                </View>
                     <View
                         style={{flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row'}}>
-                    <View style={{flex: 1, width: deviceWidth/2}}/>
-                    <View style={{flex: 1,width: deviceWidth/2,  justifyContent:'flex-start', alignItems:'flex-start', flexDirection: 'row', paddingBottom:deviceHeight*0.1}}>
-                        <Image source={require('./../assets/quote.png')}
-                               style={{height: deviceHeight / 25, resizeMode: 'contain', marginTop: 25}}/>
-                        <Text style={{
-                            color: '#212121',
-                            fontSize: 14,
-                            marginLeft: deviceWidth * 0.003125,
-                            width: deviceWidth / 2 - 64,
-                            marginTop: 25
+                        <View style={{flex: 1, width: deviceWidth / 2}}/>
+                        <View style={{
+                            flex: 1,
+                            width: deviceWidth / 2,
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                            flexDirection: 'row',
+                            paddingBottom: deviceHeight * 0.1
                         }}>
-                            {envelope.item.data.description}
-                        </Text>
+                            <Image source={require('./../assets/quote.png')}
+                                   style={{height: deviceHeight / 25, resizeMode: 'contain', marginTop: 25}}/>
+                            <Text style={{
+                                color: '#212121',
+                                fontSize: 14,
+                                marginLeft: deviceWidth * 0.003125,
+                                width: deviceWidth / 2 - 64,
+                                marginTop: 25
+                            }}>
+                                {envelope.item.data.description}
+                            </Text>
+                        </View>
                     </View>
-                </View>
-                {this.state.showButton &&
+                    {this.state.showButton &&
                     <View  style={{position: 'absolute', bottom: 32, right: 16, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end', flex: 0}}>
                         {this.state.showMenu&&
                         <CardView style={{marginBottom: deviceHeight*0.011, paddingVertical: deviceHeight* 0.022222, paddingHorizontal: deviceWidth* 0.025}}
@@ -519,7 +590,7 @@ export default class Main extends Component {
                                           onPress={(e) => this.onClickFab()}/>
                     </View>}
                 </Image>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         );
     }
 
@@ -549,6 +620,8 @@ export default class Main extends Component {
         // Divide the horizontal offset by the width of the view to see which page is visible
         let pageNum = Math.floor(contentOffset.x / viewSize.width);
         console.log('scrolled to page ', pageNum);
+
+        this.incrementViews(pageNum);
 
         this.setState({
             showButton: false
@@ -613,20 +686,21 @@ export default class Main extends Component {
     }
 
     _onScrollEnd() {
-            this.setState({
-                showProgress: true
-            });
-            let nextBlock;
-            if (block < blocksAvailable){
-                nextBlock = block +1;
+        this.setState({
+            showProgress: true
+        });
+        let nextBlock;
+        if (block < blocksAvailable) {
+            nextBlock = block + 1;
 
-            }  else{
-                nextBlock = 1;
-                isLastBlockListed = true;
-            }
+        } else {
+            nextBlock = 1;
+            isLastBlockListed = true;
+        }
         console.log('nextBlock ' + nextBlock);
-            block = nextBlock;
-            this.getCards();
+        block = nextBlock;
+        this.getCards();
+        this.updateViews();
 
     }
 
@@ -638,6 +712,44 @@ export default class Main extends Component {
             .then(this.getUserStatus())
             .catch((e)=> console.log.e)
     };
+
+    incrementViews(pageNum: number) {
+        let id = envelopesArray[pageNum].data.id;
+
+        let email = envelopesArray[pageNum].data.email;
+
+        console.log(id + email);
+        let view = 0;
+        if (!userEmails || userEmails.indexOf(email) < 1) {
+            if (id in viewsById) {
+                view = viewsById[id];
+            }
+            view++;
+            viewsById[id] = view;
+            console.log('id ' + id)
+        }
+
+    }
+
+    async updateViews() {
+        try {
+            if (Object.keys(viewsById).length > 0) {
+                let data = new FormData();
+                for (let id in viewsById) {
+                    data.append(id, viewsById[id])
+                }
+                let response = await fetch('http://penpal.eken.live/Api/update-views', {
+                    method: 'POST',
+                    body: data
+                });
+                console.log('viewsById posted' + JSON.stringify(viewsById));
+                let res = JSON.stringify(await response.text());
+                console.log("update views" + JSON.stringify(res));
+            }
+        } catch (message) {
+            console.log('catch ' + message)
+        }
+    }
 
     _navigateTo = (routeName, params) => {
         const resetAction = NavigationActions.reset({
@@ -771,7 +883,7 @@ export default class Main extends Component {
                     removeClippedSubviews={false}
                     onMomentumScrollEnd={this.onScroll}
                 />
-               }
+                }
             </View>
         );
     }
