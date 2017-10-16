@@ -13,8 +13,10 @@ import {
 } from 'react-native';
 
 import React, {Component} from 'react';
-import CardView from 'react-native-cardview';
 
+import CardView from 'react-native-cardview'
+
+import Modal from 'react-native-modal'
 
 import {NavigationActions} from 'react-navigation';
 
@@ -168,6 +170,8 @@ export default class Main extends Component {
             refreshing: false,
             showButton: false,
             showMenu: false,
+            showRateDialog: true,
+            showFilter: false
         };
 
 
@@ -577,7 +581,8 @@ export default class Main extends Component {
                                     <Icon2 name="trash-o" style={{ fontSize: 22, color: buttonIconColor}} />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
+                                              onPress={(e) => this.setState({showFilter: true})}>
                                 <Text style={styles.actionButtonText}>{strings.filter}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="filter" style={styles.actionButtonIcon} />
@@ -587,6 +592,17 @@ export default class Main extends Component {
                         <TouchableOpacity style={{backgroundColor:'#ff4444', borderRadius: 64, height:deviceHeight*0.155, width: deviceHeight*0.155}}
                                           onPress={(e) => this.onClickFab()}/>
                     </View>}
+                    <Modal isVisible={this.state.showRateDialog}
+                           backdropOpacity={0.5}>
+                        <View style={{flex: 1, margin: 56, backgroundColor: 'white', padding: 16}}>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                                <Image source={require('./../assets/google_play_icon.png')}
+                                       style={{resizeMode: 'contain', height: 32, width: 48}}/>
+                                <Text style={{fontSize: 16, color: '#212121', marginLeft: 32}}>Penpals on Google
+                                    Play</Text>
+                            </View>
+                        </View>
+                    </Modal>
                 </Image>
             </TouchableOpacity>
         );

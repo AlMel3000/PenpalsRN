@@ -19,6 +19,7 @@
     "react-native-image-picker": "^0.26.6",
     "react-native-img-cache": "^1.4.0",
     "react-native-localization": "^0.1.32",
+    "react-native-modal": "^4.0.0",
     "react-native-orientation-locker": "^1.0.3",
     "react-native-vector-icons": "^4.3.0",
     "react-navigation": "^1.0.0-beta.11",
