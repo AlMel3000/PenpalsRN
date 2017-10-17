@@ -597,9 +597,28 @@ export default class Main extends Component {
                         <View style={{flex: 1, margin: 56, backgroundColor: 'white', padding: 16}}>
                             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                                 <Image source={require('./../assets/google_play_icon.png')}
-                                       style={{resizeMode: 'contain', height: 32, width: 48}}/>
-                                <Text style={{fontSize: 16, color: '#212121', marginLeft: 32}}>Penpals on Google
+                                       style={{resizeMode: 'contain', height: 32, width: 32}}/>
+                                <Text style={{fontSize: 18, color: '#257492', marginLeft: 8}}>Penpal on Google
                                     Play</Text>
+                            </View>
+                            <Text style={{
+                                color: '#212121',
+                                fontSize: 16,
+                                marginTop: 8
+                            }}>{'We really care about your experience and want to make app better for you.\nLet us know how it can be improved and we\'ll build it!\nOr just rate us on Google Play.'}</Text>
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: 16
+                            }}>
+                                <TouchableOpacity
+                                    style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}><Text
+                                    style={{color: '#257492'}}>Don't ask more</Text></TouchableOpacity>
+                                <TouchableOpacity style={{flex: 1}}><Text
+                                    style={{color: '#257492'}}>Later</Text></TouchableOpacity>
+                                <TouchableOpacity style={{flex: 1}}><Text
+                                    style={{color: '#257492'}}>Improve</Text></TouchableOpacity>
                             </View>
                         </View>
                     </Modal>
