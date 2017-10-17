@@ -41,8 +41,11 @@ let viewStampRotationArray = [];
 
 let viewsById = {};
 
+let isAppRatedOrRateDeclined = false;
+
 const BLOCKS_RANGE_FOR_RANDOMIZATION = 100;
 const ENVELOPES_AMOUNT_PER_BLOCK = 50;
+const CARDS_COUNT_FOR_RATING_DIALOG = 35;
 
 let savedBlock;
 let blocksAvailable;
@@ -57,14 +60,14 @@ let block = 1;
 let isLastBlockListed = false;
 
 let strings = new LocalizedStrings({
-    "en-US":{
-        send_letter:"SEND LETTER",
+    "en-US": {
+        send_letter: "SEND LETTER",
         create_envelope: 'CREATE ENVELOPE',
         delete_envelope: 'DELETE OWN CARD',
         filter: 'FILTER'
     },
-    en:{
-        send_letter:"SEND LETTER",
+    en: {
+        send_letter: "SEND LETTER",
         create_envelope: 'CREATE ENVELOPE',
         delete_envelope: 'DELETE OWN CARD',
         filter: 'FILTER'
@@ -76,70 +79,70 @@ let strings = new LocalizedStrings({
         filter: 'フィルタ'
     },
     ru: {
-        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
         filter: 'ФИЛЬТР'
 
     },
     be: {
-        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
         filter: 'ФИЛЬТР'
 
     },
     uk: {
-        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
         filter: 'ФИЛЬТР'
 
     },
     az: {
-        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
         filter: 'ФИЛЬТР'
 
     },
     hy: {
-        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
         filter: 'ФИЛЬТР'
 
     },
     kk: {
-        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
         filter: 'ФИЛЬТР'
 
     },
     ky: {
-        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
         filter: 'ФИЛЬТР'
 
     },
     tg: {
-        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
         filter: 'ФИЛЬТР'
 
     },
     tk: {
-        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
         filter: 'ФИЛЬТР'
 
     },
     uz: {
-        send_letter:"ОТПРАВИТЬ ПИСЬМО",
+        send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
         filter: 'ФИЛЬТР'
@@ -149,14 +152,22 @@ let strings = new LocalizedStrings({
 });
 
 
-
 export default class Main extends Component {
 
     static navigationOptions = {
         header: false
     };
 
-    constructor(props){
+    onRefresh = () => {
+        this.setState({
+            showProgress: true
+        });
+        this.saveStatus()
+            .then(this.getUserStatus())
+            .catch((e) => console.log.e)
+    };
+
+    constructor(props) {
         super(props);
         envelopesArray = this.props.navigation.state.params.envelopesData;
         block = this.props.navigation.state.params.block;
@@ -170,8 +181,10 @@ export default class Main extends Component {
             refreshing: false,
             showButton: false,
             showMenu: false,
-            showRateDialog: true,
-            showFilter: false
+            showRateDialog: false,
+            showFilter: false,
+
+            pagesViewed: 0
         };
 
 
@@ -183,36 +196,34 @@ export default class Main extends Component {
         this.showButton = this.showButton.bind(this);
     }
 
-
-
     componentWillMount() {
-        if (envelopesArray.length<=0){
+        if (envelopesArray.length <= 0) {
             this.getUserStatus();
         } else {
             this.setState({
                 showProgress: false
             })
         }
-        if (scrollToFirst){
+        if (scrollToFirst) {
             page = 0;
         }
 
     }
 
-    componentDidMount(){
+    componentDidMount() {
         Orientation.lockToLandscapeLeft();
-        BackHandler.addEventListener('hardwareBackPress', () =>{
+        BackHandler.addEventListener('hardwareBackPress', () => {
             BackHandler.exitApp();
             return true;
         });
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.saveStatus();
         this.updateViews();
     }
 
-    async getUserStatus(){
+    async getUserStatus() {
         try {
             savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
 
@@ -228,21 +239,20 @@ export default class Main extends Component {
                     this.getCards();
                 }
 
-            } else{
+            } else {
                 block = this.randomizer(BLOCKS_RANGE_FOR_RANDOMIZATION);
                 await this.getCards();
+            }
+
+
+            if (JSON.parse(await AsyncStorage.getItem('isAppRatedOrRateDeclined'))) {
+                isAppRatedOrRateDeclined = true;
             }
 
         } catch (message) {
             this.getCards();
         }
 
-    }
-
-    async saveStatus(){
-        try {
-            await AsyncStorage.setItem('block', JSON.stringify(block));
-        } catch (error) {}
     }
 
     async getLastCardOfUser(email: string) {
@@ -287,9 +297,16 @@ export default class Main extends Component {
         }
     }
 
+    async saveStatus() {
+        try {
+            await AsyncStorage.setItem('block', JSON.stringify(block));
+        } catch (error) {
+        }
+    }
+
     async getCards() {
         try {
-            let response = await fetch(('http://penpal.eken.live/api/get-cards?page='+block+'&perPage='+ENVELOPES_AMOUNT_PER_BLOCK), {
+            let response = await fetch(('http://penpal.eken.live/api/get-cards?page=' + block + '&perPage=' + ENVELOPES_AMOUNT_PER_BLOCK), {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
@@ -302,21 +319,21 @@ export default class Main extends Component {
                 let envelopesReceived = res.cards;
 
                 // if any user doesn't exceed blocks range - let my user go
-                if (block<=blocksAvailable){
+                if (block <= blocksAvailable) {
                     // if user exceeds page range (due to card deletion) - get him to 1st page of first block
-                    if (this.state.page>=envelopesReceived.length){
+                    if (this.state.page >= envelopesReceived.length) {
                         page = 0;
                         block = 1;
                     }
                     envelopesArray = envelopesArray.concat(envelopesReceived);
                 } else {
                     // if not new user exceeds blocks range (due to card deletion) - get him to 1st page of 1st block
-                    if(savedBlock!==null){
+                    if (savedBlock !== null) {
                         page = 0;
                         block = 1;
                         envelopesArray = envelopesArray.concat(envelopesReceived);
                         // if new user exceeds blocks range - randomize him again
-                    } else{
+                    } else {
                         block = this.randomizer(blocksAvailable);
                         this.getCards();
                         return;
@@ -343,15 +360,13 @@ export default class Main extends Component {
     }
 
     randomizer(max: number) {
-        let rand =  (Math.random() * max);
+        let rand = (Math.random() * max);
         let randomBlock = Math.floor(rand) + 1;
         return randomBlock;
     }
 
-
-
-    renderEnvelope( envelope){
-        console.log("item "+ JSON.stringify(envelope.index));
+    renderEnvelope(envelope) {
+        console.log("item " + JSON.stringify(envelope.index));
 
         let buttonIconColor = '#9e9e9e';
         let buttonTextColor = '#9e9e9e';
@@ -366,39 +381,39 @@ export default class Main extends Component {
             isButtonDisabled = true;
         }
         let imageURL;
-        if(envelope.item.data.photo < 0){
-            imageURL = 'https://robohash.org/'+envelope.item.data.first_name;
-        } else{
-            imageURL = 'http://penpal.eken.live/Api/photo/width/300/id/'+envelope.item.data.photo;
+        if (envelope.item.data.photo < 0) {
+            imageURL = 'https://robohash.org/' + envelope.item.data.first_name;
+        } else {
+            imageURL = 'http://penpal.eken.live/Api/photo/width/300/id/' + envelope.item.data.photo;
         }
         let envelopeNumber = envelope.item.resources.envelope;
         let envelopeURL;
-        if (envelopeNumber<10){
-            envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=00'+envelopeNumber;
-        } else if (envelopeNumber>9 && envelopeNumber< 100){
-            envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=0'+envelopeNumber;
-        } else{
-            envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id='+envelopeNumber;
+        if (envelopeNumber < 10) {
+            envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=00' + envelopeNumber;
+        } else if (envelopeNumber > 9 && envelopeNumber < 100) {
+            envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=0' + envelopeNumber;
+        } else {
+            envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=' + envelopeNumber;
         }
 
         let stampNumber = envelope.item.resources.stamp;
         let stampURL;
-        if (stampNumber<10){
-            stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=00'+stampNumber;
-        } else if (stampNumber>9 && stampNumber< 100){
-            stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=0'+stampNumber;
-        } else{
-            stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id='+stampNumber;
+        if (stampNumber < 10) {
+            stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=00' + stampNumber;
+        } else if (stampNumber > 9 && stampNumber < 100) {
+            stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=0' + stampNumber;
+        } else {
+            stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=' + stampNumber;
         }
 
         let sealNumber = envelope.item.resources.seal;
         let sealURL;
-        if (sealNumber<10){
-            sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=00'+sealNumber;
-        } else if (sealNumber>9 && sealNumber< 100){
-            sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=0'+sealNumber;
-        } else{
-            sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id='+sealNumber;
+        if (sealNumber < 10) {
+            sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=00' + sealNumber;
+        } else if (sealNumber > 9 && sealNumber < 100) {
+            sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=0' + sealNumber;
+        } else {
+            sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=' + sealNumber;
         }
 
         let stampRotation;
@@ -409,17 +424,16 @@ export default class Main extends Component {
 
         if (stampRotationArray.hasOwnProperty(id)) {
             stampRotation = stampRotationArray[id];
-        } else{
-            stampRotation = (Math.floor(Math.random() * (10) - 5))+"deg";
+        } else {
+            stampRotation = (Math.floor(Math.random() * (10) - 5)) + "deg";
             stampRotationArray[id] = stampRotation;
         }
 
 
-
-        if (id in sealRotationArray){
+        if (id in sealRotationArray) {
             sealRotation = sealRotationArray[id];
-        } else{
-            sealRotation = (Math.floor(Math.random() * (10) - 5))+"deg";
+        } else {
+            sealRotation = (Math.floor(Math.random() * (10) - 5)) + "deg";
             sealRotationArray[id] = sealRotation;
         }
 
@@ -429,8 +443,6 @@ export default class Main extends Component {
             viewStampRotation = (Math.floor(Math.random() * (10) - 5)) + "deg";
             viewStampRotationArray[id] = viewStampRotation;
         }
-
-
 
 
         return (
@@ -547,9 +559,21 @@ export default class Main extends Component {
                         </View>
                     </View>
                     {this.state.showButton &&
-                    <View  style={{position: 'absolute', bottom: 32, right: 16, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end', flex: 0}}>
-                        {this.state.showMenu&&
-                        <CardView style={{marginBottom: deviceHeight*0.011, paddingVertical: deviceHeight* 0.022222, paddingHorizontal: deviceWidth* 0.025}}
+                    <View style={{
+                        position: 'absolute',
+                        bottom: 32,
+                        right: 16,
+                        flexDirection: 'column',
+                        alignItems: 'flex-end',
+                        justifyContent: 'flex-end',
+                        flex: 0
+                    }}>
+                        {this.state.showMenu &&
+                        <CardView style={{
+                            marginBottom: deviceHeight * 0.011,
+                            paddingVertical: deviceHeight * 0.022222,
+                            paddingHorizontal: deviceWidth * 0.025
+                        }}
                                   cardElevation={2}
                                   cardMaxElevation={2}
                                   cornerRadius={2}>
@@ -563,38 +587,52 @@ export default class Main extends Component {
                                               })}>
                                 <Text style={styles.actionButtonText}>{strings.send_letter}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
-                                    <Icon2 name="send-o" style={styles.actionButtonIcon} />
+                                    <Icon2 name="send-o" style={styles.actionButtonIcon}/>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end',  margin: 4}}
-                                              onPress={(e) => this._navigateTo('EnvelopeFillingScreen', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false})}>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
+                                              onPress={(e) => this._navigateTo('EnvelopeFillingScreen', {
+                                                  envelopesData: envelopesArray,
+                                                  block: block,
+                                                  userEmails: userEmails,
+                                                  scrollToFirst: false
+                                              })}>
                                 <Text style={styles.actionButtonText}>{strings.create_envelope}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
-                                    <Icon2 name="envelope-o" style={styles.actionButtonIcon} />
+                                    <Icon2 name="envelope-o" style={styles.actionButtonIcon}/>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
                                               disabled={isButtonDisabled}
                                               onPress={(e) => this.showDeletionWarning(envelope.item.data.id)}>
-                                <Text style={{color: buttonTextColor, fontSize: 16, marginRight: deviceWidth*0.03125}}>{strings.delete_envelope}</Text>
+                                <Text style={{
+                                    color: buttonTextColor,
+                                    fontSize: 16,
+                                    marginRight: deviceWidth * 0.03125
+                                }}>{strings.delete_envelope}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
-                                    <Icon2 name="trash-o" style={{ fontSize: 22, color: buttonIconColor}} />
+                                    <Icon2 name="trash-o" style={{fontSize: 22, color: buttonIconColor}}/>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
                                               onPress={(e) => this.setState({showFilter: true})}>
                                 <Text style={styles.actionButtonText}>{strings.filter}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
-                                    <Icon2 name="filter" style={styles.actionButtonIcon} />
+                                    <Icon2 name="filter" style={styles.actionButtonIcon}/>
                                 </View>
                             </TouchableOpacity>
                         </CardView>}
-                        <TouchableOpacity style={{backgroundColor:'#ff4444', borderRadius: 64, height:deviceHeight*0.155, width: deviceHeight*0.155}}
+                        <TouchableOpacity style={{
+                            backgroundColor: '#ff4444',
+                            borderRadius: 64,
+                            height: deviceHeight * 0.155,
+                            width: deviceHeight * 0.155
+                        }}
                                           onPress={(e) => this.onClickFab()}/>
                     </View>}
                     <Modal isVisible={this.state.showRateDialog}
                            backdropOpacity={0.5}>
-                        <View style={{flex: 1, margin: 56, backgroundColor: 'white', padding: 16}}>
+                        <View style={{flex: 0, marginHorizontal: 56, backgroundColor: 'white', padding: 16}}>
                             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                                 <Image source={require('./../assets/google_play_icon.png')}
                                        style={{resizeMode: 'contain', height: 32, width: 32}}/>
@@ -610,14 +648,20 @@ export default class Main extends Component {
                                 flexDirection: 'row',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                marginTop: 16
+                                paddingTop: 24,
+                                marginBottom: 8
                             }}>
                                 <TouchableOpacity
-                                    style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}><Text
+                                    style={{flex: 3, justifyContent: 'center', alignItems: 'flex-start'}}
+                                    onPress={(e) => this.annihilateFutureRateDialogues()}><Text
                                     style={{color: '#257492'}}>Don't ask more</Text></TouchableOpacity>
-                                <TouchableOpacity style={{flex: 1}}><Text
+                                <TouchableOpacity
+                                    style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
+                                    onPress={(e) => this.setState({showRateDialog: false})}><Text
                                     style={{color: '#257492'}}>Later</Text></TouchableOpacity>
-                                <TouchableOpacity style={{flex: 1}}><Text
+                                <TouchableOpacity
+                                    style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
+                                    onPress={(e) => this.rate()}><Text
                                     style={{color: '#257492'}}>Improve</Text></TouchableOpacity>
                             </View>
                         </View>
@@ -627,7 +671,7 @@ export default class Main extends Component {
         );
     }
 
-    showButton(){
+    showButton() {
 
         TimerMixin.requestAnimationFrame(() => {
             if (!this.state.showButton) {
@@ -657,20 +701,17 @@ export default class Main extends Component {
         this.setState({
             showButton: false
         });
-    }
 
-    onClickFab(){
-        TimerMixin.requestAnimationFrame(() => {
-            if (!this.state.showMenu) {
+        if (!isAppRatedOrRateDeclined) {
+            this.setState({pagesViewed: this.state.pagesViewed + 1});
+            console.log('pagesViewed ' + this.state.pagesViewed);
+            if (this.state.pagesViewed >= CARDS_COUNT_FOR_RATING_DIALOG) {
                 this.setState({
-                    showMenu: true
-                })
-            } else {
-                this.setState({
-                    showMenu: false
+                    pagesViewed: 0,
+                    showRateDialog: true
                 })
             }
-        })
+        }
     }
 
     async deleteOwnEnvelope(id: number) {
@@ -735,14 +776,19 @@ export default class Main extends Component {
 
     }
 
-    onRefresh = () => {
-        this.setState({
-            showProgress: true
-        });
-        this.saveStatus()
-            .then(this.getUserStatus())
-            .catch((e)=> console.log.e)
-    };
+    onClickFab() {
+        TimerMixin.requestAnimationFrame(() => {
+            if (!this.state.showMenu) {
+                this.setState({
+                    showMenu: true
+                })
+            } else {
+                this.setState({
+                    showMenu: false
+                })
+            }
+        })
+    }
 
     incrementViews(pageNum: number) {
         let id = envelopesArray[pageNum].data.id;
@@ -782,6 +828,29 @@ export default class Main extends Component {
         }
     }
 
+    async annihilateFutureRateDialogues() {
+        isAppRatedOrRateDeclined = true;
+        this.setState({showRateDialog: false});
+        try {
+            await AsyncStorage.setItem('isAppRatedOrRateDeclined', JSON.stringify(true));
+        } catch (error) {
+        }
+    }
+
+    rate() {
+        this.annihilateFutureRateDialogues();
+
+        let uri = "market://details?id=live.eken.penpal";
+        Linking.canOpenURL(uri).then(supported => {
+            if (!supported) {
+                return Linking.openURL('https://play.google.com/store/apps/details?id=live.eken.penpal');
+            } else {
+                return Linking.openURL(uri);
+            }
+        }).catch(err => console.error('An error occurred', err));
+
+    }
+
     _navigateTo = (routeName, params) => {
         const resetAction = NavigationActions.reset({
             index: 0,
@@ -794,7 +863,7 @@ export default class Main extends Component {
     render() {
         return (
             <View style={styles.container}>
-                {this.state.showProgress&&
+                {this.state.showProgress &&
                 <Image source={require('./../assets/envelope_background_lanscape.png')} style={{
                     flex: 1,
                     width: deviceWidth,
@@ -906,9 +975,9 @@ export default class Main extends Component {
                     getItem={(data, index) => ( data[index])}
                     renderItem={this.renderEnvelope}
                     onEndReached={this._onScrollEnd}
-                    onEndReachedThreshold = {1}
+                    onEndReachedThreshold={1}
                     onStartReached={this._onScrollEnd}
-                    onStartThreshold = {1}
+                    onStartThreshold={1}
                     refreshing={this.state.refreshing}
                     onRefresh={this.onRefresh}
                     removeClippedSubviews={false}
@@ -920,83 +989,82 @@ export default class Main extends Component {
     }
 
 
-
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex:1,
-        backgroundColor:'#e4e4e4',
+        flex: 1,
+        backgroundColor: '#e4e4e4',
     },
     viewPager: {
-        flex:1,
+        flex: 1,
         width: null, height: null,
         alignSelf: 'center',
-        paddingVertical:deviceHeight*0.025,
+        paddingVertical: deviceHeight * 0.025,
 
     },
-    page:{
-        flex:1,
+    page: {
+        flex: 1,
     },
-    topRow:{
-        flex:3,
-        justifyContent:'center',
-        alignItems:'center',
+    topRow: {
+        flex: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
         flexDirection: 'row'
     },
     envelopeImage: {
-        flex:1,
+        flex: 1,
         width: null,
         height: null,
         resizeMode: 'contain',
     },
-    topLeftRow:{
-        height: deviceHeight/1.9,
+    topLeftRow: {
+        height: deviceHeight / 1.9,
         width: deviceWidth / 2 - 82,
         flex: 1,
-        justifyContent:'flex-start',
-        alignItems:'flex-start',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
         flexDirection: 'column',
         paddingLeft: deviceWidth * 0.0225,
-        paddingTop:deviceHeight*0.15
+        paddingTop: deviceHeight * 0.15
     },
-    prefix:{
-        height: deviceHeight/25,
-        resizeMode:'contain'
+    prefix: {
+        height: deviceHeight / 25,
+        resizeMode: 'contain'
     },
-    topRightRow:{
-        height: deviceHeight/1.9,
+    topRightRow: {
+        height: deviceHeight / 1.9,
         flex: 1,
-        justifyContent:'flex-start',
-        alignItems:'center',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
         flexDirection: 'row',
-        paddingRight:deviceWidth*0.0375,
-        paddingTop:deviceHeight*0.1125
+        paddingRight: deviceWidth * 0.0375,
+        paddingTop: deviceHeight * 0.1125
     },
     userPhoto: {
-        height: deviceHeight/2.5,
-        width: deviceWidth/4,
-        resizeMode:'contain',
-        marginTop:deviceHeight*0.025
+        height: deviceHeight / 2.5,
+        width: deviceWidth / 4,
+        resizeMode: 'contain',
+        marginTop: deviceHeight * 0.025
     },
-    address:{
+    address: {
         color: '#212121',
         fontSize: 14,
-        marginLeft:deviceWidth*0.003125
+        marginLeft: deviceWidth * 0.003125
     },
-    name:{
+    name: {
         color: '#212121',
         fontSize: 16,
-        marginLeft:deviceWidth*0.003125
+        marginLeft: deviceWidth * 0.003125
     },
     actionButtonIcon: {
         fontSize: 22,
         color: '#757575',
     },
-    actionButtonText:{
+    actionButtonText: {
         color: '#212121',
         fontSize: 16,
-        marginRight: deviceWidth*0.03125
+        marginRight: deviceWidth * 0.03125
     }
 });
 
