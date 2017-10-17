@@ -197,6 +197,10 @@ export default class Main extends Component {
     }
 
     componentWillMount() {
+        if (scrollToFirst) {
+            page = 0;
+        }
+
         if (envelopesArray.length <= 0) {
             this.getUserStatus();
         } else {
@@ -204,9 +208,9 @@ export default class Main extends Component {
                 showProgress: false
             })
         }
-        if (scrollToFirst) {
-            page = 0;
-        }
+
+        this.getRateInfo();
+
 
     }
 
@@ -238,21 +242,25 @@ export default class Main extends Component {
                 } else {
                     this.getCards();
                 }
-
             } else {
                 block = this.randomizer(BLOCKS_RANGE_FOR_RANDOMIZATION);
                 await this.getCards();
             }
 
 
-            if (JSON.parse(await AsyncStorage.getItem('isAppRatedOrRateDeclined'))) {
-                isAppRatedOrRateDeclined = true;
-            }
-
         } catch (message) {
             this.getCards();
         }
 
+    }
+
+    async getRateInfo() {
+        if (JSON.parse(await AsyncStorage.getItem('isAppRatedOrRateDeclined'))) {
+            isAppRatedOrRateDeclined = true;
+        } else {
+            let storedPagesViewed = JSON.parse(await AsyncStorage.getItem('pagesViewed'));
+            storedPagesViewed === null ? this.setState({pagesViewed: 0}) : this.setState({pagesViewed: storedPagesViewed});
+        }
     }
 
     async getLastCardOfUser(email: string) {
@@ -300,6 +308,7 @@ export default class Main extends Component {
     async saveStatus() {
         try {
             await AsyncStorage.setItem('block', JSON.stringify(block));
+            await AsyncStorage.setItem('pagesViewed', JSON.stringify(this.state.pagesViewed));
         } catch (error) {
         }
     }
@@ -839,6 +848,8 @@ export default class Main extends Component {
 
     rate() {
         this.annihilateFutureRateDialogues();
+
+        //todo rate for iOS
 
         let uri = "market://details?id=live.eken.penpal";
         Linking.canOpenURL(uri).then(supported => {
