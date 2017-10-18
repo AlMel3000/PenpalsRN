@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "babel-plugin-transform-remove-console": "^6.8.5",
+    "radio-button-react-native": "^1.1.6",
     "react": "16.0.0-alpha.12",
     "react-native": "0.47.2",
     "react-native-action-button": "^2.8.0",

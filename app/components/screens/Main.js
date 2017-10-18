@@ -26,6 +26,8 @@ import RotatingView from './../assets/RotatingView';
 
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
+import RadioButton from 'radio-button-react-native';
+
 import LocalizedStrings from 'react-native-localization';
 
 var TimerMixin = require('react-timer-mixin');
@@ -184,7 +186,9 @@ export default class Main extends Component {
             showRateDialog: false,
             showFilter: false,
 
-            pagesViewed: 0
+            pagesViewed: 0,
+
+            value: 0
         };
 
 
@@ -233,7 +237,8 @@ export default class Main extends Component {
                 showProgress: true,
                 showMenu: false,
                 showButton: false,
-                showFilter: false
+                showFilter: false,
+                value: 0
             });
             savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
 
@@ -675,56 +680,64 @@ export default class Main extends Component {
                                 <TouchableOpacity
                                     style={{flex: 3, justifyContent: 'center', alignItems: 'flex-start'}}
                                     onPress={(e) => this.annihilateFutureRateDialogues()}><Text
-                                    style={{color: '#257492'}}>Don't ask more</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>Don't ask more</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.setState({showRateDialog: false})}><Text
-                                    style={{color: '#257492'}}>Later</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>Later</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.rate()}><Text
-                                    style={{color: '#257492'}}>Improve</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>Improve</Text></TouchableOpacity>
                             </View>
                         </View>
                     </Modal>
 
                     <Modal isVisible={this.state.showFilter}
                            backdropOpacity={0.4}>
-                        <View style={{flex: 0, marginHorizontal: 56, backgroundColor: 'white', padding: 16}}>
+                        <View style={{flex: 1, margin: 56, backgroundColor: 'white', padding: 16}}>
+                            <Text style={{flex: 2, alignSelf: 'center', fontSize: 18, color: '#212121'}}>Фильтр</Text>
                             <View style={{
-                                flex: 3,
+                                flex: 5,
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 justifyContent: 'flex-start'
                             }}>
-
+                                <RadioButton currentValue={this.state.value} value={1}
+                                             onPress={this.handleOnPress.bind(this)} outerCircleColor={'dodgerblue'}/>
+                                <View style={{width: 22, marginLeft: 16}}>
+                                    <Icon2 name="globe" style={{fontSize: 20, color: 'black'}}/>
+                                </View>
                             </View>
                             <View style={{
-                                flex: 3,
+                                flex: 5,
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 justifyContent: 'flex-start'
                             }}>
-
+                                <RadioButton currentValue={this.state.value} value={2}
+                                             onPress={this.handleOnPress.bind(this)} outerCircleColor={'dodgerblue'}/>
+                                <Text style={{marginLeft: 16, color: '#212121', fontSize: 16}}>Показать только
+                                    собственные конверты</Text>
                             </View>
                             <View style={{
-                                flex: 2,
+                                flex: 3,
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 justifyContent: 'flex-start'
                             }}>
                                 <TouchableOpacity
                                     style={{flex: 3, justifyContent: 'center', alignItems: 'flex-start'}}
-                                    onPress={(e) => this.setState({showFilter: false})}><Text
-                                    style={{color: '#257492'}}>Назад</Text></TouchableOpacity>
+                                    onPress={(e) => this.setState({showFilter: false, value: 0})}><Text
+                                    style={{color: '#257492', fontSize: 16}}>Назад</Text></TouchableOpacity>
                                 <TouchableOpacity
-                                    style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
+                                    style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end', marginRight: 8}}
                                     onPress={(e) => this.getUserStatus()}><Text
-                                    style={{color: '#257492'}}>Сбросить</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>Сбросить</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                 ><Text
-                                    style={{color: '#257492'}}>Применить</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>Применить</Text></TouchableOpacity>
                             </View>
                         </View>
                     </Modal>
@@ -914,6 +927,10 @@ export default class Main extends Component {
             }
         }).catch(err => console.error('An error occurred', err));
 
+    }
+
+    handleOnPress(value) {
+        this.setState({value: value})
     }
 
     _navigateTo = (routeName, params) => {
