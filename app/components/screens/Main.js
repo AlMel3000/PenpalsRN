@@ -229,6 +229,12 @@ export default class Main extends Component {
 
     async getUserStatus() {
         try {
+            this.setState({
+                showProgress: true,
+                showMenu: false,
+                showButton: false,
+                showFilter: false
+            });
             savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
 
             let lastCardOfUser = JSON.parse(await AsyncStorage.getItem('lastCardOfUser'));
@@ -624,7 +630,11 @@ export default class Main extends Component {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
-                                              onPress={(e) => this.setState({showFilter: true})}>
+                                              onPress={(e) => this.setState({
+                                                  showFilter: true,
+                                                  showMenu: false,
+                                                  showButton: false
+                                              })}>
                                 <Text style={styles.actionButtonText}>{strings.filter}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="filter" style={styles.actionButtonIcon}/>
@@ -652,7 +662,9 @@ export default class Main extends Component {
                                 color: '#212121',
                                 fontSize: 16,
                                 marginTop: 8
-                            }}>{'We really care about your experience and want to make app better for you.\nLet us know how it can be improved and we\'ll build it!\nOr just rate us on Google Play.'}</Text>
+                            }}>{'We really care about your experience and want to make app better for you.' +
+                            '\nLet us know how it can be improved and we\'ll build it!' +
+                            '\nOr just rate us on Google Play.'}</Text>
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'center',
@@ -675,6 +687,48 @@ export default class Main extends Component {
                             </View>
                         </View>
                     </Modal>
+
+                    <Modal isVisible={this.state.showFilter}
+                           backdropOpacity={0.4}>
+                        <View style={{flex: 0, marginHorizontal: 56, backgroundColor: 'white', padding: 16}}>
+                            <View style={{
+                                flex: 3,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start'
+                            }}>
+
+                            </View>
+                            <View style={{
+                                flex: 3,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start'
+                            }}>
+
+                            </View>
+                            <View style={{
+                                flex: 2,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start'
+                            }}>
+                                <TouchableOpacity
+                                    style={{flex: 3, justifyContent: 'center', alignItems: 'flex-start'}}
+                                    onPress={(e) => this.setState({showFilter: false})}><Text
+                                    style={{color: '#257492'}}>Назад</Text></TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
+                                    onPress={(e) => this.getUserStatus()}><Text
+                                    style={{color: '#257492'}}>Сбросить</Text></TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
+                                ><Text
+                                    style={{color: '#257492'}}>Применить</Text></TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+
                 </Image>
             </TouchableOpacity>
         );
