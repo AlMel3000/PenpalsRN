@@ -32,6 +32,8 @@ import LocalizedStrings from 'react-native-localization';
 
 var TimerMixin = require('react-timer-mixin');
 
+let countriesData = require('./../assets/countries.json');
+
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
@@ -60,6 +62,12 @@ let page = 0;
 let block = 1;
 
 let isLastBlockListed = false;
+
+let countryByISO = {};
+
+let countByIso = {};
+
+let envelopesByCountry = [];
 
 let strings = new LocalizedStrings({
     "en-US": {
@@ -188,7 +196,10 @@ export default class Main extends Component {
 
             pagesViewed: 0,
 
-            value: 0
+            value: 0,
+
+            ownEnvelopesFilterText: 'Показать только собственные конверты',
+            ownEnvelopesFilterTextColor: '#212121'
         };
 
 
@@ -224,6 +235,7 @@ export default class Main extends Component {
             BackHandler.exitApp();
             return true;
         });
+        this.getCountries().then(console.log(JSON.stringify(countryByISO)));
     }
 
     componentWillUnmount() {
@@ -370,6 +382,45 @@ export default class Main extends Component {
                     showProgress: false,
                     showError: true
                 });
+            }
+        } catch (message) {
+            this.setState({
+                showProgress: false,
+                showError: true
+            });
+        }
+    }
+
+
+    async getCountries() {
+        try {
+            let response = await fetch(('http://penpal.eken.live/api/get-cards?page=' + block + '&perPage=' + ENVELOPES_AMOUNT_PER_BLOCK), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+            let res = JSON.parse(await response.text());
+            if (response.status >= 200 && response.status < 300) {
+
+                countByIso = res.countries;
+                let countryCodesFromServer = Object.keys(countByIso);
+                for (let i = 0; i < countryCodesFromServer.length; i++) {
+                    let code = countryCodesFromServer[i];
+                    let countryname = '';
+                    countriesData.filter(value => value.cca2 === code)
+                        .map(value => countryname = value.name.common);
+
+                    countryByISO[code] = countryname;
+
+                    envelopesByCountry.push(countryname + ' (' + countByIso[code] + ")")
+                }
+
+                console.log(JSON.stringify(countByIso));
+                console.log(JSON.stringify(envelopesByCountry))
+
+
             }
         } catch (message) {
             this.setState({
@@ -717,8 +768,11 @@ export default class Main extends Component {
                             }}>
                                 <RadioButton currentValue={this.state.value} value={2}
                                              onPress={this.handleOnPress.bind(this)} outerCircleColor={'dodgerblue'}/>
-                                <Text style={{marginLeft: 16, color: '#212121', fontSize: 16}}>Показать только
-                                    собственные конверты</Text>
+                                <Text style={{
+                                    marginLeft: 16,
+                                    color: this.state.ownEnvelopesFilterTextColor,
+                                    fontSize: 16
+                                }}>{this.state.ownEnvelopesFilterText}</Text>
                             </View>
                             <View style={{
                                 flex: 3,
@@ -930,7 +984,20 @@ export default class Main extends Component {
     }
 
     handleOnPress(value) {
-        this.setState({value: value})
+        this.setState({value: value});
+        if (value === 2) {
+            if (userEmails === null || userEmails.length === 0) {
+                this.setState({
+                    ownEnvelopesFilterText: 'Вы ещё не добавляли конверты',
+                    ownEnvelopesFilterTextColor: 'red'
+                })
+            } else {
+                this.setState({
+                    ownEnvelopesFilterText: 'Показать только собственные конверты',
+                    ownEnvelopesFilterTextColor: '#212121'
+                })
+            }
+        }
     }
 
     _navigateTo = (routeName, params) => {
