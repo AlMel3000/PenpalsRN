@@ -29,6 +29,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 import RadioButton from 'radio-button-react-native';
 
 import LocalizedStrings from 'react-native-localization';
+import {Dropdown} from 'react-native-material-dropdown';
 
 var TimerMixin = require('react-timer-mixin');
 
@@ -250,7 +251,8 @@ export default class Main extends Component {
                 showMenu: false,
                 showButton: false,
                 showFilter: false,
-                value: 0
+                value: 0,
+                code: ''
             });
             savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
 
@@ -414,13 +416,8 @@ export default class Main extends Component {
 
                     countryByISO[code] = countryname;
 
-                    envelopesByCountry.push(countryname + ' (' + countByIso[code] + ")")
+                    envelopesByCountry.push({value: countryname + ' (' + countByIso[code] + ")"})
                 }
-
-                console.log(JSON.stringify(countByIso));
-                console.log(JSON.stringify(envelopesByCountry))
-
-
             }
         } catch (message) {
             this.setState({
@@ -754,10 +751,19 @@ export default class Main extends Component {
                                 alignItems: 'center',
                                 justifyContent: 'flex-start'
                             }}>
-                                <RadioButton currentValue={this.state.value} value={1}
+                                <RadioButton style={{alignSelf: 'flex-end'}}
+                                             currentValue={this.state.value} value={1}
                                              onPress={this.handleOnPress.bind(this)} outerCircleColor={'dodgerblue'}/>
-                                <View style={{width: 22, marginLeft: 16}}>
+                                <View style={{width: 22, marginLeft: 16, alignSelf: 'flex-end', marginBottom: 12}}>
                                     <Icon2 name="globe" style={{fontSize: 20, color: 'black'}}/>
+                                </View>
+                                <View style={{
+                                    flex: 1, marginHorizontal: 8, marginBottom: 12
+                                }}>
+                                    <Dropdown
+                                        label={'Страна'}
+                                        data={envelopesByCountry}
+                                        onChangeText={(data) => this.handleCountrySelection(data)}/>
                                 </View>
                             </View>
                             <View style={{
@@ -999,6 +1005,56 @@ export default class Main extends Component {
             }
         }
     }
+
+    handleCountrySelection(country: string) {
+        let countryName = country.split(' (')[0];
+        const getKey = (obj, val) => Object.keys(obj).find(key => obj[key] === val);
+        let code = getKey(countryByISO, countryName);
+        this.setState({
+            code: code
+        });
+
+    }
+
+
+    async getFilteredCards() {
+        try {
+
+            this.setState({
+                showProgress: true
+            });
+            const data = new FormData();
+            data.append('country', this.state.code);
+            data.append('gender', 0);
+            data.append('page', 1);
+            data.append('perPage', ENVELOPES_AMOUNT_PER_BLOCK);
+
+
+            let response = await fetch(('http://penpal.eken.live/api/get-cards?page=' + block + '&perPage=' + ENVELOPES_AMOUNT_PER_BLOCK), {
+                method: 'POST',
+                body: data
+            });
+            let res = JSON.parse(await response.text());
+            if (response.status >= 200 && response.status < 300) {
+
+                this.setState({
+                    showProgress: false,
+                    showError: false
+                });
+            } else {
+                this.setState({
+                    showProgress: false,
+                    showError: true
+                });
+            }
+        } catch (message) {
+            this.setState({
+                showProgress: false,
+                showError: true
+            });
+        }
+    }
+
 
     _navigateTo = (routeName, params) => {
         const resetAction = NavigationActions.reset({
