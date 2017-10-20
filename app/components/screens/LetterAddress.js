@@ -531,7 +531,8 @@ export default class LetterAddress extends Component {
                                             sender_cca2={this.state.sender_cca2}
                                             filterable={true}
                                             autoFocusFilter={true}
-                                            translation='eng'>
+                                            translation='eng'
+                                            styles={{fontSize: 12}}>
                                             <TextInput
                                                 style={{flex: 0, alignSelf: 'stretch', color: '#212121', fontSize: 14}}
                                                 placeholder={'Страна'}

@@ -582,7 +582,8 @@ export default class EnvelopeFillingScreen extends Component {
                                        cca2={this.state.cca2}
                                        filterable={true}
                                        autoFocusFilter={true}
-                                       translation='eng'>
+                                       translation='eng'
+                                       styles={{fontSize: 12}}>
                                    <TextInput
                                        style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
                                        placeholder={'Страна'}
