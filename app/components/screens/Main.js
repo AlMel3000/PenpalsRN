@@ -200,7 +200,9 @@ export default class Main extends Component {
             value: 0,
 
             ownEnvelopesFilterText: 'Показать только собственные конверты',
-            ownEnvelopesFilterTextColor: '#212121'
+            ownEnvelopesFilterTextColor: '#212121',
+
+            showOwnEnvelopes: false
         };
 
 
@@ -252,9 +254,11 @@ export default class Main extends Component {
                 showButton: false,
                 showFilter: false,
                 value: 0,
-                code: ''
+                code: '',
+                showOwnEnvelopes: false
             });
             savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
+
 
             let lastCardOfUser = JSON.parse(await AsyncStorage.getItem('lastCardOfUser'));
 
@@ -262,6 +266,7 @@ export default class Main extends Component {
 
             if (await savedBlock !== null) {
                 block = savedBlock;
+                page = JSON.parse(await AsyncStorage.getItem('page'));
                 if (await lastCardOfUser) {
                     this.getLastCardOfUser(lastCardOfUser);
                 } else {
@@ -311,7 +316,8 @@ export default class Main extends Component {
                             email: res.email,
                             description: res.description,
                             photo: res.image_id,
-                            envelope: res.envelope, stamp: res.stamp, seal: res.seal
+                            envelope: res.envelope, stamp: res.stamp, seal: res.seal,
+                            views: res.views
                         },
                         resources: {envelope: res.envelope, stamp: res.stamp, seal: res.seal}
                     }];
@@ -333,6 +339,7 @@ export default class Main extends Component {
     async saveStatus() {
         try {
             await AsyncStorage.setItem('block', JSON.stringify(block));
+            await AsyncStorage.setItem('page', JSON.stringify(page));
             await AsyncStorage.setItem('pagesViewed', JSON.stringify(this.state.pagesViewed));
         } catch (error) {
         }
@@ -340,12 +347,18 @@ export default class Main extends Component {
 
     async getCards() {
         try {
-            let response = await fetch(('http://penpal.eken.live/api/get-cards?page=' + block + '&perPage=' + ENVELOPES_AMOUNT_PER_BLOCK), {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
+            this.setState({
+                showProgress: true
+            });
+            const data = new FormData();
+            data.append('country', this.state.code);
+            data.append('page', block);
+            data.append('perPage', ENVELOPES_AMOUNT_PER_BLOCK);
+
+
+            let response = await fetch(('http://penpal.eken.live/api/get-cards'), {
+                method: 'POST',
+                body: data
             });
             let res = JSON.parse(await response.text());
             if (response.status >= 200 && response.status < 300) {
@@ -454,7 +467,7 @@ export default class Main extends Component {
         } else {
             imageURL = 'http://penpal.eken.live/Api/photo/width/300/id/' + envelope.item.data.photo;
         }
-        let envelopeNumber = envelope.item.resources.envelope;
+        let envelopeNumber = envelope.item.data.envelope;
         let envelopeURL;
         if (envelopeNumber < 10) {
             envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=00' + envelopeNumber;
@@ -464,7 +477,7 @@ export default class Main extends Component {
             envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=' + envelopeNumber;
         }
 
-        let stampNumber = envelope.item.resources.stamp;
+        let stampNumber = envelope.item.data.stamp;
         let stampURL;
         if (stampNumber < 10) {
             stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=00' + stampNumber;
@@ -474,7 +487,7 @@ export default class Main extends Component {
             stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=' + stampNumber;
         }
 
-        let sealNumber = envelope.item.resources.seal;
+        let sealNumber = envelope.item.data.seal;
         let sealURL;
         if (sealNumber < 10) {
             sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=00' + sealNumber;
@@ -792,11 +805,12 @@ export default class Main extends Component {
                                     style={{color: '#257492', fontSize: 16}}>Назад</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end', marginRight: 8}}
-                                    onPress={(e) => this.getUserStatus()}><Text
+                                    onPress={(e) => this.resetFilter()}><Text
                                     style={{color: '#257492', fontSize: 16}}>Сбросить</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
-                                ><Text
+                                    onPress={(e) => this.handleFilter()}>
+                                    <Text
                                     style={{color: '#257492', fontSize: 16}}>Применить</Text></TouchableOpacity>
                             </View>
                         </View>
@@ -871,8 +885,13 @@ export default class Main extends Component {
                     if (page > 0) {
                         page--;
                     }
-                    this.getCards();
+                    if (!this.state.showOwnEnvelopes) {
+                        this.getCards();
+                    } else {
+                        this.getAllCardsOfUser();
+                    }
                 }
+
 
             }
         } catch (message) {
@@ -894,22 +913,24 @@ export default class Main extends Component {
     }
 
     _onScrollEnd() {
-        this.setState({
-            showProgress: true
-        });
-        let nextBlock;
-        if (block < blocksAvailable) {
-            nextBlock = block + 1;
+        if (envelopesArray.length > 14) {
+            this.setState({
+                showProgress: true
+            });
+            let nextBlock;
+            if (block < blocksAvailable) {
+                nextBlock = block + 1;
 
-        } else {
-            nextBlock = 1;
-            isLastBlockListed = true;
+            } else {
+                nextBlock = 1;
+                isLastBlockListed = true;
+            }
+            console.log('nextBlock ' + nextBlock);
+            block = nextBlock;
+            this.getCards();
+            this.updateViews();
+
         }
-        console.log('nextBlock ' + nextBlock);
-        block = nextBlock;
-        this.getCards();
-        this.updateViews();
-
     }
 
     onClickFab() {
@@ -1011,32 +1032,89 @@ export default class Main extends Component {
         const getKey = (obj, val) => Object.keys(obj).find(key => obj[key] === val);
         let code = getKey(countryByISO, countryName);
         this.setState({
-            code: code
-        });
+            code: '"' + code + '"',
+            value: 1
+        })
 
     }
 
+    handleFilter() {
+        this.saveStatus();
+        if (this.state.value === 1) {
+            if (!this.state.code.isEmpty) {
+                envelopesArray = [];
+                block = 1;
+                page = 0;
+                this.getCards();
+                this.setState({
+                    showFilter: false
+                });
+            }
 
-    async getFilteredCards() {
+        } else if (this.state.value === 2) {
+            if (userEmails !== null && userEmails.length > 0) {
+                envelopesArray = [];
+                block = 1;
+                page = 0;
+                this.getAllCardsOfUser();
+                this.setState({
+                    showFilter: false,
+                    showOwnEnvelopes: true
+                });
+            }
+        }
+    }
+
+
+    async getAllCardsOfUser() {
         try {
 
             this.setState({
                 showProgress: true
             });
             const data = new FormData();
-            data.append('country', this.state.code);
-            data.append('gender', 0);
-            data.append('page', 1);
-            data.append('perPage', ENVELOPES_AMOUNT_PER_BLOCK);
+            for (let i = 0; i < userEmails.split(',').length; i++) {
+                data.append('emails[]', userEmails.split(',')[i]);
+                console.log(userEmails.split(',')[i]);
+            }
 
 
-            let response = await fetch(('http://penpal.eken.live/api/get-cards?page=' + block + '&perPage=' + ENVELOPES_AMOUNT_PER_BLOCK), {
+            let response = await fetch(('http://penpal.eken.live/Api/get-cards-by-email'), {
                 method: 'POST',
                 body: data
             });
             let res = JSON.parse(await response.text());
             if (response.status >= 200 && response.status < 300) {
+                if (res.length === 0) {
+                    this.setState({
+                        showOwnEnvelopes: false
+                    });
+                    this.showUserDeletedDialog();
+                }
+                for (let i = 0; i < res.length; i++) {
+                    let tempArray = {
+                        type: "card",
+                        data: {
+                            id: res[i].id,
+                            first_name: res[i].first_name,
+                            address: res[i].address,
+                            city: res[i].city,
+                            country_name: res[i].country_name,
+                            postal: res[i].postal,
+                            email: res[i].email,
+                            description: res[i].description,
+                            photo: res[i].image_id,
+                            envelope: res[i].envelope, stamp: res[i].stamp, seal: res[i].seal,
+                            views: res[i].views
+                        },
+                        resources: {envelope: res[i].envelope, stamp: res[i].stamp, seal: res[i].seal}
+                    };
 
+                    envelopesArray.push(tempArray)
+
+                }
+
+                console.log(JSON.stringify(envelopesArray));
                 this.setState({
                     showProgress: false,
                     showError: false
@@ -1044,17 +1122,41 @@ export default class Main extends Component {
             } else {
                 this.setState({
                     showProgress: false,
-                    showError: true
+                    showError: true,
+                    showOwnEnvelopes: false
                 });
             }
         } catch (message) {
+            console.log(message);
             this.setState({
                 showProgress: false,
-                showError: true
+                showError: true,
+                showOwnEnvelopes: false
             });
         }
     }
 
+
+    resetFilter() {
+        envelopesArray = [];
+        this.setState({
+                code: ' ',
+                showOwnEnvelopes: false
+            }
+        );
+        this.getUserStatus()
+    }
+
+    showUserDeletedDialog() {
+        Alert.alert(
+            'Your envelopes are not found',
+            'Возможно Вы удалили свои конверты или истёк срок их размещения',
+            [
+                {text: 'Ok', onPress: () => this.getUserStatus()},
+            ],
+            {cancelable: true}
+        )
+    }
 
     _navigateTo = (routeName, params) => {
         const resetAction = NavigationActions.reset({

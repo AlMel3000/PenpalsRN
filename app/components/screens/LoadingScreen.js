@@ -98,7 +98,8 @@ export default class LoadingScreen extends Component {
                             email: res.email,
                             description: res.description,
                             photo: res.image_id,
-                            envelope: res.envelope, stamp: res.stamp, seal: res.seal
+                            envelope: res.envelope, stamp: res.stamp, seal: res.seal,
+                            views: res.views
                         },
                         resources: {envelope: res.envelope, stamp: res.stamp, seal: res.seal}
                     }];

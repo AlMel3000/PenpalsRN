@@ -279,7 +279,12 @@ export default class EnvelopePublication extends Component {
 
         } finally {
             this.saveAndGo()
-                .then(this.getLastCardOfUser(email))
+                .then(this._navigateTo('Main', {
+                    envelopesData: envelopesArray,
+                    block: block,
+                    userEmails: userEmails,
+                    scrollToFirst: true
+                }));
         }
     }
 
@@ -288,49 +293,7 @@ export default class EnvelopePublication extends Component {
         await AsyncStorage.setItem('lastCardOfUser', JSON.stringify(email));
     }
 
-    async getLastCardOfUser(email: string) {
-        try {
-            let response = await fetch(('http://penpal.eken.live/Api/get-last-user-envelope/?email=' + email), {
-                method: 'GET'
-            });
-            let res = JSON.parse(await response.text());
-            console.log(JSON.stringify(res));
-            if (response.status >= 200 && response.status < 300) {
 
-                if (!res.result) {
-                    let tempArray = [{
-                        type: "card",
-                        data: {
-                            id: res.id,
-                            first_name: res.first_name,
-                            address: res.address,
-                            city: res.city,
-                            country_name: res.country_name,
-                            postal: res.postal,
-                            email: res.email,
-                            description: res.description,
-                            photo: res.image_id,
-                            envelope: res.envelope, stamp: res.stamp, seal: res.seal
-                        },
-                        resources: {envelope: res.envelope, stamp: res.stamp, seal: res.seal}
-                    }];
-                    tempArray.concat(envelopesArray);
-                    envelopesArray = tempArray;
-
-                }
-
-            }
-        } catch (message) {
-            console.log('catch ' + message)
-        } finally {
-            this._navigateTo('Main', {
-                envelopesData: envelopesArray,
-                block: block,
-                userEmails: userEmails,
-                scrollToFirst: true
-            });
-        }
-    }
 
     render() {
 

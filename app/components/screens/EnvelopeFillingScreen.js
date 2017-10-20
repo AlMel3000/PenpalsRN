@@ -414,12 +414,12 @@ export default class EnvelopeFillingScreen extends Component {
 
    async _saveFields(){
         try {
-            let userEmails;
-            savedUserEmails = JSON.parse(await AsyncStorage.getItem('userEmails'));
+
+
             let currentEmail = this.state.email;
-            if (savedUserEmails && this.isEmailValid(currentEmail)){
-                userEmails = savedUserEmails+','+currentEmail;
-            } else if (!savedUserEmails && this.isEmailValid(currentEmail)){
+            if (userEmails.length > 0 && this.isEmailValid(currentEmail)) {
+                userEmails = userEmails + ',' + currentEmail;
+            } else if (this.isEmailValid(currentEmail)) {
                 userEmails = currentEmail;
             }
 
