@@ -30,5 +30,9 @@ npm install --save react-native-billing
 
 npm install --save react-native-modal
 
+npm i radio-button-react-native --save
+
+npm install --save react-native-material-dropdown
+
 
 npm i babel-plugin-transform-remove-console --save

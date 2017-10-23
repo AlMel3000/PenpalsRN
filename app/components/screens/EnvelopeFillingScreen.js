@@ -414,12 +414,12 @@ export default class EnvelopeFillingScreen extends Component {
 
    async _saveFields(){
         try {
-            let userEmails;
-            savedUserEmails = JSON.parse(await AsyncStorage.getItem('userEmails'));
+
+
             let currentEmail = this.state.email;
-            if (savedUserEmails && this.isEmailValid(currentEmail)){
-                userEmails = savedUserEmails+','+currentEmail;
-            } else if (!savedUserEmails && this.isEmailValid(currentEmail)){
+            if (userEmails.length > 0 && this.isEmailValid(currentEmail)) {
+                userEmails = userEmails + ',' + currentEmail;
+            } else if (this.isEmailValid(currentEmail)) {
                 userEmails = currentEmail;
             }
 
@@ -582,7 +582,8 @@ export default class EnvelopeFillingScreen extends Component {
                                        cca2={this.state.cca2}
                                        filterable={true}
                                        autoFocusFilter={true}
-                                       translation='eng'>
+                                       translation='eng'
+                                       styles={{countryName: {fontSize: 14}}}>
                                    <TextInput
                                        style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
                                        placeholder={'Страна'}

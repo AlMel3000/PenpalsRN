@@ -26,9 +26,14 @@ import RotatingView from './../assets/RotatingView';
 
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
+import RadioButton from 'radio-button-react-native';
+
 import LocalizedStrings from 'react-native-localization';
+import {Dropdown} from 'react-native-material-dropdown';
 
 var TimerMixin = require('react-timer-mixin');
+
+let countriesData = require('./../assets/countries.json');
 
 
 let deviceWidth = Dimensions.get('window').width;
@@ -58,6 +63,12 @@ let page = 0;
 let block = 1;
 
 let isLastBlockListed = false;
+
+let countryByISO = {};
+
+let countByIso = {};
+
+let envelopesByCountry = [];
 
 let strings = new LocalizedStrings({
     "en-US": {
@@ -184,7 +195,14 @@ export default class Main extends Component {
             showRateDialog: false,
             showFilter: false,
 
-            pagesViewed: 0
+            pagesViewed: 0,
+
+            value: 0,
+
+            ownEnvelopesFilterText: 'Показать только собственные конверты',
+            ownEnvelopesFilterTextColor: '#212121',
+
+            showOwnEnvelopes: false
         };
 
 
@@ -220,6 +238,7 @@ export default class Main extends Component {
             BackHandler.exitApp();
             return true;
         });
+        this.getCountries().then(console.log(JSON.stringify(countryByISO)));
     }
 
     componentWillUnmount() {
@@ -229,7 +248,17 @@ export default class Main extends Component {
 
     async getUserStatus() {
         try {
+            this.setState({
+                showProgress: true,
+                showMenu: false,
+                showButton: false,
+                showFilter: false,
+                value: 0,
+                code: '',
+                showOwnEnvelopes: false
+            });
             savedBlock = JSON.parse(await AsyncStorage.getItem('block'));
+
 
             let lastCardOfUser = JSON.parse(await AsyncStorage.getItem('lastCardOfUser'));
 
@@ -237,6 +266,7 @@ export default class Main extends Component {
 
             if (await savedBlock !== null) {
                 block = savedBlock;
+                page = JSON.parse(await AsyncStorage.getItem('page'));
                 if (await lastCardOfUser) {
                     this.getLastCardOfUser(lastCardOfUser);
                 } else {
@@ -286,7 +316,8 @@ export default class Main extends Component {
                             email: res.email,
                             description: res.description,
                             photo: res.image_id,
-                            envelope: res.envelope, stamp: res.stamp, seal: res.seal
+                            envelope: res.envelope, stamp: res.stamp, seal: res.seal,
+                            views: res.views
                         },
                         resources: {envelope: res.envelope, stamp: res.stamp, seal: res.seal}
                     }];
@@ -308,6 +339,7 @@ export default class Main extends Component {
     async saveStatus() {
         try {
             await AsyncStorage.setItem('block', JSON.stringify(block));
+            await AsyncStorage.setItem('page', JSON.stringify(page));
             await AsyncStorage.setItem('pagesViewed', JSON.stringify(this.state.pagesViewed));
         } catch (error) {
         }
@@ -315,12 +347,18 @@ export default class Main extends Component {
 
     async getCards() {
         try {
-            let response = await fetch(('http://penpal.eken.live/api/get-cards?page=' + block + '&perPage=' + ENVELOPES_AMOUNT_PER_BLOCK), {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
+            this.setState({
+                showProgress: true
+            });
+            const data = new FormData();
+            data.append('country', this.state.code);
+            data.append('page', block);
+            data.append('perPage', ENVELOPES_AMOUNT_PER_BLOCK);
+
+
+            let response = await fetch(('http://penpal.eken.live/api/get-cards'), {
+                method: 'POST',
+                body: data
             });
             let res = JSON.parse(await response.text());
             if (response.status >= 200 && response.status < 300) {
@@ -368,6 +406,40 @@ export default class Main extends Component {
         }
     }
 
+
+    async getCountries() {
+        try {
+            let response = await fetch(('http://penpal.eken.live/api/get-cards?page=' + block + '&perPage=' + ENVELOPES_AMOUNT_PER_BLOCK), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+            let res = JSON.parse(await response.text());
+            if (response.status >= 200 && response.status < 300) {
+
+                countByIso = res.countries;
+                let countryCodesFromServer = Object.keys(countByIso);
+                for (let i = 0; i < countryCodesFromServer.length; i++) {
+                    let code = countryCodesFromServer[i];
+                    let countryname = '';
+                    countriesData.filter(value => value.cca2 === code)
+                        .map(value => countryname = value.name.common);
+
+                    countryByISO[code] = countryname;
+
+                    envelopesByCountry.push({value: countryname + ' (' + countByIso[code] + ")"})
+                }
+            }
+        } catch (message) {
+            this.setState({
+                showProgress: false,
+                showError: true
+            });
+        }
+    }
+
     randomizer(max: number) {
         let rand = (Math.random() * max);
         let randomBlock = Math.floor(rand) + 1;
@@ -395,7 +467,7 @@ export default class Main extends Component {
         } else {
             imageURL = 'http://penpal.eken.live/Api/photo/width/300/id/' + envelope.item.data.photo;
         }
-        let envelopeNumber = envelope.item.resources.envelope;
+        let envelopeNumber = envelope.item.data.envelope;
         let envelopeURL;
         if (envelopeNumber < 10) {
             envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=00' + envelopeNumber;
@@ -405,7 +477,7 @@ export default class Main extends Component {
             envelopeURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=envelope&id=' + envelopeNumber;
         }
 
-        let stampNumber = envelope.item.resources.stamp;
+        let stampNumber = envelope.item.data.stamp;
         let stampURL;
         if (stampNumber < 10) {
             stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=00' + stampNumber;
@@ -415,7 +487,7 @@ export default class Main extends Component {
             stampURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=stamp&id=' + stampNumber;
         }
 
-        let sealNumber = envelope.item.resources.seal;
+        let sealNumber = envelope.item.data.seal;
         let sealURL;
         if (sealNumber < 10) {
             sealURL = 'http://penpal.eken.live/Api/get-resource-by-id?type=seal&id=00' + sealNumber;
@@ -513,42 +585,43 @@ export default class Main extends Component {
                         </View>
 
                         <View style={{
-                            height: 65,
-                            width: 124,
+                            height: 38,
+                            width: 74,
                             borderColor: 'black',
                             borderWidth: 1.5,
                             position: 'absolute',
-                            right: deviceWidth / 13,
+                            right: deviceWidth / 20,
                             alignSelf: 'flex-end',
                             transform: [{rotate: viewStampRotation}]
                         }}>
                             <View style={{
-                                height: 39,
-                                width: 100,
+                                height: 18,
+                                width: 60,
                                 borderColor: 'black',
-                                borderWidth: 1.5,
+                                borderWidth: 1,
                                 position: 'absolute',
                                 alignSelf: 'center',
-                                marginTop: 13,
+                                marginTop: 10,
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
                                 <Text style={{
                                     color: 'black',
-                                    fontSize: 14,
+                                    fontSize: 10,
                                     alignSelf: 'center'
                                 }}>{envelope.item.data.views}</Text>
                             </View>
-                            <Text style={{color: 'black', fontSize: 10, alignSelf: 'center'}}>ПРОСМОТРЫ</Text>
+                            <Text style={{color: 'black', fontSize: 8, alignSelf: 'center'}}>ПРОСМОТРЫ</Text>
 
                         </View>
+
                     </View>
                     <View
                         style={{flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row'}}>
-                        <View style={{flex: 1, width: deviceWidth / 2}}/>
+                        <View style={{flex: 1, width: deviceWidth / 2.6}}/>
                         <View style={{
                             flex: 1,
-                            width: deviceWidth / 2,
+                            width: deviceWidth / 1.6,
                             justifyContent: 'flex-start',
                             alignItems: 'flex-start',
                             flexDirection: 'row',
@@ -571,7 +644,7 @@ export default class Main extends Component {
                     <View style={{
                         position: 'absolute',
                         bottom: 32,
-                        right: 16,
+                        right: 32,
                         flexDirection: 'column',
                         alignItems: 'flex-end',
                         justifyContent: 'flex-end',
@@ -624,7 +697,11 @@ export default class Main extends Component {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
-                                              onPress={(e) => this.setState({showFilter: true})}>
+                                              onPress={(e) => this.setState({
+                                                  showFilter: true,
+                                                  showMenu: false,
+                                                  showButton: false
+                                              })}>
                                 <Text style={styles.actionButtonText}>{strings.filter}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
                                     <Icon2 name="filter" style={styles.actionButtonIcon}/>
@@ -652,7 +729,9 @@ export default class Main extends Component {
                                 color: '#212121',
                                 fontSize: 16,
                                 marginTop: 8
-                            }}>{'We really care about your experience and want to make app better for you.\nLet us know how it can be improved and we\'ll build it!\nOr just rate us on Google Play.'}</Text>
+                            }}>{'We really care about your experience and want to make app better for you.' +
+                            '\nLet us know how it can be improved and we\'ll build it!' +
+                            '\nOr just rate us on Google Play.'}</Text>
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'center',
@@ -663,18 +742,81 @@ export default class Main extends Component {
                                 <TouchableOpacity
                                     style={{flex: 3, justifyContent: 'center', alignItems: 'flex-start'}}
                                     onPress={(e) => this.annihilateFutureRateDialogues()}><Text
-                                    style={{color: '#257492'}}>Don't ask more</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>Don't ask more</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.setState({showRateDialog: false})}><Text
-                                    style={{color: '#257492'}}>Later</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>Later</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.rate()}><Text
-                                    style={{color: '#257492'}}>Improve</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>Improve</Text></TouchableOpacity>
                             </View>
                         </View>
                     </Modal>
+
+                    <Modal isVisible={this.state.showFilter}
+                           backdropOpacity={0.4}>
+                        <View style={{flex: 1, backgroundColor: 'white', padding: 16}}>
+                            <Text style={{flex: 2, alignSelf: 'center', fontSize: 18, color: '#212121'}}>Фильтр</Text>
+                            <View style={{
+                                flex: 5,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start'
+                            }}>
+                                <RadioButton style={{alignSelf: 'flex-end'}}
+                                             currentValue={this.state.value} value={1}
+                                             onPress={this.handleOnPress.bind(this)} outerCircleColor={'dodgerblue'}/>
+                                <View style={{width: 22, marginLeft: 16, alignSelf: 'center'}}>
+                                    <Icon2 name="globe" style={{fontSize: 20, color: 'black'}}/>
+                                </View>
+                                <View style={{
+                                    flex: 1, marginHorizontal: 8, justifyContent: 'flex-start', alignSelf: 'flex-start'
+                                }}>
+                                    <Dropdown
+                                        label={'Страна'}
+                                        data={envelopesByCountry}
+                                        onChangeText={(data) => this.handleCountrySelection(data)}/>
+                                </View>
+                            </View>
+                            <View style={{
+                                flex: 5,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start'
+                            }}>
+                                <RadioButton currentValue={this.state.value} value={2}
+                                             onPress={this.handleOnPress.bind(this)} outerCircleColor={'dodgerblue'}/>
+                                <Text style={{
+                                    marginLeft: 16,
+                                    color: this.state.ownEnvelopesFilterTextColor,
+                                    fontSize: 16
+                                }}>{this.state.ownEnvelopesFilterText}</Text>
+                            </View>
+                            <View style={{
+                                flex: 3,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start'
+                            }}>
+                                <TouchableOpacity
+                                    style={{flex: 1.5, justifyContent: 'center', alignItems: 'flex-start'}}
+                                    onPress={(e) => this.setState({showFilter: false, value: 0})}><Text
+                                    style={{color: '#257492', fontSize: 16}}>Назад</Text></TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end', marginRight: 8}}
+                                    onPress={(e) => this.resetFilter()}><Text
+                                    style={{color: '#257492', fontSize: 16}}>Сбросить</Text></TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
+                                    onPress={(e) => this.handleFilter()}>
+                                    <Text
+                                    style={{color: '#257492', fontSize: 16}}>Применить</Text></TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+
                 </Image>
             </TouchableOpacity>
         );
@@ -744,8 +886,13 @@ export default class Main extends Component {
                     if (page > 0) {
                         page--;
                     }
-                    this.getCards();
+                    if (!this.state.showOwnEnvelopes) {
+                        this.getCards();
+                    } else {
+                        this.getAllCardsOfUser();
+                    }
                 }
+
 
             }
         } catch (message) {
@@ -767,22 +914,24 @@ export default class Main extends Component {
     }
 
     _onScrollEnd() {
-        this.setState({
-            showProgress: true
-        });
-        let nextBlock;
-        if (block < blocksAvailable) {
-            nextBlock = block + 1;
+        if (envelopesArray.length > 14) {
+            this.setState({
+                showProgress: true
+            });
+            let nextBlock;
+            if (block < blocksAvailable) {
+                nextBlock = block + 1;
 
-        } else {
-            nextBlock = 1;
-            isLastBlockListed = true;
+            } else {
+                nextBlock = 1;
+                isLastBlockListed = true;
+            }
+            console.log('nextBlock ' + nextBlock);
+            block = nextBlock;
+            this.getCards();
+            this.updateViews();
+
         }
-        console.log('nextBlock ' + nextBlock);
-        block = nextBlock;
-        this.getCards();
-        this.updateViews();
-
     }
 
     onClickFab() {
@@ -804,13 +953,16 @@ export default class Main extends Component {
 
         let email = envelopesArray[pageNum].data.email;
 
-        console.log(id + email);
+        let viewsToShow = envelopesArray[pageNum].data.views;
+
         let view = 0;
         if (!userEmails || userEmails.indexOf(email) < 1) {
             if (id in viewsById) {
                 view = viewsById[id];
             }
             view++;
+            viewsToShow++;
+            envelopesArray[pageNum].data.views = viewsToShow;
             viewsById[id] = view;
             console.log('id ' + id)
         }
@@ -860,6 +1012,154 @@ export default class Main extends Component {
             }
         }).catch(err => console.error('An error occurred', err));
 
+    }
+
+    handleOnPress(value) {
+        this.setState({value: value});
+        if (value === 2) {
+            if (userEmails === null || userEmails.length === 0) {
+                this.setState({
+                    ownEnvelopesFilterText: 'Вы ещё не добавляли конверты',
+                    ownEnvelopesFilterTextColor: 'red'
+                })
+            } else {
+                this.setState({
+                    ownEnvelopesFilterText: 'Показать только собственные конверты',
+                    ownEnvelopesFilterTextColor: '#212121'
+                })
+            }
+        }
+    }
+
+    handleCountrySelection(country: string) {
+        let countryName = country.split(' (')[0];
+        const getKey = (obj, val) => Object.keys(obj).find(key => obj[key] === val);
+        let code = getKey(countryByISO, countryName);
+        this.setState({
+            code: '"' + code + '"',
+            value: 1
+        })
+
+    }
+
+    handleFilter() {
+        this.saveStatus();
+        if (this.state.value === 1) {
+            if (!this.state.code.isEmpty) {
+                envelopesArray = [];
+                block = 1;
+                page = 0;
+                this.getCards();
+                this.setState({
+                    showFilter: false
+                });
+            }
+
+        } else if (this.state.value === 2) {
+            if (userEmails !== null && userEmails.length > 0) {
+                envelopesArray = [];
+                block = 1;
+                page = 0;
+                this.getAllCardsOfUser();
+                this.setState({
+                    showFilter: false,
+                    showOwnEnvelopes: true
+                });
+            }
+        }
+    }
+
+
+    async getAllCardsOfUser() {
+        try {
+
+            this.setState({
+                showProgress: true
+            });
+            const data = new FormData();
+            for (let i = 0; i < userEmails.split(',').length; i++) {
+                data.append('emails[]', userEmails.split(',')[i]);
+                console.log(userEmails.split(',')[i]);
+            }
+
+
+            let response = await fetch(('http://penpal.eken.live/Api/get-cards-by-email'), {
+                method: 'POST',
+                body: data
+            });
+            let res = JSON.parse(await response.text());
+            if (response.status >= 200 && response.status < 300) {
+                if (res.length === 0) {
+                    this.setState({
+                        showOwnEnvelopes: false
+                    });
+                    this.showUserDeletedDialog();
+                }
+                for (let i = 0; i < res.length; i++) {
+                    let tempArray = {
+                        type: "card",
+                        data: {
+                            id: res[i].id,
+                            first_name: res[i].first_name,
+                            address: res[i].address,
+                            city: res[i].city,
+                            country_name: res[i].country_name,
+                            postal: res[i].postal,
+                            email: res[i].email,
+                            description: res[i].description,
+                            photo: res[i].image_id,
+                            envelope: res[i].envelope, stamp: res[i].stamp, seal: res[i].seal,
+                            views: res[i].views
+                        },
+                        resources: {envelope: res[i].envelope, stamp: res[i].stamp, seal: res[i].seal}
+                    };
+
+                    envelopesArray.push(tempArray)
+
+                }
+
+                console.log(JSON.stringify(envelopesArray));
+                this.setState({
+                    showProgress: false,
+                    showError: false
+                });
+            } else {
+                this.setState({
+                    showProgress: false,
+                    showError: true,
+                    showOwnEnvelopes: false
+                });
+            }
+        } catch (message) {
+            console.log(message);
+            this.setState({
+                showProgress: false,
+                showError: true,
+                showOwnEnvelopes: false
+            });
+        }
+    }
+
+
+    resetFilter() {
+        envelopesArray = [];
+        this.setState({
+                code: ' ',
+                showOwnEnvelopes: false
+            }
+        );
+        this.getUserStatus()
+    }
+
+    showUserDeletedDialog() {
+        Alert.alert(
+            'Your envelopes are not found',
+            'Возможно Вы удалили свои конверты или истёк срок их размещения',
+            [
+                {text: 'Ok', onPress: () => this.getUserStatus()},
+            ],
+            {cancelable: true}
+        )
     }
 
     _navigateTo = (routeName, params) => {
