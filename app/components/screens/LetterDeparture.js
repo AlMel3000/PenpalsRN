@@ -38,7 +38,6 @@ let userEmails = [];
 
 let block = 1;
 
-let envelopeData = [];
 
 let recipientData = [];
 
@@ -58,8 +57,7 @@ export default class LetterDeparture extends Component {
 
     constructor(props) {
         super(props);
-        envelopeData = this.props.navigation.state.params.envelopesData;
-        envelopesArray = envelopeData;
+        envelopesArray = this.props.navigation.state.params.envelopesData;
         block = this.props.navigation.state.params.block;
         userEmails = this.props.navigation.state.params.userEmails;
         scrollToFirst = this.props.navigation.state.params.scrollToFirst;

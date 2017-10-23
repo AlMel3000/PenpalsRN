@@ -583,7 +583,7 @@ export default class EnvelopeFillingScreen extends Component {
                                        filterable={true}
                                        autoFocusFilter={true}
                                        translation='eng'
-                                       styles={{fontSize: 12}}>
+                                       styles={{countryName: {fontSize: 14}}}>
                                    <TextInput
                                        style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
                                        placeholder={'Страна'}

@@ -585,42 +585,43 @@ export default class Main extends Component {
                         </View>
 
                         <View style={{
-                            height: 65,
-                            width: 124,
+                            height: 38,
+                            width: 74,
                             borderColor: 'black',
                             borderWidth: 1.5,
                             position: 'absolute',
-                            right: deviceWidth / 13,
+                            right: deviceWidth / 20,
                             alignSelf: 'flex-end',
                             transform: [{rotate: viewStampRotation}]
                         }}>
                             <View style={{
-                                height: 39,
-                                width: 100,
+                                height: 18,
+                                width: 60,
                                 borderColor: 'black',
-                                borderWidth: 1.5,
+                                borderWidth: 1,
                                 position: 'absolute',
                                 alignSelf: 'center',
-                                marginTop: 13,
+                                marginTop: 10,
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
                                 <Text style={{
                                     color: 'black',
-                                    fontSize: 14,
+                                    fontSize: 10,
                                     alignSelf: 'center'
                                 }}>{envelope.item.data.views}</Text>
                             </View>
-                            <Text style={{color: 'black', fontSize: 10, alignSelf: 'center'}}>ПРОСМОТРЫ</Text>
+                            <Text style={{color: 'black', fontSize: 8, alignSelf: 'center'}}>ПРОСМОТРЫ</Text>
 
                         </View>
+
                     </View>
                     <View
                         style={{flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row'}}>
-                        <View style={{flex: 1, width: deviceWidth / 2}}/>
+                        <View style={{flex: 1, width: deviceWidth / 2.6}}/>
                         <View style={{
                             flex: 1,
-                            width: deviceWidth / 2,
+                            width: deviceWidth / 1.6,
                             justifyContent: 'flex-start',
                             alignItems: 'flex-start',
                             flexDirection: 'row',
@@ -643,7 +644,7 @@ export default class Main extends Component {
                     <View style={{
                         position: 'absolute',
                         bottom: 32,
-                        right: 16,
+                        right: 32,
                         flexDirection: 'column',
                         alignItems: 'flex-end',
                         justifyContent: 'flex-end',
@@ -756,7 +757,7 @@ export default class Main extends Component {
 
                     <Modal isVisible={this.state.showFilter}
                            backdropOpacity={0.4}>
-                        <View style={{flex: 1, margin: 56, backgroundColor: 'white', padding: 16}}>
+                        <View style={{flex: 1, backgroundColor: 'white', padding: 16}}>
                             <Text style={{flex: 2, alignSelf: 'center', fontSize: 18, color: '#212121'}}>Фильтр</Text>
                             <View style={{
                                 flex: 5,
@@ -767,11 +768,11 @@ export default class Main extends Component {
                                 <RadioButton style={{alignSelf: 'flex-end'}}
                                              currentValue={this.state.value} value={1}
                                              onPress={this.handleOnPress.bind(this)} outerCircleColor={'dodgerblue'}/>
-                                <View style={{width: 22, marginLeft: 16, alignSelf: 'flex-end', marginBottom: 12}}>
+                                <View style={{width: 22, marginLeft: 16, alignSelf: 'center'}}>
                                     <Icon2 name="globe" style={{fontSize: 20, color: 'black'}}/>
                                 </View>
                                 <View style={{
-                                    flex: 1, marginHorizontal: 8, marginBottom: 12
+                                    flex: 1, marginHorizontal: 8, justifyContent: 'flex-start', alignSelf: 'flex-start'
                                 }}>
                                     <Dropdown
                                         label={'Страна'}
@@ -800,7 +801,7 @@ export default class Main extends Component {
                                 justifyContent: 'flex-start'
                             }}>
                                 <TouchableOpacity
-                                    style={{flex: 3, justifyContent: 'center', alignItems: 'flex-start'}}
+                                    style={{flex: 1.5, justifyContent: 'center', alignItems: 'flex-start'}}
                                     onPress={(e) => this.setState({showFilter: false, value: 0})}><Text
                                     style={{color: '#257492', fontSize: 16}}>Назад</Text></TouchableOpacity>
                                 <TouchableOpacity
@@ -952,13 +953,16 @@ export default class Main extends Component {
 
         let email = envelopesArray[pageNum].data.email;
 
-        console.log(id + email);
+        let viewsToShow = envelopesArray[pageNum].data.views;
+
         let view = 0;
         if (!userEmails || userEmails.indexOf(email) < 1) {
             if (id in viewsById) {
                 view = viewsById[id];
             }
             view++;
+            viewsToShow++;
+            envelopesArray[pageNum].data.views = viewsToShow;
             viewsById[id] = view;
             console.log('id ' + id)
         }
