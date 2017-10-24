@@ -419,7 +419,7 @@ export default class EnvelopeFillingScreen extends Component {
     processEmails() {
         let savedEmails = this.state.userEmails;
         let currentEmail = this.state.email;
-        if (this.state.userEmails.split(','.length > 0 && this.isEmailValid(currentEmail))) {
+        if (this.state.userEmails !== undefined && this.state.userEmails && this.state.userEmails.split(',').length > 0 && this.isEmailValid(currentEmail)) {
             this.setState({
                 userEmails: savedEmails + ',' + currentEmail
             });

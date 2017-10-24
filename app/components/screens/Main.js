@@ -1070,9 +1070,8 @@ export default class Main extends Component {
                 showProgress: true
             });
             const data = new FormData();
-            for (let i = 0; i < this.state.userEmails.length; i++) {
-                data.append('emails[]', this.state.userEmails[i]);
-                console.log(this.state.userEmails[i]);
+            for (let i = 0; i < this.state.userEmails.split(',').length; i++) {
+                data.append('emails[]', this.state.userEmails.split(',')[i]);
             }
 
 
@@ -1151,7 +1150,7 @@ export default class Main extends Component {
             [
                 {text: 'Ok', onPress: () => this.getUserStatus()},
             ],
-            {cancelable: true}
+            {cancelable: false}
         )
     }
 

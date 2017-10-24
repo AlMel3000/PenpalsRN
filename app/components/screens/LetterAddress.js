@@ -327,10 +327,14 @@ export default class LetterAddress extends Component {
 
     processEmails() {
         let currentEmail = this.state.sender_email;
-        if (this.state.userEmails && this.isEmailValid(currentEmail)) {
-            this.state.userEmails = this.state.userEmails + ',' + currentEmail;
+        if (this.state.userEmails !== undefined && this.state.userEmails && this.state.userEmails.split(',').length > 0 && this.isEmailValid(currentEmail)) {
+            this.setState({
+                userEmails: this.state.userEmails + ',' + currentEmail
+            });
         } else if (this.isEmailValid(currentEmail)) {
-            this.state.userEmails = currentEmail;
+            this.setState({
+                userEmails: currentEmail
+            });
         }
         this._saveFields()
     }

@@ -208,7 +208,6 @@ export default class EnvelopePublication extends Component {
     }
 
     componentDidMount() {
-        Orientation.unlockAllOrientations();
         Orientation.lockToLandscapeLeft();
         BackHandler.addEventListener('hardwareBackPress', () => {
             this._navigateTo('EnvelopePreview', {
