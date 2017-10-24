@@ -7,14 +7,13 @@ import {AsyncStorage, BackHandler, Image, ScrollView, Text, TextInput, Touchable
 import Orientation from 'react-native-orientation-locker';
 
 
-let envelopesArray = [];
-let userEmails = [];
-
-let block = 1;
-
 let departureCountryID = null;
 
 let recipientData = [];
+
+let envelopesArray;
+let block;
+let page;
 
 export default class LetterText extends Component {
 
@@ -33,9 +32,10 @@ export default class LetterText extends Component {
     constructor(props) {
         super(props);
 
-        envelopesArray = this.props.navigation.state.params.envelopesData;
+        envelopesArray = this.props.navigation.state.params.envelopesArray;
         block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
+        page = this.props.navigation.state.params.page;
+
         recipientData = this.props.navigation.state.params.recipientData;
         departureCountryID = this.props.navigation.state.params.departureCountryID;
 
@@ -60,10 +60,10 @@ export default class LetterText extends Component {
 
     backToDepartureCountrySelection() {
         this._navigateTo('LetterDeparture', {
-            envelopesData: envelopesArray,
+            envelopesArray: envelopesArray,
             block: block,
-            userEmails: userEmails,
-            scrollToFirst: false,
+            page: page,
+
             recipientData: recipientData
         });
     }
@@ -125,10 +125,10 @@ export default class LetterText extends Component {
                     <TouchableOpacity
                         style={{justifyContent: 'center', alignItems: 'center', flex: 0, marginRight: 8, padding: 8}}
                         onPress={(e) => this._navigateTo('LetterAddress', {
-                            envelopesData: envelopesArray,
+                            envelopesArray: envelopesArray,
                             block: block,
-                            userEmails: userEmails,
-                            scrollToFirst: false,
+                            page: page,
+
                             recipientData: recipientData,
                             departureCountryID: departureCountryID,
                             text: this.state.text

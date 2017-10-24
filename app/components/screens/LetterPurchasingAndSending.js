@@ -24,15 +24,10 @@ const InAppBilling = require("react-native-billing");
 
 const RUSSIAN_LETTER_ID = 'russianletter';
 
-let envelopesArray = [];
+let envelopesArray;
+let block;
+let page;
 
-let scrollToFirst = false;
-
-let userEmails = [];
-
-let block = 1;
-
-let envelopeData;
 let recipientData = [];
 
 let departureCountryID = null;
@@ -58,15 +53,13 @@ export default class LetterPurchasingAndSending extends Component {
 
     constructor(props) {
         super(props);
-        envelopeData = this.props.navigation.state.params.envelopesData;
-        envelopesArray = envelopeData;
-        block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
-        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
-
         recipientData = this.props.navigation.state.params.recipientData;
         departureCountryID = this.props.navigation.state.params.departureCountryID;
         text = this.props.navigation.state.params.text;
+
+        envelopesArray = this.props.navigation.state.params.envelopesArray;
+        block = this.props.navigation.state.params.block;
+        page = this.props.navigation.state.params.page;
 
         this.state = {
             showProgress: true,
@@ -112,10 +105,10 @@ export default class LetterPurchasingAndSending extends Component {
 
     backToAddress() {
         this._navigateTo('LetterAddress', {
-            envelopesData: envelopesArray,
+            envelopesArray: envelopesArray,
             block: block,
-            userEmails: userEmails,
-            scrollToFirst: false,
+            page: page,
+
             recipientData: recipientData,
             departureCountryID: departureCountryID,
             text: text,
@@ -240,12 +233,7 @@ export default class LetterPurchasingAndSending extends Component {
             console.log("FAIL " + e.message);
 
         } finally {
-            this._navigateTo('Main', {
-                envelopesData: envelopesArray,
-                block: block,
-                userEmails: userEmails,
-                scrollToFirst: false
-            });
+            this._navigateTo('Main', {envelopesArray: envelopesArray, block: block, page: page,});
         }
     }
 

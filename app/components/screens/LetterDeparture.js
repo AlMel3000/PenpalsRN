@@ -30,14 +30,10 @@ const JAPANESE_LETTER_ID = 'japanletter';
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
-let envelopesArray = [];
 
-let scrollToFirst = false;
-
-let userEmails = [];
-
-let block = 1;
-
+let envelopesArray;
+let block;
+let page;
 
 let recipientData = [];
 
@@ -57,10 +53,11 @@ export default class LetterDeparture extends Component {
 
     constructor(props) {
         super(props);
-        envelopesArray = this.props.navigation.state.params.envelopesData;
+
+        envelopesArray = this.props.navigation.state.params.envelopesArray;
         block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
-        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
+        page = this.props.navigation.state.params.page;
+
         recipientData = this.props.navigation.state.params.recipientData;
 
         this.state = {
@@ -126,23 +123,17 @@ export default class LetterDeparture extends Component {
     }
 
     backToMain() {
-        this._navigateTo('Main', {
-            envelopesData: envelopesArray,
-            block: block,
-            userEmails: userEmails,
-            scrollToFirst: false
-        });
+        this._navigateTo('Main', {envelopesArray: envelopesArray, block: block, page: page});
     }
 
     navigateToTextFilling(selectedCountry: string) {
         this._navigateTo('LetterText', {
-            envelopesData: envelopesArray,
+            envelopesArray: envelopesArray,
             block: block,
-            userEmails: userEmails,
-            scrollToFirst: false,
+            page: page,
+
             recipientData: recipientData,
             departureCountryID: selectedCountry
-
         });
     }
 

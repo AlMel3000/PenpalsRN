@@ -47,10 +47,9 @@ let options = {
 
 };
 
-let envelopesArray = [];
-let userEmails =[];
-
-let block = 1;
+let envelopesArray;
+let block;
+let page;
 
 export default class EnvelopeFillingScreen extends Component {
 
@@ -61,9 +60,9 @@ export default class EnvelopeFillingScreen extends Component {
     constructor(props) {
         super(props);
 
-        envelopesArray = this.props.navigation.state.params.envelopesData;
+        envelopesArray = this.props.navigation.state.params.envelopesArray;
         block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
+        page = this.props.navigation.state.params.page;
 
         this.state = {
             name: ' ',
@@ -88,6 +87,8 @@ export default class EnvelopeFillingScreen extends Component {
             photoIsSet: false,
             image: defaultRobohash,
 
+            userEmails: ''
+
         };
 
     }
@@ -99,13 +100,13 @@ export default class EnvelopeFillingScreen extends Component {
     componentDidMount(){
     Orientation.lockToPortrait();
         BackHandler.addEventListener('hardwareBackPress', () =>{
-            this._navigateTo('Main', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false});
+            this._navigateTo('Main', {envelopesArray: envelopesArray, block: block, page: page});
             return true;
         });
     }
 
     componentWillUnmount(){
-        this._saveFields();
+        this.processEmails();
     }
 
     async retrieveFields(){
@@ -118,8 +119,11 @@ export default class EnvelopeFillingScreen extends Component {
                 cca2: JSON.parse(await AsyncStorage.getItem('cca2')),
                 zip: JSON.parse(await AsyncStorage.getItem('zip')),
                 email: JSON.parse(await AsyncStorage.getItem('email')),
-                description: JSON.parse(await AsyncStorage.getItem('description'))
-            }).then(this.setRobohash(await this.state.name))
+                description: JSON.parse(await AsyncStorage.getItem('description')),
+
+                userEmails: JSON.parse(await AsyncStorage.getItem('userEmails'))
+            }).then(this.setRobohash(await this.state.name));
+
 
 
         } catch (message) {
@@ -375,12 +379,12 @@ export default class EnvelopeFillingScreen extends Component {
 
 
             if (name && address && city && country && zip && email && description && eulaAcepted) {
-                this._saveFields();
+                this.processEmails();
                 this._navigateTo('EnvelopePreview', {
-                    envelopesData: envelopesArray,
+                    envelopesArray: envelopesArray,
                     block: block,
-                    userEmails: userEmails,
-                    scrollToFirst: false,
+                    page: page,
+
                     photo: this.state.image,
                     name: this.state.name,
                     address: this.state.address,
@@ -412,16 +416,24 @@ export default class EnvelopeFillingScreen extends Component {
         return re.test(email);
     }
 
-   async _saveFields(){
+    processEmails() {
+        let savedEmails = this.state.userEmails;
+        let currentEmail = this.state.email;
+        if (this.state.userEmails.split(','.length > 0 && this.isEmailValid(currentEmail))) {
+            this.setState({
+                userEmails: savedEmails + ',' + currentEmail
+            });
+
+        } else if (this.isEmailValid(currentEmail)) {
+            this.setState({
+                userEmails: currentEmail
+            });
+        }
+        this._saveFields()
+    }
+
+    async _saveFields() {
         try {
-
-
-            let currentEmail = this.state.email;
-            if (userEmails.length > 0 && this.isEmailValid(currentEmail)) {
-                userEmails = userEmails + ',' + currentEmail;
-            } else if (this.isEmailValid(currentEmail)) {
-                userEmails = currentEmail;
-            }
 
             await AsyncStorage.setItem('name', JSON.stringify(this.state.name));
             await AsyncStorage.setItem('address', JSON.stringify(this.state.address));
@@ -429,8 +441,8 @@ export default class EnvelopeFillingScreen extends Component {
             await AsyncStorage.setItem('country', JSON.stringify(this.state.country));
             await AsyncStorage.setItem('cca2', JSON.stringify(this.state.cca2));
             await AsyncStorage.setItem('zip', JSON.stringify(this.state.zip));
-            await AsyncStorage.setItem('email', JSON.stringify(currentEmail));
-            await AsyncStorage.setItem('userEmails', JSON.stringify(userEmails));
+            await AsyncStorage.setItem('email', JSON.stringify(this.state.email));
+            await AsyncStorage.setItem('userEmails', JSON.stringify(this.state.userEmails));
             await AsyncStorage.setItem('description', JSON.stringify(this.state.description));
             if (this.state.photoIsSet) {
                 await AsyncStorage.setItem('photo', JSON.stringify(this.state.image));
@@ -446,7 +458,14 @@ export default class EnvelopeFillingScreen extends Component {
             'Terms & Conditions',
             '\t\t\t1) I am of sound mind and memory, in person, without any pressure from outside, decided to publish my personal information in the Penpals Service for finding penpals. \n\n\t\t\t2) Each card is verified by the moderator before it gets into the list of the envelopes. Be worthy of yourself. We\'ll remove all the dirt, trash and spam.Also cards that contain email, phone, links to other sites and profiles in social networks will not be moderated. Moderation takes some time, please be patient a little bit and your address will appear in the Penpals.',
             [
-                {text: 'УЗНАТЬ БОЛЬШЕ', onPress: () => this._navigateTo('EulaScreen', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false})},
+                {
+                    text: 'УЗНАТЬ БОЛЬШЕ',
+                    onPress: () => this._navigateTo('EulaScreen', {
+                        envelopesArray: envelopesArray,
+                        block: block,
+                        page: page
+                    })
+                },
                 {text: 'OК'},
             ],
             { cancelable: true}
@@ -671,7 +690,11 @@ export default class EnvelopeFillingScreen extends Component {
 
                        <View style={{alignSelf:'stretch', flexDirection:'row', alignItems: 'flex-end', justifyContent: 'flex-end', padding:16}}>
                            <TouchableOpacity style={{marginRight:32}}
-                                             onPress={(e) => this._navigateTo('Main', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false})}>
+                                             onPress={(e) => this._navigateTo('Main', {
+                                                 envelopesArray: envelopesArray,
+                                                 block: block,
+                                                 page: page
+                                             })}>
                                <Text style={{fontSize:16, color:'#7299BF'}}>ОТМЕНА</Text>
                            </TouchableOpacity>
                            <TouchableOpacity

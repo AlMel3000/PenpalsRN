@@ -57,12 +57,8 @@ let blocksAvailable;
 
 let scrollToFirst = false;
 
-let userEmails = [];
-
 let page = 0;
 let block = 1;
-
-let isLastBlockListed = false;
 
 let countryByISO = {};
 
@@ -178,13 +174,11 @@ export default class Main extends Component {
             .catch((e) => console.log.e)
     };
 
+    z;
+
     constructor(props) {
         super(props);
-        envelopesArray = this.props.navigation.state.params.envelopesData;
-        block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
-        console.log(userEmails);
-        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
+
 
         this.state = {
             showProgress: true,
@@ -202,7 +196,8 @@ export default class Main extends Component {
             ownEnvelopesFilterText: 'Показать только собственные конверты',
             ownEnvelopesFilterTextColor: '#212121',
 
-            showOwnEnvelopes: false
+            showOwnEnvelopes: false,
+            userEmails: ''
         };
 
 
@@ -212,24 +207,6 @@ export default class Main extends Component {
         this.saveStatus = this.saveStatus.bind(this);
         this.getUserStatus = this.getUserStatus.bind(this);
         this.showButton = this.showButton.bind(this);
-    }
-
-    componentWillMount() {
-        if (scrollToFirst) {
-            page = 0;
-        }
-
-        if (envelopesArray.length <= 0) {
-            this.getUserStatus();
-        } else {
-            this.setState({
-                showProgress: false
-            })
-        }
-
-        this.getRateInfo();
-
-
     }
 
     componentDidMount() {
@@ -244,6 +221,21 @@ export default class Main extends Component {
     componentWillUnmount() {
         this.saveStatus();
         this.updateViews();
+    }
+
+    componentWillMount() {
+        if (this.props.navigation.state.params !== undefined) {
+            envelopesArray = this.props.navigation.state.params.envelopesArray;
+            block = this.props.navigation.state.params.block;
+            page = this.props.navigation.state.params.page;
+            this.setState({
+                showProgress: false
+            })
+        } else {
+            this.getUserStatus();
+        }
+
+        this.getRateAndEmailsInfo();
     }
 
     async getUserStatus() {
@@ -262,11 +254,11 @@ export default class Main extends Component {
 
             let lastCardOfUser = JSON.parse(await AsyncStorage.getItem('lastCardOfUser'));
 
-            userEmails = JSON.parse(await AsyncStorage.getItem('userEmails'));
-
             if (await savedBlock !== null) {
                 block = savedBlock;
-                page = JSON.parse(await AsyncStorage.getItem('page'));
+                if (!scrollToFirst) {
+                    page = JSON.parse(await AsyncStorage.getItem('page'));
+                }
                 if (await lastCardOfUser) {
                     this.getLastCardOfUser(lastCardOfUser);
                 } else {
@@ -282,15 +274,6 @@ export default class Main extends Component {
             this.getCards();
         }
 
-    }
-
-    async getRateInfo() {
-        if (JSON.parse(await AsyncStorage.getItem('isAppRatedOrRateDeclined'))) {
-            isAppRatedOrRateDeclined = true;
-        } else {
-            let storedPagesViewed = JSON.parse(await AsyncStorage.getItem('pagesViewed'));
-            storedPagesViewed === null ? this.setState({pagesViewed: 0}) : this.setState({pagesViewed: storedPagesViewed});
-        }
     }
 
     async getLastCardOfUser(email: string) {
@@ -446,13 +429,117 @@ export default class Main extends Component {
         return randomBlock;
     }
 
+    async getRateAndEmailsInfo() {
+        if (JSON.parse(await AsyncStorage.getItem('isAppRatedOrRateDeclined'))) {
+            isAppRatedOrRateDeclined = true;
+        } else {
+            let storedPagesViewed = JSON.parse(await AsyncStorage.getItem('pagesViewed'));
+            storedPagesViewed === null ? this.setState({pagesViewed: 0}) : this.setState({pagesViewed: storedPagesViewed});
+        }
+        this.setState({
+            userEmails: JSON.parse(await AsyncStorage.getItem('userEmails'))
+        });
+
+    }
+
+    showButton() {
+
+        TimerMixin.requestAnimationFrame(() => {
+            if (!this.state.showButton) {
+                this.setState({
+                    showButton: true
+                })
+            } else {
+                this.setState({
+                    showButton: false
+                })
+            }
+            this.setState({
+                showMenu: false
+            })
+        })
+
+    }
+
+    onScroll(e) {
+        let contentOffset = e.nativeEvent.contentOffset;
+        let viewSize = e.nativeEvent.layoutMeasurement;
+
+        // Divide the horizontal offset by the width of the view to see which page is visible
+        page = Math.floor(contentOffset.x / viewSize.width);
+
+        this.incrementViews(page);
+        this.setState({
+            showButton: false
+        });
+
+        if (!isAppRatedOrRateDeclined) {
+            this.setState({pagesViewed: this.state.pagesViewed + 1});
+            console.log('pagesViewed ' + this.state.pagesViewed);
+            if (this.state.pagesViewed >= CARDS_COUNT_FOR_RATING_DIALOG) {
+                this.setState({
+                    pagesViewed: 0,
+                    showRateDialog: true
+                })
+            }
+        }
+    }
+
+    async deleteOwnEnvelope(id: number) {
+        try {
+            this.setState({
+                showButton: false,
+                showMenu: false
+            });
+            let response = await fetch(('http://penpal.eken.live/Api/delete/?id=' + id), {
+                method: 'GET'
+            });
+            let res = JSON.parse(await response.text());
+            console.log(JSON.stringify(res));
+            if (response.status >= 200 && response.status < 300) {
+
+                if (res.result === 0) {
+                    this.setState({
+                        showProgress: true,
+                    });
+                    envelopesArray = [];
+                    if (page > 0) {
+                        page--;
+                    }
+                    if (!this.state.showOwnEnvelopes) {
+                        this.getCards();
+                    } else {
+                        this.getAllCardsOfUser();
+                    }
+                }
+
+
+            }
+        } catch (message) {
+            console.log("BOOM 5");
+            console.log('catch ' + message)
+        }
+    }
+
+    showDeletionWarning(id: number) {
+        Alert.alert(
+            'Удалить конверт?',
+            'Восстановить конверт будет невозможно, даже если он был оплачен.',
+            [
+                {text: 'ДА', onPress: () => this.deleteOwnEnvelope(id)},
+                {text: 'ОТМЕНА'},
+            ],
+            {cancelable: true}
+        )
+    }
+
     renderEnvelope(envelope) {
         console.log("item " + JSON.stringify(envelope.index));
 
         let buttonIconColor = '#9e9e9e';
         let buttonTextColor = '#9e9e9e';
         let isButtonDisabled = true;
-        if (userEmails !== null && userEmails.includes(envelope.item.data.email)) {
+        if (this.state.userEmails !== null && this.state.userEmails.includes(envelope.item.data.email)) {
             buttonIconColor = 'red';
             buttonTextColor = 'red';
             isButtonDisabled = false;
@@ -661,10 +748,9 @@ export default class Main extends Component {
                                   cornerRadius={2}>
                             <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
                                               onPress={(e) => this._navigateTo('LetterDeparture', {
-                                                  envelopesData: envelopesArray,
+                                                  envelopesArray: envelopesArray,
                                                   block: block,
-                                                  userEmails: userEmails,
-                                                  scrollToFirst: false,
+                                                  page: page,
                                                   recipientData: envelope.item.data
                                               })}>
                                 <Text style={styles.actionButtonText}>{strings.send_letter}</Text>
@@ -674,10 +760,9 @@ export default class Main extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 4}}
                                               onPress={(e) => this._navigateTo('EnvelopeFillingScreen', {
-                                                  envelopesData: envelopesArray,
+                                                  envelopesArray: envelopesArray,
                                                   block: block,
-                                                  userEmails: userEmails,
-                                                  scrollToFirst: false
+                                                  page: page
                                               })}>
                                 <Text style={styles.actionButtonText}>{strings.create_envelope}</Text>
                                 <View style={{width: 32, alignItems: 'center', justifyContent: 'center'}}>
@@ -822,115 +907,23 @@ export default class Main extends Component {
         );
     }
 
-    showButton() {
-
-        TimerMixin.requestAnimationFrame(() => {
-            if (!this.state.showButton) {
-                this.setState({
-                    showButton: true
-                })
-            } else {
-                this.setState({
-                    showButton: false
-                })
-            }
-            this.setState({
-                showMenu: false
-            })
-        })
-
-    }
-
-    onScroll(e) {
-        let contentOffset = e.nativeEvent.contentOffset;
-        let viewSize = e.nativeEvent.layoutMeasurement;
-
-        // Divide the horizontal offset by the width of the view to see which page is visible
-        page = Math.floor(contentOffset.x / viewSize.width);
-
-        this.incrementViews(page);
-        this.setState({
-            showButton: false
-        });
-
-        if (!isAppRatedOrRateDeclined) {
-            this.setState({pagesViewed: this.state.pagesViewed + 1});
-            console.log('pagesViewed ' + this.state.pagesViewed);
-            if (this.state.pagesViewed >= CARDS_COUNT_FOR_RATING_DIALOG) {
-                this.setState({
-                    pagesViewed: 0,
-                    showRateDialog: true
-                })
-            }
-        }
-    }
-
-    async deleteOwnEnvelope(id: number) {
-        try {
-            this.setState({
-                showButton: false,
-                showMenu: false
-            });
-            let response = await fetch(('http://penpal.eken.live/Api/delete/?id=' + id), {
-                method: 'GET'
-            });
-            let res = JSON.parse(await response.text());
-            console.log(JSON.stringify(res));
-            if (response.status >= 200 && response.status < 300) {
-
-                if (res.result === 0) {
-                    this.setState({
-                        showProgress: true,
-                    });
-                    envelopesArray = [];
-                    if (page > 0) {
-                        page--;
-                    }
-                    if (!this.state.showOwnEnvelopes) {
-                        this.getCards();
-                    } else {
-                        this.getAllCardsOfUser();
-                    }
-                }
-
-
-            }
-        } catch (message) {
-            console.log("BOOM 5");
-            console.log('catch ' + message)
-        }
-    }
-
-    showDeletionWarning(id: number) {
-        Alert.alert(
-            'Удалить конверт?',
-            'Восстановить конверт будет невозможно, даже если он был оплачен.',
-            [
-                {text: 'ДА', onPress: () => this.deleteOwnEnvelope(id)},
-                {text: 'ОТМЕНА'},
-            ],
-            {cancelable: true}
-        )
-    }
 
     _onScrollEnd() {
-        if (envelopesArray.length > 14) {
+        if (envelopesArray.length > 14 && !this.state.showOwnEnvelopes) {
             this.setState({
                 showProgress: true
             });
             let nextBlock;
             if (block < blocksAvailable) {
-                nextBlock = block + 1;
+                nextBlock = block++;
 
             } else {
                 nextBlock = 1;
-                isLastBlockListed = true;
             }
             console.log('nextBlock ' + nextBlock);
             block = nextBlock;
             this.getCards();
             this.updateViews();
-
         }
     }
 
@@ -956,7 +949,7 @@ export default class Main extends Component {
         let viewsToShow = envelopesArray[pageNum].data.views;
 
         let view = 0;
-        if (!userEmails || userEmails.indexOf(email) < 1) {
+        if (!this.state.userEmails || this.state.userEmails.indexOf(email) < 1) {
             if (id in viewsById) {
                 view = viewsById[id];
             }
@@ -1017,7 +1010,7 @@ export default class Main extends Component {
     handleOnPress(value) {
         this.setState({value: value});
         if (value === 2) {
-            if (userEmails === null || userEmails.length === 0) {
+            if (this.state.userEmails === null || this.state.userEmails.length === 0) {
                 this.setState({
                     ownEnvelopesFilterText: 'Вы ещё не добавляли конверты',
                     ownEnvelopesFilterTextColor: 'red'
@@ -1056,7 +1049,7 @@ export default class Main extends Component {
             }
 
         } else if (this.state.value === 2) {
-            if (userEmails !== null && userEmails.length > 0) {
+            if (this.state.userEmails !== null && this.state.userEmails.length > 0) {
                 envelopesArray = [];
                 block = 1;
                 page = 0;
@@ -1077,9 +1070,9 @@ export default class Main extends Component {
                 showProgress: true
             });
             const data = new FormData();
-            for (let i = 0; i < userEmails.split(',').length; i++) {
-                data.append('emails[]', userEmails.split(',')[i]);
-                console.log(userEmails.split(',')[i]);
+            for (let i = 0; i < this.state.userEmails.length; i++) {
+                data.append('emails[]', this.state.userEmails[i]);
+                console.log(this.state.userEmails[i]);
             }
 
 

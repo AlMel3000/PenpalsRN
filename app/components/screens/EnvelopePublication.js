@@ -34,15 +34,10 @@ const PUBLICATION_FOR_10_YEARS_ID = '10years';
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
-let envelopesArray = [];
 
-let scrollToFirst = false;
-
-let userEmails = [];
-
-let block = 1;
-
-let envelopeData;
+let envelopesArray;
+let block;
+let page;
 
 let photo;
 
@@ -62,6 +57,7 @@ export default class EnvelopePublication extends Component {
         header: false
     };
 
+
     _navigateTo = (routeName, params) => {
         const resetAction = NavigationActions.reset({
             index: 0,
@@ -70,13 +66,17 @@ export default class EnvelopePublication extends Component {
         this.props.navigation.dispatch(resetAction)
     };
 
+    componentWillMount() {
+        InAppBilling.open().then(() => this.getProductPrice());
+        this.getEnvelopeAppearanceAndInfo();
+    }
+
+    componentWillUnmount() {
+        InAppBilling.close();
+    }
+
     constructor(props) {
         super(props);
-        envelopeData = this.props.navigation.state.params.envelopesData;
-        envelopesArray = envelopeData;
-        block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
-        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
         photo = this.props.navigation.state.params.photo;
 
         name = this.props.navigation.state.params.name;
@@ -87,6 +87,10 @@ export default class EnvelopePublication extends Component {
         zip = this.props.navigation.state.params.zip;
         email = this.props.navigation.state.params.email;
         description = this.props.navigation.state.params.description;
+
+        envelopesArray = this.props.navigation.state.params.envelopesArray;
+        block = this.props.navigation.state.params.block;
+        page = this.props.navigation.state.params.page;
 
         this.state = {
 
@@ -103,39 +107,6 @@ export default class EnvelopePublication extends Component {
 
         };
 
-    }
-
-    componentWillMount() {
-        InAppBilling.open().then(() => this.getProductPrice());
-        this.getEnvelopeAppearanceAndInfo();
-    }
-
-    componentWillUnmount() {
-        InAppBilling.close();
-    }
-
-    componentDidMount() {
-        Orientation.unlockAllOrientations();
-        Orientation.lockToLandscapeLeft();
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this._navigateTo('EnvelopePreview', {
-                envelopesData: envelopesArray,
-                block: block,
-                userEmails: userEmails,
-                scrollToFirst: false,
-                photo: photo,
-
-                name: name,
-                address: address,
-                city: city,
-                country: country,
-                cca2: cca2,
-                zip: zip,
-                email: email,
-                description: description
-            });
-            return true;
-        });
     }
 
     getProductPrice() {
@@ -236,6 +207,30 @@ export default class EnvelopePublication extends Component {
         }
     }
 
+    componentDidMount() {
+        Orientation.unlockAllOrientations();
+        Orientation.lockToLandscapeLeft();
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this._navigateTo('EnvelopePreview', {
+                envelopesArray: envelopesArray,
+                block: block,
+                page: page,
+
+                photo: photo,
+
+                name: name,
+                address: address,
+                city: city,
+                country: country,
+                cca2: cca2,
+                zip: zip,
+                email: email,
+                description: description
+            });
+            return true;
+        });
+    }
+
     async uploadCard(status: number, type) {
         try {
             this.setState({
@@ -279,18 +274,13 @@ export default class EnvelopePublication extends Component {
 
         } finally {
             this.saveAndGo()
-                .then(this._navigateTo('Main', {
-                    envelopesData: envelopesArray,
-                    block: block,
-                    userEmails: userEmails,
-                    scrollToFirst: true
-                }));
+                .then(this._navigateTo('Main'));
         }
     }
 
     async saveAndGo() {
-        console.log('saveAndGo ' + this.state.email);
         await AsyncStorage.setItem('lastCardOfUser', JSON.stringify(email));
+        await AsyncStorage.setItem('page', JSON.stringify(0));
     }
 
 

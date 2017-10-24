@@ -28,15 +28,10 @@ var TimerMixin = require('react-timer-mixin');
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
-let envelopesArray = [];
 
-let scrollToFirst = false;
-
-let userEmails = [];
-
-let block = 1;
-
-let envelopeData;
+let envelopesArray;
+let block;
+let page;
 
 let photo;
 
@@ -58,6 +53,8 @@ export default class EnvelopePreview extends Component {
     onRefresh = () => {
         this.reloadResources();
     };
+
+
     _navigateTo = (routeName, params) => {
         const resetAction = NavigationActions.reset({
             index: 0,
@@ -66,13 +63,16 @@ export default class EnvelopePreview extends Component {
         this.props.navigation.dispatch(resetAction)
     };
 
+    componentWillUnmount() {
+        this.saveEnvelopeAppearance();
+    }
+
+    componentWillMount() {
+        this.getEnvelopeAppearanceAndInfo()
+    }
+
     constructor(props) {
         super(props);
-        envelopeData = this.props.navigation.state.params.envelopesData;
-        envelopesArray = envelopeData;
-        block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
-        scrollToFirst = this.props.navigation.state.params.scrollToFirst;
         photo = this.props.navigation.state.params.photo;
 
         name = this.props.navigation.state.params.name;
@@ -83,6 +83,10 @@ export default class EnvelopePreview extends Component {
         zip = this.props.navigation.state.params.zip;
         email = this.props.navigation.state.params.email;
         description = this.props.navigation.state.params.description;
+
+        envelopesArray = this.props.navigation.state.params.envelopesArray;
+        block = this.props.navigation.state.params.block;
+        page = this.props.navigation.state.params.page;
 
         this.state = {
             refreshing: false,
@@ -108,28 +112,6 @@ export default class EnvelopePreview extends Component {
 
         this.renderEnvelope = this.renderEnvelope.bind(this);
 
-    }
-
-    componentWillUnmount() {
-        this.saveEnvelopeAppearance();
-    }
-
-    componentWillMount() {
-        this.getEnvelopeAppearanceAndInfo()
-    }
-
-    componentDidMount() {
-        Orientation.unlockAllOrientations();
-        Orientation.lockToLandscapeLeft();
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this._navigateTo('EnvelopeFillingScreen', {
-                envelopesData: envelopesArray,
-                block: block,
-                userEmails: userEmails,
-                scrollToFirst: false
-            });
-            return true;
-        });
     }
 
     async getEnvelopeAppearanceAndInfo() {
@@ -220,13 +202,22 @@ export default class EnvelopePreview extends Component {
         }
     }
 
+    componentDidMount() {
+        Orientation.unlockAllOrientations();
+        Orientation.lockToLandscapeLeft();
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this._navigateTo('EnvelopeFillingScreen', {envelopesArray: envelopesArray, block: block, page: page});
+            return true;
+        });
+    }
+
     publish() {
         this.saveEnvelopeAppearance();
         this._navigateTo('EnvelopePublication', {
-            envelopesData: envelopesArray,
+            envelopesArray: envelopesArray,
             block: block,
-            userEmails: userEmails,
-            scrollToFirst: false,
+            page: page,
+
             photo: photo,
             name: name,
             address: address,
@@ -359,10 +350,9 @@ export default class EnvelopePreview extends Component {
                               cornerRadius={4}>
                         <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
                                           onPress={(e) => this._navigateTo('EnvelopeFillingScreen', {
-                                              envelopesData: envelopesArray,
+                                              envelopesArray: envelopesArray,
                                               block: block,
-                                              userEmails: userEmails,
-                                              scrollToFirst: false
+                                              page: page
                                           })}>
                             <Image source={require('./../assets/back.png')}
                                    style={{

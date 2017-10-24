@@ -1,21 +1,15 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import { NavigationActions
-} from 'react-navigation';
+import {NavigationActions} from 'react-navigation';
 
 
-import {
-    StyleSheet,
-    WebView,
-    BackHandler
-} from 'react-native';
+import {BackHandler, StyleSheet, WebView} from 'react-native';
 
 import Orientation from 'react-native-orientation-locker';
 
-let envelopesArray = [];
-let userEmails =[];
-
-let block = 1;
+let envelopesArray;
+let block;
+let page;
 
 export default class LoadingScreen extends Component {
 
@@ -26,9 +20,9 @@ export default class LoadingScreen extends Component {
     constructor(props) {
         super(props);
 
-        envelopesArray = this.props.navigation.state.params.envelopesData;
+        envelopesArray = this.props.navigation.state.params.envelopesArray;
         block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
+        page = this.props.navigation.state.params.page;
     }
 
     componentWillMount() {
@@ -37,7 +31,7 @@ export default class LoadingScreen extends Component {
     componentDidMount() {
         Orientation.lockToPortrait();
         BackHandler.addEventListener('hardwareBackPress', () =>{
-            this._navigateTo('EnvelopeFillingScreen', {envelopesData: envelopesArray, block: block, userEmails: userEmails, scrollToFirst: false});
+            this._navigateTo('EnvelopeFillingScreen', {envelopesArray: envelopesArray, block: block, page: page});
             return true;
         });
     }

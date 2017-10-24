@@ -5,7 +5,6 @@ import {StackNavigator} from 'react-navigation';
 import {StyleSheet, View} from 'react-native';
 
 import TabBar from './../components/TabBar'
-import LoadingScreen from '../components/screens/LoadingScreen'
 import Main from '../components/screens/Main'
 import EnvelopeFillingScreen from '../components/screens/EnvelopeFillingScreen'
 import EulaScreen from '../components/screens/EulaScreen'
@@ -19,7 +18,6 @@ import LetterPurchasingAndSending from '../components/screens/LetterPurchasingAn
 
 const ApplicationNavContainer = StackNavigator(
     {
-        LoadingScreen: {screen: LoadingScreen},
         Main: { screen: Main },
         EnvelopeFillingScreen: {screen: EnvelopeFillingScreen},
         EulaScreen: {screen: EulaScreen},

@@ -40,10 +40,9 @@ let options = {
 
 };
 
-let envelopesArray = [];
-let userEmails = [];
-
-let block = 1;
+let envelopesArray;
+let block;
+let page;
 
 let departureCountryID = null;
 
@@ -56,6 +55,8 @@ export default class LetterAddress extends Component {
     static navigationOptions = {
         header: false
     };
+
+
     _navigateTo = (routeName, params) => {
         const resetAction = NavigationActions.reset({
             index: 0,
@@ -64,12 +65,25 @@ export default class LetterAddress extends Component {
         this.props.navigation.dispatch(resetAction)
     };
 
+    componentWillMount() {
+        this.retrieveFields();
+    }
+
+    componentDidMount() {
+        Orientation.lockToPortrait();
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.navigateToTextFilling();
+            return true;
+        });
+    }
+
     constructor(props) {
         super(props);
 
-        envelopesArray = this.props.navigation.state.params.envelopesData;
+        envelopesArray = this.props.navigation.state.params.envelopesArray;
         block = this.props.navigation.state.params.block;
-        userEmails = this.props.navigation.state.params.userEmails;
+        page = this.props.navigation.state.params.page;
+
         departureCountryID = this.props.navigation.state.params.departureCountryID;
         text = this.props.navigation.state.params.text;
         recipientData = this.props.navigation.state.params.recipientData;
@@ -93,47 +107,19 @@ export default class LetterAddress extends Component {
 
     }
 
-    componentWillMount() {
-        this.retrieveFields();
-    }
-
-    componentDidMount() {
-        Orientation.lockToPortrait();
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this.navigateToTextFilling();
-            return true;
-        });
-    }
-
     componentWillUnmount() {
-        this._saveFields();
+        this.processEmails();
     }
 
     navigateToTextFilling() {
         this._navigateTo('LetterText', {
-            envelopesData: envelopesArray,
+            envelopesArray: envelopesArray,
             block: block,
-            userEmails: userEmails,
-            scrollToFirst: false,
+            page: page,
+
             recipientData: recipientData,
             departureCountryID: departureCountryID
         });
-    }
-
-    async retrieveFields() {
-        try {
-            this.setState({
-                sender_name: JSON.parse(await AsyncStorage.getItem('sender_name')),
-                sender_address: JSON.parse(await AsyncStorage.getItem('sender_address')),
-                sender_city: JSON.parse(await AsyncStorage.getItem('sender_city')),
-                sender_country: JSON.parse(await AsyncStorage.getItem('sender_country')),
-                sender_cca2: JSON.parse(await AsyncStorage.getItem('sender_cca2')),
-                sender_zip: JSON.parse(await AsyncStorage.getItem('sender_zip')),
-                sender_email: JSON.parse(await AsyncStorage.getItem('sender_email')),
-            })
-
-        } catch (message) {
-        }
     }
 
     _onChangeName(text) {
@@ -202,6 +188,29 @@ export default class LetterAddress extends Component {
         this.setState({
             sender_emailUnderlineColor: '#1ca9c9',
         });
+    }
+
+    async retrieveFields() {
+        try {
+            this.setState({
+                sender_name: JSON.parse(await AsyncStorage.getItem('sender_name')),
+                sender_address: JSON.parse(await AsyncStorage.getItem('sender_address')),
+                sender_city: JSON.parse(await AsyncStorage.getItem('sender_city')),
+                sender_country: JSON.parse(await AsyncStorage.getItem('sender_country')),
+                sender_cca2: JSON.parse(await AsyncStorage.getItem('sender_cca2')),
+                sender_zip: JSON.parse(await AsyncStorage.getItem('sender_zip')),
+                sender_email: JSON.parse(await AsyncStorage.getItem('sender_email')),
+                userEmails: JSON.parse(await AsyncStorage.getItem('userEmails'))
+            });
+
+
+        } catch (message) {
+        }
+    }
+
+    isEmailValid(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
     }
 
     _checkFields() {
@@ -289,11 +298,12 @@ export default class LetterAddress extends Component {
 
 
             if (sender_name && sender_address && sender_city && sender_country && sender_zip && sender_email) {
-                this._saveFields().then(this._navigateTo('LetterPurchasingAndSending', {
-                    envelopesData: envelopesArray,
+                this.processEmails();
+                this._navigateTo('LetterPurchasingAndSending', {
+                    envelopesArray: envelopesArray,
                     block: block,
-                    userEmails: userEmails,
-                    scrollToFirst: false,
+                    page: page,
+
                     recipientData: recipientData,
                     departureCountryID: departureCountryID,
                     text: text,
@@ -305,8 +315,7 @@ export default class LetterAddress extends Component {
                     sender_cca2: this.state.sender_cca2,
                     sender_zip: this.state.sender_zip,
                     sender_email: this.state.sender_email
-                }))
-
+                });
             } else {
                 Vibration.vibrate();
                 if (!(sender_name && sender_address && sender_country && sender_zip && sender_email)) {
@@ -316,20 +325,18 @@ export default class LetterAddress extends Component {
         })
     }
 
-    isEmailValid(email) {
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
+    processEmails() {
+        let currentEmail = this.state.sender_email;
+        if (this.state.userEmails && this.isEmailValid(currentEmail)) {
+            this.state.userEmails = this.state.userEmails + ',' + currentEmail;
+        } else if (this.isEmailValid(currentEmail)) {
+            this.state.userEmails = currentEmail;
+        }
+        this._saveFields()
     }
 
     async _saveFields() {
         try {
-
-            let currentEmail = this.state.sender_email;
-            if (userEmails && this.isEmailValid(currentEmail)) {
-                userEmails = userEmails + ',' + currentEmail;
-            } else if (!userEmails && this.isEmailValid(currentEmail)) {
-                userEmails = currentEmail;
-            }
 
             await AsyncStorage.setItem('sender_name', JSON.stringify(this.state.sender_name));
             await AsyncStorage.setItem('sender_address', JSON.stringify(this.state.sender_address));
@@ -337,8 +344,8 @@ export default class LetterAddress extends Component {
             await AsyncStorage.setItem('sender_country', JSON.stringify(this.state.sender_country));
             await AsyncStorage.setItem('sender_cca2', JSON.stringify(this.state.sender_cca2));
             await AsyncStorage.setItem('sender_zip', JSON.stringify(this.state.sender_zip));
-            await AsyncStorage.setItem('sender_email', JSON.stringify(currentEmail));
-            await AsyncStorage.setItem('userEmails', JSON.stringify(userEmails));
+            await AsyncStorage.setItem('sender_email', JSON.stringify(this.state.sender_email));
+            await AsyncStorage.setItem('userEmails', JSON.stringify(this.state.userEmails));
 
         } catch (error) {
         }
