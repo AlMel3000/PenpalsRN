@@ -98,7 +98,7 @@ let strings = new LocalizedStrings({
         'Please do not change the subject of the email. \n\n\n' +
         'We, like everyone else, very much love Google Translate:) \n\n' +
         'And like everyone else, know, how to use it.\n\n' +
-        'Please, note, that employees of our support team speak English.\n\n\n' +
+        'Please, note, meanwhile, that employees of our support team speak English.\n\n\n' +
         'Best Regards, Your Penpals.\n\n---------------------------------------------------------------'
     },
     en: {
@@ -131,7 +131,7 @@ let strings = new LocalizedStrings({
         'Please do not change the subject of the email. \n\n\n' +
         'We, like everyone else, very much love Google Translate:) \n\n' +
         'And like everyone else, know, how to use it.\n\n' +
-        'Please, note, that employees of our support team speak English.\n\n\n' +
+        'Please, note, meanwhile, that employees of our support team speak English.\n\n\n' +
         'Best Regards, Your Penpals.\n\n---------------------------------------------------------------'
     },
     ja: {
@@ -964,7 +964,7 @@ export default class Main extends Component {
 
         return (
             <TouchableOpacity style={styles.viewPager} key={envelope.item.data.id}
-                              activeOpacity={0.8}
+                              activeOpacity={1}
                               onPress={(e) => this.showButton()}>
                 <Image source={{uri: envelopeURL}} style={styles.envelopeImage}>
                     <View style={styles.topRow}>
@@ -1152,6 +1152,7 @@ export default class Main extends Component {
                             height: deviceHeight * 0.155,
                             width: deviceHeight * 0.155
                         }}
+                                          activeOpacity={1}
                                           onPress={(e) => this.onClickFab()}/>
                     </View>}
                     <Modal isVisible={this.state.showRateDialog}
@@ -1585,7 +1586,7 @@ export default class Main extends Component {
                         <TouchableOpacity style={{
                             flex: 1,
                             alignSelf: 'center',
-                            padding: 8,
+                            padding: 2,
                             margin: 8
                         }}
                                           onPress={(e) => this.getUserStatus()}>

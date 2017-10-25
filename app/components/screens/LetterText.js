@@ -170,7 +170,9 @@ export default class LetterText extends Component {
 
 
         this.state = {
-            text: null
+            text: null,
+            counterColor: '#257492',
+            counterText: '0/4000'
         };
 
     }
@@ -210,6 +212,23 @@ export default class LetterText extends Component {
         }
     }
 
+
+    processTextChanging(text) {
+        this.setState({
+            text: text,
+            counterText: text.length + '/4000'
+        });
+
+        if (text.length > 3500) {
+            this.setState({
+                counterColor: 'red'
+            });
+        } else {
+            this.setState({
+                counterColor: '#257492'
+            });
+        }
+    }
 
     async _saveFields() {
         try {
@@ -273,12 +292,18 @@ export default class LetterText extends Component {
                         <TextInput
                             style={{flex: 1, alignSelf: 'stretch', color: '#212121', fontSize: 14, height: 248}}
                             placeholder={strings.standart_sending}
-                            onChangeText={(text) => this.setState({text: text})}
+                            onChangeText={(text) => this.processTextChanging(text)}
                             underlineColorAndroid={'transparent'}
                             multiline={true}
                             value={this.state.text}
                             maxLength={4000}/>
                         <View style={{flex: 0, height: 1, backgroundColor: '#257492'}}/>
+                        <Text style={{
+                            flex: 0,
+                            fontSize: 12,
+                            color: this.state.counterColor,
+                            alignSelf: 'flex-end'
+                        }}>{this.state.counterText}</Text>
                     </View>
                 </ScrollView>
             </View>

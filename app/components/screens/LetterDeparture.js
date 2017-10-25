@@ -365,9 +365,8 @@ export default class LetterDeparture extends Component {
                             <CardView style={{
                                 backgroundColor: '#FFFFFF',
                                 flex: 1,
-                                width: 160,
+                                width: 172,
                                 marginVertical: 2,
-                                marginRight: 2,
                                 flexDirection: 'column'
                             }}
                                       cardElevation={2}
@@ -379,13 +378,13 @@ export default class LetterDeparture extends Component {
                                         flex: 1,
                                         alignItems: 'center',
                                         justifyContent: 'flex-start',
-                                        padding: 8
+                                        padding: 4
                                     }}>
                                         <CardView style={{
                                             flex: 0,
                                             top: 0,
                                             marginRight: 4,
-                                            width: 138,
+                                            width: 150,
                                             height: 48,
                                             backgroundColor: '#757575',
                                             alignItems: 'center',
@@ -405,8 +404,8 @@ export default class LetterDeparture extends Component {
                                             </Text>
 
                                         </CardView>
-                                        <View style={{flex: 1, paddingVertical: 16, marginRight: 14, marginLeft: 10}}>
-                                            <Text style={{flex: 1, width: 132}}>
+                                        <View style={{flex: 1, paddingVertical: 4, marginRight: 2, marginLeft: 0}}>
+                                            <Text style={{flex: 1, width: 138}}>
                                                 {strings.take_a_pen}
                                             </Text>
                                         </View>
@@ -414,7 +413,7 @@ export default class LetterDeparture extends Component {
                                             color: '#757575',
                                             fontSize: 20,
                                             alignSelf: 'center',
-                                            marginBottom: 8
+                                            bottom: 8
                                         }}>
                                             Бесплатно
                                         </Text>
@@ -425,7 +424,7 @@ export default class LetterDeparture extends Component {
                             <CardView style={{
                                 backgroundColor: '#FFFFFF',
                                 flex: 1,
-                                width: 160,
+                                width: 172,
                                 marginVertical: 2,
                                 marginRight: 2,
                                 flexDirection: 'column'
@@ -439,13 +438,13 @@ export default class LetterDeparture extends Component {
                                         flex: 1,
                                         alignItems: 'center',
                                         justifyContent: 'flex-start',
-                                        padding: 8
+                                        padding: 4
                                     }}>
                                         <CardView style={{
                                             flex: 0,
                                             top: 0,
                                             marginRight: 4,
-                                            width: 138,
+                                            width: 150,
                                             height: 48,
                                             backgroundColor: '#757575',
                                             alignItems: 'center',
@@ -465,16 +464,16 @@ export default class LetterDeparture extends Component {
                                             </Text>
 
                                         </CardView>
-                                        <View style={{flex: 1, paddingVertical: 16, marginRight: 14, marginLeft: 10}}>
+                                        <View style={{flex: 1, paddingVertical: 4, marginRight: 2, marginLeft: 0}}>
                                             <Image source={require('./../assets/russia.png')} style={{
-                                                flex: 1, width: 130, resizeMode: 'contain'
+                                                flex: 1, width: 138, resizeMode: 'contain'
                                             }}/>
                                         </View>
                                         <Text style={{
                                             color: '#757575',
                                             fontSize: 20,
                                             alignSelf: 'center',
-                                            marginBottom: 8
+                                            bottom: 8
                                         }}>
                                             {this.state.russianLetter + '*'}
                                         </Text>
@@ -485,7 +484,7 @@ export default class LetterDeparture extends Component {
                             <CardView style={{
                                 backgroundColor: '#FFFFFF',
                                 flex: 1,
-                                width: 160,
+                                width: 172,
                                 marginVertical: 2,
                                 marginRight: 2,
                                 flexDirection: 'column'
@@ -499,13 +498,13 @@ export default class LetterDeparture extends Component {
                                         flex: 1,
                                         alignItems: 'center',
                                         justifyContent: 'flex-start',
-                                        padding: 8
+                                        padding: 4
                                     }}>
                                         <CardView style={{
                                             flex: 0,
                                             top: 0,
                                             marginRight: 4,
-                                            width: 138,
+                                            width: 150,
                                             height: 48,
                                             backgroundColor: '#757575',
                                             alignItems: 'center',
@@ -525,16 +524,16 @@ export default class LetterDeparture extends Component {
                                             </Text>
 
                                         </CardView>
-                                        <View style={{flex: 1, paddingVertical: 16, marginRight: 14, marginLeft: 10}}>
+                                        <View style={{flex: 1, paddingVertical: 4, marginRight: 2, marginLeft: 0}}>
                                             <Image source={require('./../assets/japan.png')} style={{
-                                                flex: 1, width: 130, resizeMode: 'contain'
+                                                flex: 1, width: 138, resizeMode: 'contain'
                                             }}/>
                                         </View>
                                         <Text style={{
                                             color: '#757575',
                                             fontSize: 20,
                                             alignSelf: 'center',
-                                            marginBottom: 8
+                                            bottom: 8
                                         }}>
                                             {this.state.japaneseLetter + '*'}
                                         </Text>

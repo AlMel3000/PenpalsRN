@@ -62,7 +62,7 @@ let strings = new LocalizedStrings({
     ru: {
         name: 'Имя, фамилия',
         choose_country: 'Страна',
-        address: 'Address',
+        address: 'Адрес',
         city: 'Город',
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
@@ -72,7 +72,7 @@ let strings = new LocalizedStrings({
     be: {
         name: 'Имя, фамилия',
         choose_country: 'Страна',
-        address: 'Address',
+        address: 'Адрес',
         city: 'Город',
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
@@ -82,7 +82,7 @@ let strings = new LocalizedStrings({
     uk: {
         name: 'Имя, фамилия',
         choose_country: 'Страна',
-        address: 'Address',
+        address: 'Адрес',
         city: 'Город',
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
@@ -92,7 +92,7 @@ let strings = new LocalizedStrings({
     az: {
         name: 'Имя, фамилия',
         choose_country: 'Страна',
-        address: 'Address',
+        address: 'Адрес',
         city: 'Город',
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
@@ -102,7 +102,7 @@ let strings = new LocalizedStrings({
     hy: {
         name: 'Имя, фамилия',
         choose_country: 'Страна',
-        address: 'Address',
+        address: 'Адрес',
         city: 'Город',
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
@@ -112,7 +112,7 @@ let strings = new LocalizedStrings({
     kk: {
         name: 'Имя, фамилия',
         choose_country: 'Страна',
-        address: 'Address',
+        address: 'Адрес',
         city: 'Город',
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
@@ -122,7 +122,7 @@ let strings = new LocalizedStrings({
     ky: {
         name: 'Имя, фамилия',
         choose_country: 'Страна',
-        address: 'Address',
+        address: 'Адрес',
         city: 'Город',
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
@@ -132,7 +132,7 @@ let strings = new LocalizedStrings({
     tg: {
         name: 'Имя, фамилия',
         choose_country: 'Страна',
-        address: 'Address',
+        address: 'Адрес',
         city: 'Город',
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
@@ -142,7 +142,7 @@ let strings = new LocalizedStrings({
     tk: {
         name: 'Имя, фамилия',
         choose_country: 'Страна',
-        address: 'Address',
+        address: 'Адрес',
         city: 'Город',
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
@@ -152,7 +152,7 @@ let strings = new LocalizedStrings({
     uz: {
         name: 'Имя, фамилия',
         choose_country: 'Страна',
-        address: 'Address',
+        address: 'Адрес',
         city: 'Город',
         your_address: 'Мой почтовый адрес',
         next: 'Далее',

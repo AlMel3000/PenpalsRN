@@ -408,7 +408,7 @@ export default class LetterPurchasingAndSending extends Component {
                     <Image source={require('./../assets/envelope_background.png')}
                            style={{flex: 1, width: null, height: null, resizeMode: 'stretch'}}>
                         {!this.state.showProgress && <View style={{flex: 1, width: null, height: null}}>
-                            <ScrollView showsVerticalScrollIndicator={false}>
+                            <ScrollView style={{marginTop: 14}} showsVerticalScrollIndicator={false}>
                                 <View style={{
                                     flex: 1,
                                     justifyContent: 'flex-start',

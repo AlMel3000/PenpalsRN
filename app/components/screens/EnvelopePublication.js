@@ -70,7 +70,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 month',
         free: 'Free',
         placing_period: 'Choose a period placing of envelope',
-        prices_may_not_include_taxes: '*価格は税金が含まれない場合があります'
+        prices_may_not_include_taxes: '*Prices may not include taxes'
     },
     ja: {
         _10_years: "10年",
@@ -80,7 +80,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1ヶ月',
         free: '無料',
         placing_period: '封筒の表示期間を選択します。',
-        prices_may_not_include_taxes: '*Цены могут не включать налоги'
+        prices_may_not_include_taxes: '*価格は税金が含まれない場合があります'
     },
     ru: {
         _10_years: "10 лет",
@@ -90,7 +90,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 месяц',
         free: 'Бесплатно',
         placing_period: 'Выбирайте период размещения конверта',
-        prices_may_not_include_taxes: '*Prices may not include taxes'
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
     },
     be: {
         _10_years: "10 лет",
@@ -100,7 +100,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 месяц',
         free: 'Бесплатно',
         placing_period: 'Выбирайте период размещения конверта',
-        prices_may_not_include_taxes: '*Prices may not include taxes'
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
     },
     uk: {
         _10_years: "10 лет",
@@ -110,7 +110,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 месяц',
         free: 'Бесплатно',
         placing_period: 'Выбирайте период размещения конверта',
-        prices_may_not_include_taxes: '*Prices may not include taxes'
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
 
     },
     az: {
@@ -121,7 +121,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 месяц',
         free: 'Бесплатно',
         placing_period: 'Выбирайте период размещения конверта',
-        prices_may_not_include_taxes: '*Prices may not include taxes'
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
 
     },
     hy: {
@@ -132,7 +132,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 месяц',
         free: 'Бесплатно',
         placing_period: 'Выбирайте период размещения конверта',
-        prices_may_not_include_taxes: '*Prices may not include taxes'
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
     },
     kk: {
         _10_years: "10 лет",
@@ -142,7 +142,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 месяц',
         free: 'Бесплатно',
         placing_period: 'Выбирайте период размещения конверта',
-        prices_may_not_include_taxes: '*Prices may not include taxes'
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
 
     },
     ky: {
@@ -153,7 +153,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 месяц',
         free: 'Бесплатно',
         placing_period: 'Выбирайте период размещения конверта',
-        prices_may_not_include_taxes: '*Prices may not include taxes'
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
 
     },
     tg: {
@@ -164,7 +164,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 месяц',
         free: 'Бесплатно',
         placing_period: 'Выбирайте период размещения конверта',
-        prices_may_not_include_taxes: '*Prices may not include taxes'
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
     },
     tk: {
         _10_years: "10 лет",
@@ -174,7 +174,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 месяц',
         free: 'Бесплатно',
         placing_period: 'Выбирайте период размещения конверта',
-        prices_may_not_include_taxes: '*Prices may not include taxes'
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
 
     },
     uz: {
@@ -185,7 +185,7 @@ let strings = new LocalizedStrings({
         free_1_month: '1 месяц',
         free: 'Бесплатно',
         placing_period: 'Выбирайте период размещения конверта',
-        prices_may_not_include_taxes: '*Prices may not include taxes'
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
     }
 
 });
