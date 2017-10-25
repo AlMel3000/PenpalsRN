@@ -99,8 +99,8 @@ android {
         applicationId "live.eken.penpal"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 107
-        versionName "2.0.0 Alpha 1.3"
+        versionCode 108
+        versionName "2.0.0 Alpha 0.1.3"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
