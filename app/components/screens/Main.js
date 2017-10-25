@@ -576,7 +576,7 @@ export default class Main extends Component {
             BackHandler.exitApp();
             return true;
         });
-        this.getCountries().then(console.log(JSON.stringify(countryByISO)));
+        this.getCountries();
     }
 
     componentWillUnmount() {
@@ -639,13 +639,11 @@ export default class Main extends Component {
     }
 
     async getLastCardOfUser(email: string) {
-        console.log("BOOM START");
         try {
             let response = await fetch(('http://penpal.eken.live/Api/get-last-user-envelope/?email=' + email), {
                 method: 'GET'
             });
             let res = JSON.parse(await response.text());
-            console.log(JSON.stringify(res));
             if (response.status >= 200 && response.status < 300) {
 
                 if (!res.result) {
@@ -668,15 +666,11 @@ export default class Main extends Component {
                     }];
                     tempArray.concat(envelopesArray);
                     envelopesArray = tempArray;
-                    console.log("BOOM 4");
                 }
 
             }
         } catch (message) {
-            console.log("BOOM 5");
-            console.log('catch ' + message)
         } finally {
-            console.log("BOOM 6 main");
             this.getCards();
         }
     }
@@ -837,7 +831,6 @@ export default class Main extends Component {
 
         if (!isAppRatedOrRateDeclined) {
             this.setState({pagesViewed: this.state.pagesViewed + 1});
-            console.log('pagesViewed ' + this.state.pagesViewed);
             if (this.state.pagesViewed >= CARDS_COUNT_FOR_RATING_DIALOG) {
                 this.setState({
                     pagesViewed: 0,
@@ -857,7 +850,6 @@ export default class Main extends Component {
                 method: 'GET'
             });
             let res = JSON.parse(await response.text());
-            console.log(JSON.stringify(res));
             if (response.status >= 200 && response.status < 300) {
 
                 if (res.result === 0) {
@@ -878,8 +870,6 @@ export default class Main extends Component {
 
             }
         } catch (message) {
-            console.log("BOOM 5");
-            console.log('catch ' + message)
         }
     }
 
@@ -896,7 +886,6 @@ export default class Main extends Component {
     }
 
     renderEnvelope(envelope) {
-        console.log("item " + JSON.stringify(envelope.index));
 
         let buttonIconColor = '#9e9e9e';
         let buttonTextColor = '#9e9e9e';
@@ -1304,7 +1293,6 @@ export default class Main extends Component {
             } else {
                 nextBlock = 1;
             }
-            console.log('nextBlock ' + nextBlock);
             block = nextBlock;
             this.getCards();
             this.updateViews();
@@ -1341,7 +1329,6 @@ export default class Main extends Component {
             viewsToShow++;
             envelopesArray[pageNum].data.views = viewsToShow;
             viewsById[id] = view;
-            console.log('id ' + id)
         }
 
     }
@@ -1357,12 +1344,9 @@ export default class Main extends Component {
                     method: 'POST',
                     body: data
                 });
-                console.log('viewsById posted' + JSON.stringify(viewsById));
                 let res = JSON.stringify(await response.text());
-                console.log("update views" + JSON.stringify(res));
             }
         } catch (message) {
-            console.log('catch ' + message)
         }
     }
 
@@ -1495,7 +1479,6 @@ export default class Main extends Component {
 
                 }
 
-                console.log(JSON.stringify(envelopesArray));
                 this.setState({
                     showProgress: false,
                     showError: false
@@ -1508,7 +1491,6 @@ export default class Main extends Component {
                 });
             }
         } catch (message) {
-            console.log(message);
             this.setState({
                 showProgress: false,
                 showError: true,
@@ -1565,7 +1547,6 @@ export default class Main extends Component {
                         style={{height: 48, width: 48, alignSelf: 'center'}}
                         duration={3000}
                         onFinishedAnimating={( (status) => {
-                            console.log(status)
                         } )}>
                         <Image
                             style={{height: '100%', width: '100%', resizeMode: 'contain'}}

@@ -269,7 +269,6 @@ export default class LetterDeparture extends Component {
         try {
             InAppBilling.getProductDetailsArray([RUSSIAN_LETTER_ID, JAPANESE_LETTER_ID])
                 .then((details) => {
-                    console.log(details);
                     for (let i = 0; i < details.length; i++) {
 
                         switch (details[i].productId) {
@@ -296,7 +295,6 @@ export default class LetterDeparture extends Component {
                     return InAppBilling.close()
                 })
         } catch (e) {
-            console.log('BILLING ' + e.message)
         }
     }
 
@@ -560,7 +558,6 @@ export default class LetterDeparture extends Component {
                         style={{height: 48, width: 48, alignSelf: 'center'}}
                         duration={3000}
                         onFinishedAnimating={( (status) => {
-                            console.log(status)
                         } )}>
                         <Image
                             style={{height: '100%', width: '100%', resizeMode: 'contain'}}

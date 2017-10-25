@@ -273,7 +273,6 @@ export default class LetterPurchasingAndSending extends Component {
         try {
             InAppBilling.getProductDetailsArray([departureCountryID])
                 .then((details) => {
-                    console.log(details);
                     for (let i = 0; i < details.length; i++) {
                         this.setState({
                             price: details[i].priceText,
@@ -288,7 +287,6 @@ export default class LetterPurchasingAndSending extends Component {
                     return InAppBilling.close()
                 })
         } catch (e) {
-            console.log('BILLING ' + e.message)
         }
     }
 
@@ -299,7 +297,6 @@ export default class LetterPurchasingAndSending extends Component {
                 InAppBilling.open()
                     .then(() => InAppBilling.purchase(departureCountryID))
                     .then((details) => {
-                        console.log('DETAILS try' + JSON.stringify(details));
                         this.setState({details});
                         this.sendLetter();
                         return InAppBilling.consumePurchase(departureCountryID)
@@ -309,7 +306,6 @@ export default class LetterPurchasingAndSending extends Component {
                         return InAppBilling.close()
                     }))
         } catch (e) {
-            console.log('DETAILS err' + e.message);
             InAppBilling.close()
         }
     }
@@ -359,7 +355,6 @@ export default class LetterPurchasingAndSending extends Component {
 
 
         } catch (e) {
-            console.log("FAIL " + e.message);
 
         } finally {
             this._navigateTo('Main', {envelopesArray: envelopesArray, block: block, page: page,});
@@ -565,7 +560,6 @@ export default class LetterPurchasingAndSending extends Component {
                                 style={{height: 48, width: 48, alignSelf: 'center'}}
                                 duration={3000}
                                 onFinishedAnimating={( (status) => {
-                                    console.log(status)
                                 } )}>
                                 <Image
                                     style={{height: '100%', width: '100%', resizeMode: 'contain'}}

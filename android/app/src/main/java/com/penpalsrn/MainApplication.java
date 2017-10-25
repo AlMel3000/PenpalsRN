@@ -14,6 +14,9 @@ import com.imagepicker.ImagePickerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.idehub.Billing.InAppBillingBridgePackage;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,5 +51,6 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    Fabric.with(this, new Crashlytics());
   }
 }
