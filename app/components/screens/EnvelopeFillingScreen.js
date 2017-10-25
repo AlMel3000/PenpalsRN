@@ -25,6 +25,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 import CountryPicker from 'react-native-country-picker-modal';
 
 import CheckBox from 'react-native-check-box'
+import LocalizedStrings from 'react-native-localization';
 
 var ImagePicker = require('react-native-image-picker');
 
@@ -35,17 +36,257 @@ var TimerMixin = require('react-timer-mixin');
 let defaultRobohash = require('./../assets/default_robohash.png');
 
 let options = {
-    title: 'Добавьте фото',
+    title: 'Photo',
     storageOptions: {
         skipBackup: true,
         path: 'images',
         returnBase64Image: true
     },
-    cancelButtonTitle: 'Отмена',
-    takePhotoButtonTitle: 'Сфотографировать',
-    chooseFromLibraryButtonTitle: 'Выбрать из галереи',
+    cancelButtonTitle: 'Cancel',
+    takePhotoButtonTitle: 'Camera',
+    chooseFromLibraryButtonTitle: 'Gallery',
 
 };
+
+let strings = new LocalizedStrings({
+    "en-US": {
+        name: 'Name, last name',
+        cancel: 'Cancel',
+        choose_country: 'Country',
+        address: 'Address',
+        city: 'City',
+        description: 'P.S.',
+        fill_address: 'Specify correct mailing address to receive letters',
+        i_accept: 'I accept license ',
+        agreement: 'agreement',
+        terms: 'Terms & Conditions',
+        more: 'More',
+        declaration: '\t\t\t1) I am of sound mind and memory, in person, without any pressure from outside, decided to publish my personal information in the Penpals Service for finding penpals.\n\t\t\t2) Each card is verified by the moderator before it gets into the list of the envelopes. Be worthy of yourself. We\'ll remove all the dirt, trash and spam.Also cards that contain email, phone, links to other sites and profiles in social networks will not be moderated. Moderation takes some time, please be patient a little bit and your address will appear in the Penpals.',
+        next: 'Next',
+        zip: 'Zip',
+        agreement_n_fields: 'You must accept the agreement and fill in all fields correctly!',
+        fields: 'You must fill in all fields correctly'
+    },
+    en: {
+        name: 'Name, last name',
+        cancel: 'Cancel',
+        choose_country: 'Country',
+        address: 'Address',
+        city: 'City',
+        description: 'P.S.',
+        fill_address: 'Specify correct mailing address to receive letters',
+        i_accept: 'I accept license ',
+        agreement: 'agreement',
+        terms: 'Terms & Conditions',
+        more: 'More',
+        declaration: '\t\t\t1) I am of sound mind and memory, in person, without any pressure from outside, decided to publish my personal information in the Penpals Service for finding penpals.\n\t\t\t2) Each card is verified by the moderator before it gets into the list of the envelopes. Be worthy of yourself. We\'ll remove all the dirt, trash and spam.Also cards that contain email, phone, links to other sites and profiles in social networks will not be moderated. Moderation takes some time, please be patient a little bit and your address will appear in the Penpals.',
+        next: 'Next',
+        zip: 'Zip',
+        agreement_n_fields: 'You must accept the agreement and fill in all fields correctly!',
+        fields: 'You must fill in all fields correctly'
+    },
+    ja: {
+        name: '名前、姓',
+        cancel: 'キャンセル',
+        choose_country: '国',
+        address: '住所',
+        city: '市',
+        description: '追記',
+        fill_address: '手紙を受け取るために、正しい住所を指定します。',
+        i_accept: 'I受け入れるライセンス ',
+        agreement: '同意する',
+        terms: 'ご利用規約',
+        more: 'もっと',
+        declaration: '\t\t\t1) 私は健全な精神と記憶の持ち主であり、外部からの圧力なしに一人でペンパルを見つけるためにPenpalsサービスで個人情報を公開することにしました。\n\t\t\t2) 各カードは封筒リストに掲載される前に、モデレーターによって検証されます。自分自身にふさわしい内容にしてください。私たちは、すべての汚い表示やスパムを削除します。Eメールや電話番号、他のサイトやソーシャルネットワーク上のプロフィーへのリンクを含むカードもモデレートされません。検証には少し時間がかかります。あなたの住所がPenpalsに表示されるまでお待ちください。',
+        next: '次',
+        zip: '郵便番号',
+        agreement_n_fields: '規約内容に同意し、すべての欄に正しく記入する必要があります。',
+        fields: 'すべての欄に正しく記入する必要があります。'
+    },
+    ru: {
+        name: 'Имя, фамилия',
+        cancel: 'Отмена',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        description: 'P.S.',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получать письма',
+        i_accept: 'Я принимаю условия ',
+        agreement: 'соглашения',
+        terms: 'Условия и положения',
+        more: 'Узнать больше',
+        declaration: '\t\t\tЯ в здравом уме и трезвой памяти, лично, без какого-либо давления извне, решил опубликовать свои личные данные в Penpals для поиска друзей по переписке.\n\t\t\t2) Каждая карточка проверяется модератором, прежде чем попасть в ленту Друзей. Будьте достойными самого себя. Всю грязь, мусор и спам мы удалим. Также не будут модерироваться карточки, содержащие в тексте email, телефон, ссылки на профили в социальных сетях или внешних сайтах. Модерация занимает некоторое время, пожалуйста, потерпите немного и Ваш адрес появится в ленте Penpals.',
+        next: 'Далее',
+        zip: 'Индекс',
+        agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    be: {
+        name: 'Имя, фамилия',
+        cancel: 'Отмена',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        description: 'P.S.',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получать письма',
+        i_accept: 'Я принимаю условия ',
+        agreement: 'соглашения',
+        terms: 'Условия и положения',
+        more: 'Узнать больше',
+        declaration: '\t\t\tЯ в здравом уме и трезвой памяти, лично, без какого-либо давления извне, решил опубликовать свои личные данные в Penpals для поиска друзей по переписке.\n\t\t\t2) Каждая карточка проверяется модератором, прежде чем попасть в ленту Друзей. Будьте достойными самого себя. Всю грязь, мусор и спам мы удалим. Также не будут модерироваться карточки, содержащие в тексте email, телефон, ссылки на профили в социальных сетях или внешних сайтах. Модерация занимает некоторое время, пожалуйста, потерпите немного и Ваш адрес появится в ленте Penpals.',
+        next: 'Далее',
+        zip: 'Индекс',
+        agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    uk: {
+        name: 'Имя, фамилия',
+        cancel: 'Отмена',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        description: 'P.S.',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получать письма',
+        i_accept: 'Я принимаю условия ',
+        agreement: 'соглашения',
+        terms: 'Условия и положения',
+        more: 'Узнать больше',
+        declaration: '\t\t\tЯ в здравом уме и трезвой памяти, лично, без какого-либо давления извне, решил опубликовать свои личные данные в Penpals для поиска друзей по переписке.\n\t\t\t2) Каждая карточка проверяется модератором, прежде чем попасть в ленту Друзей. Будьте достойными самого себя. Всю грязь, мусор и спам мы удалим. Также не будут модерироваться карточки, содержащие в тексте email, телефон, ссылки на профили в социальных сетях или внешних сайтах. Модерация занимает некоторое время, пожалуйста, потерпите немного и Ваш адрес появится в ленте Penpals.',
+        next: 'Далее',
+        zip: 'Индекс',
+        agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    az: {
+        name: 'Имя, фамилия',
+        cancel: 'Отмена',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        description: 'P.S.',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получать письма',
+        i_accept: 'Я принимаю условия ',
+        agreement: 'соглашения',
+        terms: 'Условия и положения',
+        more: 'Узнать больше',
+        declaration: '\t\t\tЯ в здравом уме и трезвой памяти, лично, без какого-либо давления извне, решил опубликовать свои личные данные в Penpals для поиска друзей по переписке.\n\t\t\t2) Каждая карточка проверяется модератором, прежде чем попасть в ленту Друзей. Будьте достойными самого себя. Всю грязь, мусор и спам мы удалим. Также не будут модерироваться карточки, содержащие в тексте email, телефон, ссылки на профили в социальных сетях или внешних сайтах. Модерация занимает некоторое время, пожалуйста, потерпите немного и Ваш адрес появится в ленте Penpals.',
+        next: 'Далее',
+        zip: 'Индекс',
+        agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
+        fields: 'Вы должны корректно заполнить все поля'
+
+    },
+    hy: {
+        name: 'Имя, фамилия',
+        cancel: 'Отмена',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        description: 'P.S.',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получать письма',
+        i_accept: 'Я принимаю условия ',
+        agreement: 'соглашения',
+        terms: 'Условия и положения',
+        more: 'Узнать больше',
+        declaration: '\t\t\tЯ в здравом уме и трезвой памяти, лично, без какого-либо давления извне, решил опубликовать свои личные данные в Penpals для поиска друзей по переписке.\n\t\t\t2) Каждая карточка проверяется модератором, прежде чем попасть в ленту Друзей. Будьте достойными самого себя. Всю грязь, мусор и спам мы удалим. Также не будут модерироваться карточки, содержащие в тексте email, телефон, ссылки на профили в социальных сетях или внешних сайтах. Модерация занимает некоторое время, пожалуйста, потерпите немного и Ваш адрес появится в ленте Penpals.',
+        next: 'Далее',
+        zip: 'Индекс',
+        agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    kk: {
+        name: 'Имя, фамилия',
+        cancel: 'Отмена',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        description: 'P.S.',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получать письма',
+        i_accept: 'Я принимаю условия ',
+        agreement: 'соглашения',
+        terms: 'Условия и положения',
+        more: 'Узнать больше',
+        declaration: '\t\t\tЯ в здравом уме и трезвой памяти, лично, без какого-либо давления извне, решил опубликовать свои личные данные в Penpals для поиска друзей по переписке.\n\t\t\t2) Каждая карточка проверяется модератором, прежде чем попасть в ленту Друзей. Будьте достойными самого себя. Всю грязь, мусор и спам мы удалим. Также не будут модерироваться карточки, содержащие в тексте email, телефон, ссылки на профили в социальных сетях или внешних сайтах. Модерация занимает некоторое время, пожалуйста, потерпите немного и Ваш адрес появится в ленте Penpals.',
+        next: 'Далее',
+        zip: 'Индекс',
+        agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    ky: {
+        name: 'Имя, фамилия',
+        cancel: 'Отмена',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        description: 'P.S.',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получать письма',
+        i_accept: 'Я принимаю условия ',
+        agreement: 'соглашения',
+        terms: 'Условия и положения',
+        more: 'Узнать больше',
+        declaration: '\t\t\tЯ в здравом уме и трезвой памяти, лично, без какого-либо давления извне, решил опубликовать свои личные данные в Penpals для поиска друзей по переписке.\n\t\t\t2) Каждая карточка проверяется модератором, прежде чем попасть в ленту Друзей. Будьте достойными самого себя. Всю грязь, мусор и спам мы удалим. Также не будут модерироваться карточки, содержащие в тексте email, телефон, ссылки на профили в социальных сетях или внешних сайтах. Модерация занимает некоторое время, пожалуйста, потерпите немного и Ваш адрес появится в ленте Penpals.',
+        next: 'Далее',
+        zip: 'Индекс',
+        agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    tg: {
+        name: 'Имя, фамилия',
+        cancel: 'Отмена',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        description: 'P.S.',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получать письма',
+        i_accept: 'Я принимаю условия ',
+        agreement: 'соглашения',
+        terms: 'Условия и положения',
+        more: 'Узнать больше',
+        declaration: '\t\t\tЯ в здравом уме и трезвой памяти, лично, без какого-либо давления извне, решил опубликовать свои личные данные в Penpals для поиска друзей по переписке.\n\t\t\t2) Каждая карточка проверяется модератором, прежде чем попасть в ленту Друзей. Будьте достойными самого себя. Всю грязь, мусор и спам мы удалим. Также не будут модерироваться карточки, содержащие в тексте email, телефон, ссылки на профили в социальных сетях или внешних сайтах. Модерация занимает некоторое время, пожалуйста, потерпите немного и Ваш адрес появится в ленте Penpals.',
+        next: 'Далее',
+        zip: 'Индекс',
+        agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
+        fields: 'Вы должны корректно заполнить все поля'
+
+    },
+    tk: {
+        name: 'Имя, фамилия',
+        cancel: 'Отмена',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        description: 'P.S.',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получать письма',
+        i_accept: 'Я принимаю условия ',
+        agreement: 'соглашения',
+        terms: 'Условия и положения',
+        more: 'Узнать больше',
+        declaration: '\t\t\tЯ в здравом уме и трезвой памяти, лично, без какого-либо давления извне, решил опубликовать свои личные данные в Penpals для поиска друзей по переписке.\n\t\t\t2) Каждая карточка проверяется модератором, прежде чем попасть в ленту Друзей. Будьте достойными самого себя. Всю грязь, мусор и спам мы удалим. Также не будут модерироваться карточки, содержащие в тексте email, телефон, ссылки на профили в социальных сетях или внешних сайтах. Модерация занимает некоторое время, пожалуйста, потерпите немного и Ваш адрес появится в ленте Penpals.',
+        next: 'Далее',
+        zip: 'Индекс',
+        agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    uz: {
+        name: 'Имя, фамилия',
+        cancel: 'Отмена',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        description: 'P.S.',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получать письма',
+        i_accept: 'Я принимаю условия ',
+        agreement: 'соглашения',
+        terms: 'Условия и положения',
+        more: 'Узнать больше',
+        declaration: '\t\t\tЯ в здравом уме и трезвой памяти, лично, без какого-либо давления извне, решил опубликовать свои личные данные в Penpals для поиска друзей по переписке.\n\t\t\t2) Каждая карточка проверяется модератором, прежде чем попасть в ленту Друзей. Будьте достойными самого себя. Всю грязь, мусор и спам мы удалим. Также не будут модерироваться карточки, содержащие в тексте email, телефон, ссылки на профили в социальных сетях или внешних сайтах. Модерация занимает некоторое время, пожалуйста, потерпите немного и Ваш адрес появится в ленте Penpals.',
+        next: 'Далее',
+        zip: 'Индекс',
+        agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
+        fields: 'Вы должны корректно заполнить все поля'
+    }
+
+});
 
 let envelopesArray;
 let block;
@@ -399,11 +640,11 @@ export default class EnvelopeFillingScreen extends Component {
             } else {
                 Vibration.vibrate();
                 if (!eulaAcepted && (name && address && city && country && zip && email && description)) {
-                    ToastAndroid.showWithGravity('Вы должны принять соглашение', ToastAndroid.LONG, ToastAndroid.CENTER);
+                    ToastAndroid.showWithGravity(strings.acceptance_warning, ToastAndroid.LONG, ToastAndroid.CENTER);
                 } else if (!eulaAcepted && !(name && address && country && zip && email && description)) {
-                    ToastAndroid.showWithGravity('Вы должны принять соглашение и корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
+                    ToastAndroid.showWithGravity(strings.agreement_n_fields, ToastAndroid.LONG, ToastAndroid.CENTER);
                 } else {
-                    ToastAndroid.showWithGravity('Вы должны корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
+                    ToastAndroid.showWithGravity(strings.fields, ToastAndroid.LONG, ToastAndroid.CENTER);
                 }
             }
         })
@@ -455,11 +696,11 @@ export default class EnvelopeFillingScreen extends Component {
 
     _showEULA(){
         Alert.alert(
-            'Terms & Conditions',
-            '\t\t\t1) I am of sound mind and memory, in person, without any pressure from outside, decided to publish my personal information in the Penpals Service for finding penpals. \n\n\t\t\t2) Each card is verified by the moderator before it gets into the list of the envelopes. Be worthy of yourself. We\'ll remove all the dirt, trash and spam.Also cards that contain email, phone, links to other sites and profiles in social networks will not be moderated. Moderation takes some time, please be patient a little bit and your address will appear in the Penpals.',
+            strings.terms,
+            strings.declaration,
             [
                 {
-                    text: 'УЗНАТЬ БОЛЬШЕ',
+                    text: strings.more,
                     onPress: () => this._navigateTo('EulaScreen', {
                         envelopesArray: envelopesArray,
                         block: block,
@@ -520,7 +761,7 @@ export default class EnvelopeFillingScreen extends Component {
                            alignSelf: 'stretch'
                        }}>
                        <Text style={{color: '#212121', alignSelf: 'center', marginVertical:16}}>
-                           Specify correct mailing address to receive letters
+                           {strings.fill_address}
                        </Text>
                        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems:'flex-start', alignSelf:'stretch'}}>
                            <View style={{flex:2,flexDirection: 'column', justifyContent: 'flex-start', alignItems:'flex-start', alignSelf:'stretch'}}>
@@ -532,7 +773,7 @@ export default class EnvelopeFillingScreen extends Component {
                                   <View style={{flex:1, marginHorizontal: 8}}>
                                       <TextInput
                                           style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
-                                          placeholder={'Имя, фамилия'}
+                                          placeholder={strings.name}
                                           autoFocus={true}
                                           onFocus={(e)=> this.onFocusName()}
                                           onEndEditing={(e)=>this.setState({nameUnderlineColor: '#e4e4e4'})}
@@ -551,7 +792,7 @@ export default class EnvelopeFillingScreen extends Component {
                                    <View style={{flex:1, marginHorizontal: 8}}>
                                        <TextInput
                                            style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
-                                           placeholder={'Адрес'}
+                                           placeholder={strings.address}
                                            onFocus={(e) => this._onFocusAddress()}
                                            onEndEditing={(e)=>this.setState({addressUnderlineColor: '#e4e4e4'})}
                                            onChangeText={(text) => this._onChangeAddress(text)}
@@ -605,7 +846,7 @@ export default class EnvelopeFillingScreen extends Component {
                                        styles={{countryName: {fontSize: 14}}}>
                                    <TextInput
                                        style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
-                                       placeholder={'Страна'}
+                                       placeholder={strings.choose_country}
                                        editable={false}
                                        underlineColorAndroid={'transparent'}
                                        value={this.state.country}/>
@@ -621,7 +862,7 @@ export default class EnvelopeFillingScreen extends Component {
                                <View style={{flex:1, marginHorizontal: 8}}>
                                    <TextInput
                                        style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
-                                       placeholder={'Индекс'}
+                                       placeholder={strings.zip}
                                        onFocus={(e) => this._onFocusZip()}
                                        onEndEditing={(e)=>this.setState({zipUnderlineColor: '#e4e4e4'})}
                                        onChangeText={(text) => this._onChangeZip(text)}
@@ -655,7 +896,7 @@ export default class EnvelopeFillingScreen extends Component {
                        <View style={{flex:1, alignSelf:'stretch', borderColor: this.state.descriptionUnderlineColor, borderWidth: 1, marginVertical:12}}>
                            <TextInput
                                style={{flex:0, alignSelf: 'stretch',color: '#212121',fontSize: 14}}
-                               placeholder={'p.s.'}
+                               placeholder={strings.description}
                                maxLength={150}
                                multiline={true}
                                onFocus={(e) => this._onFocusDescription()}
@@ -672,7 +913,7 @@ export default class EnvelopeFillingScreen extends Component {
                                isChecked={this.state.checked}
                            />
                            <Text style={{color: '#212121', marginTop: 6}}>
-                               Я принимаю условия
+                               {strings.i_accept}
                            </Text>
                            <TouchableOpacity
                                onPress={(e) => this._showEULA()}>
@@ -682,7 +923,7 @@ export default class EnvelopeFillingScreen extends Component {
                                    textDecorationLine: 'underline',
                                    marginTop: 6
                                }}>
-                                   соглашения
+                                   {strings.agreement}
                                </Text>
                            </TouchableOpacity>
 
@@ -695,11 +936,11 @@ export default class EnvelopeFillingScreen extends Component {
                                                  block: block,
                                                  page: page
                                              })}>
-                               <Text style={{fontSize:16, color:'#7299BF'}}>ОТМЕНА</Text>
+                               <Text style={{fontSize: 16, color: '#7299BF'}}>{strings.cancel}</Text>
                            </TouchableOpacity>
                            <TouchableOpacity
                                onPress={(e) =>this._checkFields()}>
-                               <Text style={{fontSize:16, color:'#7299BF'}}>ДАЛЕЕ</Text>
+                               <Text style={{fontSize: 16, color: '#7299BF'}}>{strings.next}</Text>
                            </TouchableOpacity>
                        </View>
                        </View>

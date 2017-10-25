@@ -28,8 +28,9 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 
 import RadioButton from 'radio-button-react-native';
 
-import LocalizedStrings from 'react-native-localization';
 import {Dropdown} from 'react-native-material-dropdown';
+
+import LocalizedStrings from 'react-native-localization';
 
 var TimerMixin = require('react-timer-mixin');
 
@@ -71,88 +72,434 @@ let strings = new LocalizedStrings({
         send_letter: "SEND LETTER",
         create_envelope: 'CREATE ENVELOPE',
         delete_envelope: 'DELETE OWN CARD',
-        filter: 'FILTER'
+        filter: 'FILTER',
+        apply_filter: 'Apply',
+        back: 'Back',
+        cancel: 'Cancel',
+        delete_dialog_body: 'It will not be possible to recover the envelope, even if it was paid for.',
+        delete_dialog_title: 'Delete the envelope?',
+        do_not_ask: 'Don\'t ask more',
+        google_play: 'asdf on Google Play',
+        later: 'Later',
+        no_own_envelopes: 'You haven\'t added envelopes yet',
+        number_of_views: 'NUMBER OF VIEWS',
+        own_envelopes_not_found_title: 'Your envelopes are not found',
+        own_envelopes_not_found_body: 'Perhaps you have deleted your envelopes or their placement time is expired',
+        rating_dialog: 'We really care about your experience and want to make app better for you.\n' +
+        'Let us know how it can be improved and we\'ll build it!\n' +
+        'Or just rate us on Google Play.',
+        reset_filter: 'Reset filter',
+        show_only_own_envelops: 'Show only own envelopes',
+        suggest_improvement: 'Improve',
+        choose_country: 'Country',
+        went_wrong: 'Something went wrong.\n\n Please check your Internet connection or try again later',
+        write_us: 'For any questions, write to:',
+        email_header: 'Hello, \n\n\n' +
+        'Please do not change the subject of the email. \n\n\n' +
+        'We, like everyone else, very much love Google Translate:) \n\n' +
+        'And like everyone else, know, how to use it.\n\n' +
+        'Please, note, that employees of our support team speak English.\n\n\n' +
+        'Best Regards, Your Penpals.\n\n---------------------------------------------------------------'
     },
     en: {
         send_letter: "SEND LETTER",
         create_envelope: 'CREATE ENVELOPE',
         delete_envelope: 'DELETE OWN CARD',
-        filter: 'FILTER'
+        filter: 'FILTER',
+        apply_filter: 'Apply',
+        back: 'Back',
+        cancel: 'Cancel',
+        delete_dialog_body: 'It will not be possible to recover the envelope, even if it was paid for.',
+        delete_dialog_title: 'Delete the envelope?',
+        do_not_ask: 'Don\'t ask more',
+        google_play: 'Penpal on Google Play',
+        later: 'Later',
+        no_own_envelopes: 'You haven\'t added envelopes yet',
+        number_of_views: 'NUMBER OF VIEWS',
+        own_envelopes_not_found_title: 'Your envelopes are not found',
+        own_envelopes_not_found_body: 'Perhaps you have deleted your envelopes or their placement time is expired',
+        rating_dialog: 'We really care about your experience and want to make app better for you.\n' +
+        'Let us know how it can be improved and we\'ll build it!\n' +
+        'Or just rate us on Google Play.',
+        reset_filter: 'Reset filter',
+        show_only_own_envelops: 'Show only own envelopes',
+        suggest_improvement: 'Improve',
+        choose_country: 'Country',
+        went_wrong: 'Something went wrong.\n\n Please check your Internet connection or try again later',
+        write_us: 'For any questions, write to:',
+        email_header: 'Hello, \n\n\n' +
+        'Please do not change the subject of the email. \n\n\n' +
+        'We, like everyone else, very much love Google Translate:) \n\n' +
+        'And like everyone else, know, how to use it.\n\n' +
+        'Please, note, that employees of our support team speak English.\n\n\n' +
+        'Best Regards, Your Penpals.\n\n---------------------------------------------------------------'
     },
     ja: {
         send_letter: '手紙を送ります',
         create_envelope: '封筒を作成します。',
         delete_envelope: '自分の封筒を消去',
-        filter: 'フィルタ'
+        filter: 'フィルタ',
+        apply_filter: '適用します',
+        back: '戻る',
+        cancel: 'キャンセル',
+        delete_dialog_body: '例え支払われたとしても、封筒を復元することは不可能です。',
+        delete_dialog_title: '封筒を消去しますか?',
+        do_not_ask: 'それ以上聞かないでください',
+        google_play: 'Google Play の Penpals',
+        later: '後',
+        no_own_envelopes: 'あなたはまだ封筒を追加していません',
+        number_of_views: '閲覧数',
+        own_envelopes_not_found_title: 'あなたの封筒は見つかりません。',
+        own_envelopes_not_found_body: '恐らく自分の封筒を削除してしまったか、掲載期限切れになったようです。',
+        rating_dialog: 'あなたの経験に気を配り、あなたのためにアプリケーションをより良くしたいと思っています。\n' +
+        'どのように改善されるべきか教えてください、私たちはそれをもとに構築していきます\n' +
+        'または、Google Play で評価してください。',
+        reset_filter: 'フィルターをリセット',
+        show_only_own_envelops: '自分の封筒のみ表示',
+        suggest_improvement: '改善',
+        choose_country: '国',
+        went_wrong: '何か問題があったようです。\n\nインターネットの接続を確認するか、後でもう一度お試しください。',
+        write_us: '何か質問があれば書いてください。',
+        email_header: 'こんにちは, \n\n\n' +
+        'Eメールのタイトルは変更しないでください。 \n\n\n' +
+        '私たちは皆さんと同じくグーグル翻訳がとても好きです(^^)\n\n' +
+        'そして、皆さんと同じようにその使い方を知っています。\n\n' +
+        'サポートチームのスタッフは英語を話すことをご承知おきください。\n\n\n' +
+        'よろしくお願いします。 Your Penpals.\n\n---------------------------------------------------------------'
     },
     ru: {
         send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
-        filter: 'ФИЛЬТР'
+        filter: 'ФИЛЬТР',
+        apply_filter: 'Применить',
+        back: 'Назад',
+        cancel: 'Отмена',
+        delete_dialog_body: 'Восстановить конверт будет невозможно, даже если он был оплачен.',
+        delete_dialog_title: 'Удалить конверт?',
+        do_not_ask: 'Не спрашивать',
+        google_play: 'Penpal на Google Play',
+        later: 'Позже',
+        no_own_envelopes: 'Вы ещё не добавляли конверты',
+        number_of_views: 'ПРОСМОТРЫ',
+        own_envelopes_not_found_title: 'Ваши конверты не найдены',
+        own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
+        rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
+        reset_filter: 'Сбросить',
+        show_only_own_envelops: 'Показать только собственные конверты',
+        suggest_improvement: 'Улучшить',
+        choose_country: 'Страна',
+        went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
+        write_us: 'По любым вопросам пишите нам:',
+        email_header: 'Здравствуйте!\n\n' +
+        'Пожалуйста не изменяйте тему письма.\n\n' +
+        'Мы как и все очень любим Google Translate :)\n\n' +
+        'И как и все умеем им пользоваться.\n\n' +
+        'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n\n' +
+        'С наилучшими пожеланиями, Ваш Penpals.\n\n' +
+        '---------------------------------------------------------------'
 
     },
     be: {
         send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
-        filter: 'ФИЛЬТР'
+        filter: 'ФИЛЬТР',
+        apply_filter: 'Применить',
+        back: 'Назад',
+        cancel: 'Отмена',
+        delete_dialog_body: 'Восстановить конверт будет невозможно, даже если он был оплачен.',
+        delete_dialog_title: 'Удалить конверт?',
+        do_not_ask: 'Не спрашивать',
+        google_play: 'Penpal на Google Play',
+        later: 'Позже',
+        no_own_envelopes: 'Вы ещё не добавляли конверты',
+        number_of_views: 'ПРОСМОТРЫ',
+        own_envelopes_not_found_title: 'Ваши конверты не найдены',
+        own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
+        rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
+        reset_filter: 'Сбросить',
+        show_only_own_envelops: 'Показать только собственные конверты',
+        suggest_improvement: 'Улучшить',
+        choose_country: 'Страна',
+        went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
+        write_us: 'По любым вопросам пишите нам:',
+        email_header: 'Здравствуйте!\n\n' +
+        'Пожалуйста не изменяйте тему письма.\n\n' +
+        'Мы как и все очень любим Google Translate :)\n\n' +
+        'И как и все умеем им пользоваться.\n\n' +
+        'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n\n' +
+        'С наилучшими пожеланиями, Ваш Penpals.\n\n' +
+        '---------------------------------------------------------------'
+
 
     },
     uk: {
         send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
-        filter: 'ФИЛЬТР'
+        filter: 'ФИЛЬТР',
+        apply_filter: 'Применить',
+        back: 'Назад',
+        cancel: 'Отмена',
+        delete_dialog_body: 'Восстановить конверт будет невозможно, даже если он был оплачен.',
+        delete_dialog_title: 'Удалить конверт?',
+        do_not_ask: 'Не спрашивать',
+        google_play: 'Penpal на Google Play',
+        later: 'Позже',
+        no_own_envelopes: 'Вы ещё не добавляли конверты',
+        number_of_views: 'ПРОСМОТРЫ',
+        own_envelopes_not_found_title: 'Ваши конверты не найдены',
+        own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
+        rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
+        reset_filter: 'Сбросить',
+        show_only_own_envelops: 'Показать только собственные конверты',
+        suggest_improvement: 'Улучшить',
+        choose_country: 'Страна',
+        went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
+        write_us: 'По любым вопросам пишите нам:',
+        email_header: 'Здравствуйте!\n\n' +
+        'Пожалуйста не изменяйте тему письма.\n\n' +
+        'Мы как и все очень любим Google Translate :)\n\n' +
+        'И как и все умеем им пользоваться.\n\n' +
+        'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n\n' +
+        'С наилучшими пожеланиями, Ваш Penpals.\n\n' +
+        '---------------------------------------------------------------'
 
     },
     az: {
         send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
-        filter: 'ФИЛЬТР'
+        filter: 'ФИЛЬТР',
+        apply_filter: 'Применить',
+        back: 'Назад',
+        cancel: 'Отмена',
+        delete_dialog_body: 'Восстановить конверт будет невозможно, даже если он был оплачен.',
+        delete_dialog_title: 'Удалить конверт?',
+        do_not_ask: 'Не спрашивать',
+        google_play: 'Penpal на Google Play',
+        later: 'Позже',
+        no_own_envelopes: 'Вы ещё не добавляли конверты',
+        number_of_views: 'ПРОСМОТРЫ',
+        own_envelopes_not_found_title: 'Ваши конверты не найдены',
+        own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
+        rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
+        reset_filter: 'Сбросить',
+        show_only_own_envelops: 'Показать только собственные конверты',
+        suggest_improvement: 'Улучшить',
+        choose_country: 'Страна',
+        went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
+        write_us: 'По любым вопросам пишите нам:',
+        email_header: 'Здравствуйте!\n\n' +
+        'Пожалуйста не изменяйте тему письма.\n\n' +
+        'Мы как и все очень любим Google Translate :)\n\n' +
+        'И как и все умеем им пользоваться.\n\n' +
+        'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n\n' +
+        'С наилучшими пожеланиями, Ваш Penpals.\n\n' +
+        '---------------------------------------------------------------'
+
 
     },
     hy: {
         send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
-        filter: 'ФИЛЬТР'
+        filter: 'ФИЛЬТР',
+        apply_filter: 'Применить',
+        back: 'Назад',
+        cancel: 'Отмена',
+        delete_dialog_body: 'Восстановить конверт будет невозможно, даже если он был оплачен.',
+        delete_dialog_title: 'Удалить конверт?',
+        do_not_ask: 'Не спрашивать',
+        google_play: 'Penpal на Google Play',
+        later: 'Позже',
+        no_own_envelopes: 'Вы ещё не добавляли конверты',
+        number_of_views: 'ПРОСМОТРЫ',
+        own_envelopes_not_found_title: 'Ваши конверты не найдены',
+        own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
+        rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
+        reset_filter: 'Сбросить',
+        show_only_own_envelops: 'Показать только собственные конверты',
+        suggest_improvement: 'Улучшить',
+        choose_country: 'Страна',
+        went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
+        write_us: 'По любым вопросам пишите нам:',
+        email_header: 'Здравствуйте!\n\n' +
+        'Пожалуйста не изменяйте тему письма.\n\n' +
+        'Мы как и все очень любим Google Translate :)\n\n' +
+        'И как и все умеем им пользоваться.\n\n' +
+        'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n\n' +
+        'С наилучшими пожеланиями, Ваш Penpals.\n\n' +
+        '---------------------------------------------------------------'
 
     },
     kk: {
         send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
-        filter: 'ФИЛЬТР'
+        filter: 'ФИЛЬТР',
+        apply_filter: 'Применить',
+        back: 'Назад',
+        cancel: 'Отмена',
+        delete_dialog_body: 'Восстановить конверт будет невозможно, даже если он был оплачен.',
+        delete_dialog_title: 'Удалить конверт?',
+        do_not_ask: 'Не спрашивать',
+        google_play: 'Penpal на Google Play',
+        later: 'Позже',
+        no_own_envelopes: 'Вы ещё не добавляли конверты',
+        number_of_views: 'ПРОСМОТРЫ',
+        own_envelopes_not_found_title: 'Ваши конверты не найдены',
+        own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
+        rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
+        reset_filter: 'Сбросить',
+        show_only_own_envelops: 'Показать только собственные конверты',
+        suggest_improvement: 'Улучшить',
+        choose_country: 'Страна',
+        went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
+        write_us: 'По любым вопросам пишите нам:',
+        email_header: 'Здравствуйте!\n\n' +
+        'Пожалуйста не изменяйте тему письма.\n\n' +
+        'Мы как и все очень любим Google Translate :)\n\n' +
+        'И как и все умеем им пользоваться.\n\n' +
+        'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n\n' +
+        'С наилучшими пожеланиями, Ваш Penpals.\n\n' +
+        '---------------------------------------------------------------'
+
 
     },
     ky: {
         send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
-        filter: 'ФИЛЬТР'
+        filter: 'ФИЛЬТР',
+        apply_filter: 'Применить',
+        back: 'Назад',
+        cancel: 'Отмена',
+        delete_dialog_body: 'Восстановить конверт будет невозможно, даже если он был оплачен.',
+        delete_dialog_title: 'Удалить конверт?',
+        do_not_ask: 'Не спрашивать',
+        google_play: 'Penpal на Google Play',
+        later: 'Позже',
+        no_own_envelopes: 'Вы ещё не добавляли конверты',
+        number_of_views: 'ПРОСМОТРЫ',
+        own_envelopes_not_found_title: 'Ваши конверты не найдены',
+        own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
+        rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
+        reset_filter: 'Сбросить',
+        show_only_own_envelops: 'Показать только собственные конверты',
+        suggest_improvement: 'Улучшить',
+        choose_country: 'Страна',
+        went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
+        write_us: 'По любым вопросам пишите нам:',
+        email_header: 'Здравствуйте!\n\n' +
+        'Пожалуйста не изменяйте тему письма.\n\n' +
+        'Мы как и все очень любим Google Translate :)\n\n' +
+        'И как и все умеем им пользоваться.\n\n' +
+        'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n\n' +
+        'С наилучшими пожеланиями, Ваш Penpals.\n\n' +
+        '---------------------------------------------------------------'
 
     },
     tg: {
         send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
-        filter: 'ФИЛЬТР'
+        filter: 'ФИЛЬТР',
+        apply_filter: 'Применить',
+        back: 'Назад',
+        cancel: 'Отмена',
+        delete_dialog_body: 'Восстановить конверт будет невозможно, даже если он был оплачен.',
+        delete_dialog_title: 'Удалить конверт?',
+        do_not_ask: 'Не спрашивать',
+        google_play: 'Penpal на Google Play',
+        later: 'Позже',
+        no_own_envelopes: 'Вы ещё не добавляли конверты',
+        number_of_views: 'ПРОСМОТРЫ',
+        own_envelopes_not_found_title: 'Ваши конверты не найдены',
+        own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
+        rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
+        reset_filter: 'Сбросить',
+        show_only_own_envelops: 'Показать только собственные конверты',
+        suggest_improvement: 'Улучшить',
+        choose_country: 'Страна',
+        went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
+        write_us: 'По любым вопросам пишите нам:',
+        email_header: 'Здравствуйте!\n\n' +
+        'Пожалуйста не изменяйте тему письма.\n\n' +
+        'Мы как и все очень любим Google Translate :)\n\n' +
+        'И как и все умеем им пользоваться.\n\n' +
+        'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n\n' +
+        'С наилучшими пожеланиями, Ваш Penpals.\n\n' +
+        '---------------------------------------------------------------'
+
 
     },
     tk: {
         send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
-        filter: 'ФИЛЬТР'
+        filter: 'ФИЛЬТР',
+        apply_filter: 'Применить',
+        back: 'Назад',
+        cancel: 'Отмена',
+        delete_dialog_body: 'Восстановить конверт будет невозможно, даже если он был оплачен.',
+        delete_dialog_title: 'Удалить конверт?',
+        do_not_ask: 'Не спрашивать',
+        google_play: 'Penpal на Google Play',
+        later: 'Позже',
+        no_own_envelopes: 'Вы ещё не добавляли конверты',
+        number_of_views: 'ПРОСМОТРЫ',
+        own_envelopes_not_found_title: 'Ваши конверты не найдены',
+        own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
+        rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
+        reset_filter: 'Сбросить',
+        show_only_own_envelops: 'Показать только собственные конверты',
+        suggest_improvement: 'Улучшить',
+        choose_country: 'Страна',
+        went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
+        write_us: 'По любым вопросам пишите нам:',
+        email_header: 'Здравствуйте!\n\n' +
+        'Пожалуйста не изменяйте тему письма.\n\n' +
+        'Мы как и все очень любим Google Translate :)\n\n' +
+        'И как и все умеем им пользоваться.\n\n' +
+        'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n\n' +
+        'С наилучшими пожеланиями, Ваш Penpals.\n\n' +
+        '---------------------------------------------------------------'
 
     },
     uz: {
         send_letter: "ОТПРАВИТЬ ПИСЬМО",
         create_envelope: 'СОЗДАТЬ КОНВЕРТ',
         delete_envelope: 'УДАЛИТЬ СВОЙ КОНВЕРТ',
-        filter: 'ФИЛЬТР'
+        filter: 'ФИЛЬТР',
+        apply_filter: 'Применить',
+        back: 'Назад',
+        cancel: 'Отмена',
+        delete_dialog_body: 'Восстановить конверт будет невозможно, даже если он был оплачен.',
+        delete_dialog_title: 'Удалить конверт?',
+        do_not_ask: 'Не спрашивать',
+        google_play: 'Penpal на Google Play',
+        later: 'Позже',
+        no_own_envelopes: 'Вы ещё не добавляли конверты',
+        number_of_views: 'ПРОСМОТРЫ',
+        own_envelopes_not_found_title: 'Ваши конверты не найдены',
+        own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
+        rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
+        reset_filter: 'Сбросить',
+        show_only_own_envelops: 'Показать только собственные конверты',
+        suggest_improvement: 'Улучшить',
+        choose_country: 'Страна',
+        went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
+        write_us: 'По любым вопросам пишите нам:',
+        email_header: 'Здравствуйте!\n\n' +
+        'Пожалуйста не изменяйте тему письма.\n\n' +
+        'Мы как и все очень любим Google Translate :)\n\n' +
+        'И как и все умеем им пользоваться.\n\n' +
+        'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n\n' +
+        'С наилучшими пожеланиями, Ваш Penpals.\n\n' +
+        '---------------------------------------------------------------'
+
 
     }
 
@@ -167,7 +514,8 @@ export default class Main extends Component {
 
     onRefresh = () => {
         this.setState({
-            showProgress: true
+            showProgress: true,
+            showError: false
         });
         this.saveStatus()
             .then(this.getUserStatus())
@@ -242,6 +590,7 @@ export default class Main extends Component {
         try {
             this.setState({
                 showProgress: true,
+                showError: false,
                 showMenu: false,
                 showButton: false,
                 showFilter: false,
@@ -523,11 +872,11 @@ export default class Main extends Component {
 
     showDeletionWarning(id: number) {
         Alert.alert(
-            'Удалить конверт?',
-            'Восстановить конверт будет невозможно, даже если он был оплачен.',
+            strings.delete_dialog_title,
+            strings.delete_dialog_body,
             [
                 {text: 'ДА', onPress: () => this.deleteOwnEnvelope(id)},
-                {text: 'ОТМЕНА'},
+                {text: strings.cancel},
             ],
             {cancelable: true}
         )
@@ -698,7 +1047,11 @@ export default class Main extends Component {
                                     alignSelf: 'center'
                                 }}>{envelope.item.data.views}</Text>
                             </View>
-                            <Text style={{color: 'black', fontSize: 8, alignSelf: 'center'}}>ПРОСМОТРЫ</Text>
+                            <Text style={{
+                                color: 'black',
+                                fontSize: 8,
+                                alignSelf: 'center'
+                            }}>{strings.number_of_views}</Text>
 
                         </View>
 
@@ -807,16 +1160,16 @@ export default class Main extends Component {
                             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                                 <Image source={require('./../assets/google_play_icon.png')}
                                        style={{resizeMode: 'contain', height: 32, width: 32}}/>
-                                <Text style={{fontSize: 18, color: '#257492', marginLeft: 8}}>Penpal on Google
-                                    Play</Text>
+                                <Text
+                                    style={{fontSize: 18, color: '#257492', marginLeft: 8}}>{strings.google_play}</Text>
                             </View>
                             <Text style={{
                                 color: '#212121',
                                 fontSize: 16,
                                 marginTop: 8
-                            }}>{'We really care about your experience and want to make app better for you.' +
-                            '\nLet us know how it can be improved and we\'ll build it!' +
-                            '\nOr just rate us on Google Play.'}</Text>
+                            }}>
+                                {strings.rating_dialog}
+                            </Text>
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'center',
@@ -827,7 +1180,10 @@ export default class Main extends Component {
                                 <TouchableOpacity
                                     style={{flex: 3, justifyContent: 'center', alignItems: 'flex-start'}}
                                     onPress={(e) => this.annihilateFutureRateDialogues()}><Text
-                                    style={{color: '#257492', fontSize: 16}}>Don't ask more</Text></TouchableOpacity>
+                                    style={{
+                                        color: '#257492',
+                                        fontSize: 16
+                                    }}>{strings.do_not_ask}</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.setState({showRateDialog: false})}><Text
@@ -835,7 +1191,10 @@ export default class Main extends Component {
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.rate()}><Text
-                                    style={{color: '#257492', fontSize: 16}}>Improve</Text></TouchableOpacity>
+                                    style={{
+                                        color: '#257492',
+                                        fontSize: 16
+                                    }}>{strings.suggest_improvement}</Text></TouchableOpacity>
                             </View>
                         </View>
                     </Modal>
@@ -843,7 +1202,12 @@ export default class Main extends Component {
                     <Modal isVisible={this.state.showFilter}
                            backdropOpacity={0.4}>
                         <View style={{flex: 1, backgroundColor: 'white', padding: 16}}>
-                            <Text style={{flex: 2, alignSelf: 'center', fontSize: 18, color: '#212121'}}>Фильтр</Text>
+                            <Text style={{
+                                flex: 2,
+                                alignSelf: 'center',
+                                fontSize: 18,
+                                color: '#212121'
+                            }}>{strings.filter}</Text>
                             <View style={{
                                 flex: 5,
                                 flexDirection: 'row',
@@ -860,7 +1224,7 @@ export default class Main extends Component {
                                     flex: 1, marginHorizontal: 8, justifyContent: 'flex-start', alignSelf: 'flex-start'
                                 }}>
                                     <Dropdown
-                                        label={'Страна'}
+                                        label={strings.choose_country}
                                         data={envelopesByCountry}
                                         onChangeText={(data) => this.handleCountrySelection(data)}/>
                                 </View>
@@ -888,16 +1252,22 @@ export default class Main extends Component {
                                 <TouchableOpacity
                                     style={{flex: 1.5, justifyContent: 'center', alignItems: 'flex-start'}}
                                     onPress={(e) => this.setState({showFilter: false, value: 0})}><Text
-                                    style={{color: '#257492', fontSize: 16}}>Назад</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>{strings.back}</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end', marginRight: 8}}
                                     onPress={(e) => this.resetFilter()}><Text
-                                    style={{color: '#257492', fontSize: 16}}>Сбросить</Text></TouchableOpacity>
+                                    style={{
+                                        color: '#257492',
+                                        fontSize: 16
+                                    }}>{strings.reset_filter}</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.handleFilter()}>
                                     <Text
-                                    style={{color: '#257492', fontSize: 16}}>Применить</Text></TouchableOpacity>
+                                        style={{
+                                            color: '#257492',
+                                            fontSize: 16
+                                        }}>{strings.apply_filter}</Text></TouchableOpacity>
                             </View>
                         </View>
                     </Modal>
@@ -1012,12 +1382,12 @@ export default class Main extends Component {
         if (value === 2) {
             if (this.state.userEmails === null || this.state.userEmails.length === 0) {
                 this.setState({
-                    ownEnvelopesFilterText: 'Вы ещё не добавляли конверты',
+                    ownEnvelopesFilterText: strings.no_own_envelopes,
                     ownEnvelopesFilterTextColor: 'red'
                 })
             } else {
                 this.setState({
-                    ownEnvelopesFilterText: 'Показать только собственные конверты',
+                    ownEnvelopesFilterText: strings.show_only_own_envelops,
                     ownEnvelopesFilterTextColor: '#212121'
                 })
             }
@@ -1044,7 +1414,8 @@ export default class Main extends Component {
                 page = 0;
                 this.getCards();
                 this.setState({
-                    showFilter: false
+                    showFilter: false,
+
                 });
             }
 
@@ -1145,8 +1516,8 @@ export default class Main extends Component {
 
     showUserDeletedDialog() {
         Alert.alert(
-            'Your envelopes are not found',
-            'Возможно Вы удалили свои конверты или истёк срок их размещения',
+            strings.own_envelopes_not_found_title,
+            strings.own_envelopes_not_found_body,
             [
                 {text: 'Ok', onPress: () => this.getUserStatus()},
             ],
@@ -1209,14 +1580,11 @@ export default class Main extends Component {
                     }}>
                         <Text
                             style={{color: '#212121', flex: 1, fontSize: 16,}}>
-                            {'Что-то пошло не так.\n\nПожалуйста проверьте интернет соединение или зайдите к нам позже'}
+                            {strings.went_wrong}
                         </Text>
                         <TouchableOpacity style={{
                             flex: 1,
                             alignSelf: 'center',
-                            borderColor: '#257492',
-                            borderWidth: 0.5,
-                            borderRadius: 2,
                             padding: 8,
                             margin: 8
                         }}
@@ -1226,16 +1594,7 @@ export default class Main extends Component {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{flex: 1, flexDirection: 'row', alignSelf: 'center'}}
-                            onPress={(e) => Linking.openURL('mailto:119@penpal.eken.live?subject=From Penpals app&body=Здравствуйте!\n' +
-                                '\n' +
-                                'Пожалуйста не изменяйте тему письма.\n' +
-                                '\n' +
-                                'Мы как и все очень любим Google Translate :)\n' +
-                                'И как и все умеем им пользоваться.\n' +
-                                'При этом просим Вас всё-таки обратить внимание, что сотрудники нашей службы поддержки говорят на английском языке.\n' +
-                                '\n' +
-                                'С наилучшими пожеланиями, Ваш Penpals.\n' +
-                                '\n---------------------------------------------------------------')}>
+                            onPress={(e) => Linking.openURL('mailto:119@penpal.eken.live?subject=From Penpals app&body=' + strings.email_header)}>
                             <Text
                                 style={{
                                     flex: 3,
@@ -1244,7 +1603,7 @@ export default class Main extends Component {
                                     width: deviceWidth,
                                     fontSize: 16
                                 }}>
-                                {'По любым вопросам Вы можете написать нам:'}
+                                {strings.write_us}
                             </Text>
                             <Text
                                 style={{

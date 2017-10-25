@@ -22,10 +22,145 @@ import Orientation from 'react-native-orientation-locker';
 
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import CountryPicker from 'react-native-country-picker-modal';
+import LocalizedStrings from 'react-native-localization';
 
 
 var TimerMixin = require('react-timer-mixin');
 
+
+let strings = new LocalizedStrings({
+    "en-US": {
+        name: 'Name, last name',
+        choose_country: 'Country',
+        address: 'Address',
+        city: 'City',
+        your_address: 'My postal address',
+        next: 'Next',
+        zip: 'Zip',
+        fields: 'You must fill in all fields correctly'
+    },
+    en: {
+        name: 'Name, last name',
+        choose_country: 'Country',
+        address: 'Address',
+        city: 'City',
+        your_address: 'My postal address',
+        next: 'Next',
+        zip: 'Zip',
+        fields: 'You must fill in all fields correctly'
+    },
+    ja: {
+        name: '名前、姓',
+        choose_country: '国',
+        address: '住所',
+        city: '市',
+        your_address: 'あなたの住所',
+        next: '次',
+        zip: '郵便番号',
+        fields: 'すべての欄に正しく記入する必要があります。'
+    },
+    ru: {
+        name: 'Имя, фамилия',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        your_address: 'Мой почтовый адрес',
+        next: 'Далее',
+        zip: 'Индекс',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    be: {
+        name: 'Имя, фамилия',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        your_address: 'Мой почтовый адрес',
+        next: 'Далее',
+        zip: 'Индекс',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    uk: {
+        name: 'Имя, фамилия',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        your_address: 'Мой почтовый адрес',
+        next: 'Далее',
+        zip: 'Индекс',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    az: {
+        name: 'Имя, фамилия',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        your_address: 'Мой почтовый адрес',
+        next: 'Далее',
+        zip: 'Индекс',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    hy: {
+        name: 'Имя, фамилия',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        your_address: 'Мой почтовый адрес',
+        next: 'Далее',
+        zip: 'Индекс',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    kk: {
+        name: 'Имя, фамилия',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        your_address: 'Мой почтовый адрес',
+        next: 'Далее',
+        zip: 'Индекс',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    ky: {
+        name: 'Имя, фамилия',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        your_address: 'Мой почтовый адрес',
+        next: 'Далее',
+        zip: 'Индекс',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    tg: {
+        name: 'Имя, фамилия',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        your_address: 'Мой почтовый адрес',
+        next: 'Далее',
+        zip: 'Индекс',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    tk: {
+        name: 'Имя, фамилия',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        your_address: 'Мой почтовый адрес',
+        next: 'Далее',
+        zip: 'Индекс',
+        fields: 'Вы должны корректно заполнить все поля'
+    },
+    uz: {
+        name: 'Имя, фамилия',
+        choose_country: 'Страна',
+        address: 'Address',
+        city: 'Город',
+        your_address: 'Мой почтовый адрес',
+        next: 'Далее',
+        zip: 'Индекс',
+        fields: 'Вы должны корректно заполнить все поля'
+    }
+
+});
 
 let options = {
     title: 'Добавьте фото',
@@ -319,7 +454,7 @@ export default class LetterAddress extends Component {
             } else {
                 Vibration.vibrate();
                 if (!(sender_name && sender_address && sender_country && sender_zip && sender_email)) {
-                    ToastAndroid.showWithGravity('Вы должны корректно заполнить все поля', ToastAndroid.LONG, ToastAndroid.CENTER);
+                    ToastAndroid.showWithGravity(strings.fields, ToastAndroid.LONG, ToastAndroid.CENTER);
                 }
             }
         })
@@ -387,14 +522,14 @@ export default class LetterAddress extends Component {
                     </TouchableOpacity>
 
                     <Text style={{color: 'white', fontSize: 16, flex: 1}}>
-                        Почтовый адрес
+                        {strings.your_address}
                     </Text>
 
                     <TouchableOpacity
                         style={{justifyContent: 'center', alignItems: 'center', flex: 0, marginRight: 8, padding: 8}}
                         onPress={(e) => this._checkFields()}>
                         <Text style={{color: 'white', fontSize: 16}}>
-                            ДАЛЕЕ
+                            {strings.next}
                         </Text>
                     </TouchableOpacity>
 
@@ -443,7 +578,7 @@ export default class LetterAddress extends Component {
                                         <View style={{flex: 1, marginHorizontal: 8}}>
                                             <TextInput
                                                 style={{flex: 0, alignSelf: 'stretch', color: '#212121', fontSize: 14}}
-                                                placeholder={'Имя, фамилия'}
+                                                placeholder={strings.name}
                                                 autoFocus={true}
                                                 onFocus={(e) => this.onFocusName()}
                                                 onEndEditing={(e) => this.setState({sender_nameUnderlineColor: '#e4e4e4'})}
@@ -472,7 +607,7 @@ export default class LetterAddress extends Component {
                                         <View style={{flex: 1, marginHorizontal: 8}}>
                                             <TextInput
                                                 style={{flex: 0, alignSelf: 'stretch', color: '#212121', fontSize: 14}}
-                                                placeholder={'Адрес'}
+                                                placeholder={strings.address}
                                                 onFocus={(e) => this._onFocusAddress()}
                                                 onEndEditing={(e) => this.setState({sender_addressUnderlineColor: '#e4e4e4'})}
                                                 onChangeText={(text) => this._onChangeAddress(text)}
@@ -500,7 +635,7 @@ export default class LetterAddress extends Component {
                                         <View style={{flex: 1, marginHorizontal: 8}}>
                                             <TextInput
                                                 style={{flex: 0, alignSelf: 'stretch', color: '#212121', fontSize: 14}}
-                                                placeholder={'Город'}
+                                                placeholder={strings.city}
                                                 onFocus={(e) => this._onFocusCity()}
                                                 onEndEditing={(e) => this.setState({sender_cityUnderlineColor: '#e4e4e4'})}
                                                 onChangeText={(text) => this._onChangeCity(text)}
@@ -546,7 +681,7 @@ export default class LetterAddress extends Component {
                                             styles={{countryName: {fontSize: 14}}}>
                                             <TextInput
                                                 style={{flex: 0, alignSelf: 'stretch', color: '#212121', fontSize: 14}}
-                                                placeholder={'Страна'}
+                                                placeholder={strings.choose_country}
                                                 editable={false}
                                                 underlineColorAndroid={'transparent'}
                                                 value={this.state.sender_country}/>
@@ -572,7 +707,7 @@ export default class LetterAddress extends Component {
                                     <View style={{flex: 1, marginHorizontal: 8}}>
                                         <TextInput
                                             style={{flex: 0, alignSelf: 'stretch', color: '#212121', fontSize: 14}}
-                                            placeholder={'Индекс'}
+                                            placeholder={strings.zip}
                                             onFocus={(e) => this._onFocusZip()}
                                             onEndEditing={(e) => this.setState({sender_zipUnderlineColor: '#e4e4e4'})}
                                             onChangeText={(text) => this._onChangeZip(text)}

@@ -6,6 +6,135 @@ import {AsyncStorage, BackHandler, Image, ScrollView, Text, TextInput, Touchable
 
 import Orientation from 'react-native-orientation-locker';
 
+import LocalizedStrings from 'react-native-localization';
+
+let strings = new LocalizedStrings({
+    "en-US": {
+        my_letter: 'My letter',
+        standart_sending: 'Write text of your letter here\n' +
+        'The letter will be printed on A4 sheet\n' +
+        'Font: Arial\n' +
+        'Font size: 14\n' +
+        'Maximum number of characters: 4000',
+        next: 'Next'
+    },
+    en: {
+        my_letter: 'My letter',
+        standart_sending: 'Write text of your letter here\n' +
+        'The letter will be printed on A4 sheet\n' +
+        'Font: Arial\n' +
+        'Font size: 14\n' +
+        'Maximum number of characters: 4000',
+        next: 'Next'
+    },
+    ja: {
+        my_letter: '私の手紙',
+        standart_sending: 'ここにあなたの手紙の文章を書きます\n' +
+        '手紙はA4用紙に印刷されます\n' +
+        'フォント：ゴシック\n' +
+        'フォントサイズ：14\n' +
+        '最大文字数：4000',
+        next: '次'
+    },
+    ru: {
+        my_letter: 'Моё письмо',
+        standart_sending: 'Напишите текст письма здесь\n' +
+        'Письмо будет распечатано на листе А4\n' +
+        'Шрифт: Arial\n' +
+        'Размер шрифта: 14\n' +
+        'Максимальное количество знаков: 4000',
+        next: 'Далее'
+    },
+    be: {
+        my_letter: 'Моё письмо',
+        standart_sending: 'Напишите текст письма здесь\n' +
+        'Письмо будет распечатано на листе А4\n' +
+        'Шрифт: Arial\n' +
+        'Размер шрифта: 14\n' +
+        'Максимальное количество знаков: 4000',
+        next: 'Далее'
+
+    },
+    uk: {
+        my_letter: 'Моё письмо',
+        standart_sending: 'Напишите текст письма здесь\n' +
+        'Письмо будет распечатано на листе А4\n' +
+        'Шрифт: Arial\n' +
+        'Размер шрифта: 14\n' +
+        'Максимальное количество знаков: 4000',
+        next: 'Далее'
+
+    },
+    az: {
+        my_letter: 'Моё письмо',
+        standart_sending: 'Напишите текст письма здесь\n' +
+        'Письмо будет распечатано на листе А4\n' +
+        'Шрифт: Arial\n' +
+        'Размер шрифта: 14\n' +
+        'Максимальное количество знаков: 4000',
+        next: 'Далее'
+    },
+    hy: {
+        my_letter: 'Моё письмо',
+        standart_sending: 'Напишите текст письма здесь\n' +
+        'Письмо будет распечатано на листе А4\n' +
+        'Шрифт: Arial\n' +
+        'Размер шрифта: 14\n' +
+        'Максимальное количество знаков: 4000',
+        next: 'Далее'
+
+    },
+    kk: {
+        my_letter: 'Моё письмо',
+        standart_sending: 'Напишите текст письма здесь\n' +
+        'Письмо будет распечатано на листе А4\n' +
+        'Шрифт: Arial\n' +
+        'Размер шрифта: 14\n' +
+        'Максимальное количество знаков: 4000',
+        next: 'Далее'
+    },
+    ky: {
+        my_letter: 'Моё письмо',
+        standart_sending: 'Напишите текст письма здесь\n' +
+        'Письмо будет распечатано на листе А4\n' +
+        'Шрифт: Arial\n' +
+        'Размер шрифта: 14\n' +
+        'Максимальное количество знаков: 4000',
+        next: 'Далее'
+
+    },
+    tg: {
+        my_letter: 'Моё письмо',
+        standart_sending: 'Напишите текст письма здесь\n' +
+        'Письмо будет распечатано на листе А4\n' +
+        'Шрифт: Arial\n' +
+        'Размер шрифта: 14\n' +
+        'Максимальное количество знаков: 4000',
+        next: 'Далее'
+    },
+    tk: {
+        my_letter: 'Моё письмо',
+        standart_sending: 'Напишите текст письма здесь\n' +
+        'Письмо будет распечатано на листе А4\n' +
+        'Шрифт: Arial\n' +
+        'Размер шрифта: 14\n' +
+        'Максимальное количество знаков: 4000',
+        next: 'Далее'
+
+    },
+    uz: {
+        my_letter: 'Моё письмо',
+        standart_sending: 'Напишите текст письма здесь\n' +
+        'Письмо будет распечатано на листе А4\n' +
+        'Шрифт: Arial\n' +
+        'Размер шрифта: 14\n' +
+        'Максимальное количество знаков: 4000',
+        next: 'Далее'
+    }
+
+});
+
+
 
 let departureCountryID = null;
 
@@ -119,7 +248,7 @@ export default class LetterText extends Component {
                     </TouchableOpacity>
 
                     <Text style={{color: 'white', fontSize: 16, flex: 1}}>
-                        Моё письмо
+                        {strings.my_letter}
                     </Text>
 
                     <TouchableOpacity
@@ -134,7 +263,7 @@ export default class LetterText extends Component {
                             text: this.state.text
                         })}>
                         <Text style={{color: 'white', fontSize: 16}}>
-                            ДАЛЕЕ
+                            {strings.next}
                         </Text>
                     </TouchableOpacity>
 
@@ -143,7 +272,7 @@ export default class LetterText extends Component {
                     <View style={{flex: 1, marginHorizontal: 16}}>
                         <TextInput
                             style={{flex: 1, alignSelf: 'stretch', color: '#212121', fontSize: 14, height: 248}}
-                            placeholder={'Напишите текст письма здесь\nПисьмо будет распечатано на листе А4\nШрифт: Arial\nРазмер шрифта: 14\nМаксимальное количество знаков: 4000'}
+                            placeholder={strings.standart_sending}
                             onChangeText={(text) => this.setState({text: text})}
                             underlineColorAndroid={'transparent'}
                             multiline={true}

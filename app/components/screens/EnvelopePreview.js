@@ -22,12 +22,73 @@ import {CachedImage} from "react-native-img-cache";
 import CardView from 'react-native-cardview';
 
 import Orientation from 'react-native-orientation-locker';
+import LocalizedStrings from 'react-native-localization';
 
 
 var TimerMixin = require('react-timer-mixin');
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
+
+let strings = new LocalizedStrings({
+    "en-US": {
+        publication_preview: 'That\'s how envelope will look like after the publication',
+        publish: 'PUBLISH'
+    },
+    en: {
+        publication_preview: 'That\'s how envelope will look like after the publication',
+        publish: 'PUBLISH'
+    },
+    ja: {
+        publication_preview: 'これが編集後の封筒の見え方です。',
+        publish: '編集'
+
+    },
+    ru: {
+        publication_preview: 'Так будет выглядеть конверт после публикации',
+        publish: 'Опубликовать'
+    },
+    be: {
+        publication_preview: 'Так будет выглядеть конверт после публикации',
+        publish: 'Опубликовать'
+    },
+    uk: {
+        publication_preview: 'Так будет выглядеть конверт после публикации',
+        publish: 'Опубликовать'
+    },
+    az: {
+        publication_preview: 'Так будет выглядеть конверт после публикации',
+        publish: 'Опубликовать'
+
+    },
+    hy: {
+        publication_preview: 'Так будет выглядеть конверт после публикации',
+        publish: 'Опубликовать'
+
+    },
+    kk: {
+        publication_preview: 'Так будет выглядеть конверт после публикации',
+        publish: 'Опубликовать'
+    },
+    ky: {
+        publication_preview: 'Так будет выглядеть конверт после публикации',
+        publish: 'Опубликовать'
+
+    },
+    tg: {
+        publication_preview: 'Так будет выглядеть конверт после публикации',
+        publish: 'Опубликовать'
+    },
+    tk: {
+        publication_preview: 'Так будет выглядеть конверт после публикации',
+        publish: 'Опубликовать'
+    },
+    uz: {
+        publication_preview: 'Так будет выглядеть конверт после публикации',
+        publish: 'Опубликовать'
+    }
+
+});
 
 let envelopesArray;
 let block;
@@ -331,7 +392,7 @@ export default class EnvelopePreview extends Component {
                           cardMaxElevation={2}
                           cornerRadius={4}>
                     <Text style={{color: 'white', marginBottom: 8}}>
-                        Так будет выглядеть конверт после публикации
+                        {strings.publication_preview}
                     </Text>
                 </CardView>
 
@@ -396,7 +457,7 @@ export default class EnvelopePreview extends Component {
                             style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8}}
                             onPress={(e) => this.publish()}>
                             <Text style={{marginBottom: 6, marginRight: 6, color: '#212121'}}>
-                                PUBLISH
+                                {strings.publish}
                             </Text>
 
                         </TouchableOpacity>

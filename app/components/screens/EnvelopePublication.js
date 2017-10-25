@@ -19,6 +19,7 @@ import RotatingView from './../assets/RotatingView';
 import CardView from 'react-native-cardview';
 
 import Orientation from 'react-native-orientation-locker';
+import LocalizedStrings from 'react-native-localization';
 
 const InAppBilling = require("react-native-billing");
 
@@ -49,6 +50,145 @@ let cca2;
 let zip;
 let email;
 let description;
+
+let strings = new LocalizedStrings({
+    "en-US": {
+        _10_years: "10 years",
+        _3_years: '3 years',
+        _5_years: '5 years',
+        year: '1 year',
+        free_1_month: '1 month',
+        free: 'Free',
+        placing_period: 'Choose a period placing of envelope',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+    },
+    en: {
+        _10_years: "10 years",
+        _3_years: '3 years',
+        _5_years: '5 years',
+        year: '1 year',
+        free_1_month: '1 month',
+        free: 'Free',
+        placing_period: 'Choose a period placing of envelope',
+        prices_may_not_include_taxes: '*価格は税金が含まれない場合があります'
+    },
+    ja: {
+        _10_years: "10年",
+        _3_years: '3年',
+        _5_years: '5年',
+        year: '1年',
+        free_1_month: '1ヶ月',
+        free: '無料',
+        placing_period: '封筒の表示期間を選択します。',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги'
+    },
+    ru: {
+        _10_years: "10 лет",
+        _3_years: '3 года',
+        _5_years: '5 лет',
+        year: '1 год',
+        free_1_month: '1 месяц',
+        free: 'Бесплатно',
+        placing_period: 'Выбирайте период размещения конверта',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+    },
+    be: {
+        _10_years: "10 лет",
+        _3_years: '3 года',
+        _5_years: '5 лет',
+        year: '1 год',
+        free_1_month: '1 месяц',
+        free: 'Бесплатно',
+        placing_period: 'Выбирайте период размещения конверта',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+    },
+    uk: {
+        _10_years: "10 лет",
+        _3_years: '3 года',
+        _5_years: '5 лет',
+        year: '1 год',
+        free_1_month: '1 месяц',
+        free: 'Бесплатно',
+        placing_period: 'Выбирайте период размещения конверта',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+
+    },
+    az: {
+        _10_years: "10 лет",
+        _3_years: '3 года',
+        _5_years: '5 лет',
+        year: '1 год',
+        free_1_month: '1 месяц',
+        free: 'Бесплатно',
+        placing_period: 'Выбирайте период размещения конверта',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+
+    },
+    hy: {
+        _10_years: "10 лет",
+        _3_years: '3 года',
+        _5_years: '5 лет',
+        year: '1 год',
+        free_1_month: '1 месяц',
+        free: 'Бесплатно',
+        placing_period: 'Выбирайте период размещения конверта',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+    },
+    kk: {
+        _10_years: "10 лет",
+        _3_years: '3 года',
+        _5_years: '5 лет',
+        year: '1 год',
+        free_1_month: '1 месяц',
+        free: 'Бесплатно',
+        placing_period: 'Выбирайте период размещения конверта',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+
+    },
+    ky: {
+        _10_years: "10 лет",
+        _3_years: '3 года',
+        _5_years: '5 лет',
+        year: '1 год',
+        free_1_month: '1 месяц',
+        free: 'Бесплатно',
+        placing_period: 'Выбирайте период размещения конверта',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+
+    },
+    tg: {
+        _10_years: "10 лет",
+        _3_years: '3 года',
+        _5_years: '5 лет',
+        year: '1 год',
+        free_1_month: '1 месяц',
+        free: 'Бесплатно',
+        placing_period: 'Выбирайте период размещения конверта',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+    },
+    tk: {
+        _10_years: "10 лет",
+        _3_years: '3 года',
+        _5_years: '5 лет',
+        year: '1 год',
+        free_1_month: '1 месяц',
+        free: 'Бесплатно',
+        placing_period: 'Выбирайте период размещения конверта',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+
+    },
+    uz: {
+        _10_years: "10 лет",
+        _3_years: '3 года',
+        _5_years: '5 лет',
+        year: '1 год',
+        free_1_month: '1 месяц',
+        free: 'Бесплатно',
+        placing_period: 'Выбирайте период размещения конверта',
+        prices_may_not_include_taxes: '*Prices may not include taxes'
+    }
+
+});
 
 
 export default class EnvelopePublication extends Component {
@@ -291,7 +431,7 @@ export default class EnvelopePublication extends Component {
             <View style={styles.container}>
                 {!this.state.showProgress &&
                 <View style={{flex: 1}}>
-                    <Text style={{alignSelf: 'center', fontSize: 20}}>Выбирайте период размещения конверта</Text>
+                    <Text style={{alignSelf: 'center', fontSize: 20}}>{strings.placing_period}</Text>
                     <ScrollView horizontal={true} style={{flex: 1, alignSelf: 'stretch'}}
                                 showsHorizontalScrollIndicator={false}>
                         <View style={{justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row'}}>
@@ -334,7 +474,7 @@ export default class EnvelopePublication extends Component {
                                                 marginRight: 10,
                                                 marginBottom: 18
                                             }}>
-                                                1 месяц
+                                                {strings.free_1_month}
                                             </Text>
 
                                         </CardView>
@@ -363,7 +503,7 @@ export default class EnvelopePublication extends Component {
                                             marginRight: 8,
                                             marginBottom: 16
                                         }}>
-                                            Бесплатно
+                                            {strings.free}
                                         </Text>
                                     </View>
                                 </TouchableOpacity>
@@ -409,7 +549,7 @@ export default class EnvelopePublication extends Component {
                                                 marginRight: 10,
                                                 marginBottom: 18
                                             }}>
-                                                1 год
+                                                {strings.year}
                                             </Text>
 
                                         </CardView>
@@ -484,7 +624,7 @@ export default class EnvelopePublication extends Component {
                                                 marginRight: 10,
                                                 marginBottom: 18
                                             }}>
-                                                3 года
+                                                {strings._3_years}
                                             </Text>
 
                                         </CardView>
@@ -559,7 +699,7 @@ export default class EnvelopePublication extends Component {
                                                 marginRight: 10,
                                                 marginBottom: 18
                                             }}>
-                                                5 лет
+                                                {strings._5_years}
                                             </Text>
 
                                         </CardView>
@@ -635,7 +775,7 @@ export default class EnvelopePublication extends Component {
                                                 marginRight: 10,
                                                 marginBottom: 18
                                             }}>
-                                                10 лет
+                                                {strings._10_years}
                                             </Text>
 
                                         </CardView>
@@ -673,7 +813,7 @@ export default class EnvelopePublication extends Component {
 
                         </View>
                     </ScrollView>
-                    <Text style={{alignSelf: 'center', bottom: 4}}>*Цены могут не включать налоги</Text>
+                    <Text style={{alignSelf: 'center', bottom: 4}}>{strings.prices_may_not_include_taxes}</Text>
                 </View>}
 
                 {this.state.showProgress &&

@@ -16,6 +16,7 @@ import {NavigationActions} from 'react-navigation';
 
 import RotatingView from './../assets/RotatingView';
 import Orientation from 'react-native-orientation-locker';
+import LocalizedStrings from 'react-native-localization';
 
 let deviceWidth = Dimensions.get('window').width;
 
@@ -23,6 +24,134 @@ const InAppBilling = require("react-native-billing");
 
 
 const RUSSIAN_LETTER_ID = 'russianletter';
+
+let strings = new LocalizedStrings({
+    "en-US": {
+        departure: 'Departure\nfrom:',
+        from: 'From:',
+        pay: 'Pay',
+        payment: 'Payment',
+        prices_may_not_include_taxes: '*Prices may not include taxes',
+        to: 'To:',
+        total: 'Total: '
+    },
+    en: {
+        departure: 'Departure\nfrom:',
+        from: 'From:',
+        pay: 'Pay',
+        payment: 'Payment',
+        prices_may_not_include_taxes: '*Prices may not include taxes',
+        to: 'To:',
+        total: 'Total: '
+    },
+    ja: {
+        departure: 'から出発：',
+        from: 'から：',
+        pay: '支払う',
+        payment: '支払い',
+        prices_may_not_include_taxes: '*価格は税金が含まれない場合があります',
+        to: 'に：',
+        total: '合計: '
+    },
+    ru: {
+        departure: 'Отправить\nиз',
+        from: 'От:',
+        pay: 'Оплатить',
+        payment: 'Оплата услуги',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги',
+        to: 'Кому:',
+        total: 'Итого: '
+
+    },
+    be: {
+        departure: 'Отправить\nиз',
+        from: 'От:',
+        pay: 'Оплатить',
+        payment: 'Оплата услуги',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги',
+        to: 'Кому:',
+        total: 'Итого: '
+
+    },
+    uk: {
+        departure: 'Отправить\nиз',
+        from: 'От:',
+        pay: 'Оплатить',
+        payment: 'Оплата услуги',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги',
+        to: 'Кому:',
+        total: 'Итого: '
+    },
+    az: {
+        departure: 'Отправить\nиз',
+        from: 'От:',
+        pay: 'Оплатить',
+        payment: 'Оплата услуги',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги',
+        to: 'Кому:',
+        total: 'Итого: '
+
+    },
+    hy: {
+        departure: 'Отправить\nиз',
+        from: 'От:',
+        pay: 'Оплатить',
+        payment: 'Оплата услуги',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги',
+        to: 'Кому:',
+        total: 'Итого: '
+
+    },
+    kk: {
+        departure: 'Отправить\nиз',
+        from: 'От:',
+        pay: 'Оплатить',
+        payment: 'Оплата услуги',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги',
+        to: 'Кому:',
+        total: 'Итого: '
+
+    },
+    ky: {
+        departure: 'Отправить\nиз',
+        from: 'От:',
+        pay: 'Оплатить',
+        payment: 'Оплата услуги',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги',
+        to: 'Кому:',
+        total: 'Итого: '
+
+    },
+    tg: {
+        departure: 'Отправить\nиз',
+        from: 'От:',
+        pay: 'Оплатить',
+        payment: 'Оплата услуги',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги',
+        to: 'Кому:',
+        total: 'Итого: '
+    },
+    tk: {
+        departure: 'Отправить\nиз',
+        from: 'От:',
+        pay: 'Оплатить',
+        payment: 'Оплата услуги',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги',
+        to: 'Кому:',
+        total: 'Итого: '
+    },
+    uz: {
+        departure: 'Отправить\nиз',
+        from: 'От:',
+        pay: 'Оплатить',
+        payment: 'Оплата услуги',
+        prices_may_not_include_taxes: '*Цены могут не включать налоги',
+        to: 'Кому:',
+        total: 'Итого: '
+
+    }
+
+});
 
 let envelopesArray;
 let block;
@@ -272,7 +401,7 @@ export default class LetterPurchasingAndSending extends Component {
                         </TouchableOpacity>
 
                         <Text style={{color: 'white', fontSize: 16, flex: 1}}>
-                            Оплата услуги
+                            {strings.payment}
                         </Text>
 
                     </View>
@@ -295,7 +424,7 @@ export default class LetterPurchasingAndSending extends Component {
                                         paddingVertical: 14
                                     }}>
                                         <Text style={{flex: 1, color: '#212121'}}>
-                                            Кому
+                                            {strings.to}
                                         </Text>
 
                                         <View style={{flex: 2}}>
@@ -356,7 +485,7 @@ export default class LetterPurchasingAndSending extends Component {
                                         paddingVertical: 14
                                     }}>
                                         <Text style={{flex: 1, color: '#212121'}}>
-                                            Oт
+                                            {strings.from}
                                         </Text>
 
                                         <View style={{flex: 3}}>
@@ -383,7 +512,7 @@ export default class LetterPurchasingAndSending extends Component {
                                         paddingVertical: 14
                                     }}>
                                         <Text style={{flex: 1, color: '#212121'}}>
-                                            {'Отправить\nиз:'}
+                                            {strings.departure}
                                         </Text>
                                         <Image source={this.state.picture} style={{flex: 3}}/>
                                     </View>
@@ -407,7 +536,7 @@ export default class LetterPurchasingAndSending extends Component {
                                     margin: 14
                                 }}>
                                     <Text style={{color: '#212121', fontSize: 16}}>
-                                        {'Итого: '}
+                                        {strings.total}
                                     </Text>
                                     <Text style={{color: '#257492', fontSize: 16}}>
                                         {this.state.price + '*'}
@@ -416,11 +545,12 @@ export default class LetterPurchasingAndSending extends Component {
                                 <TouchableOpacity style={{alignSelf: 'flex-end'}}
                                                   onPress={(e) => this.purchaseSending()}>
                                     <Text style={{color: '#257492', fontSize: 20, marginHorizontal: 18}}>
-                                        ОПЛАТИТЬ
+                                        {strings.pay}
                                     </Text>
                                 </TouchableOpacity>
-                                <Text style={{color: '#212121', fontSize: 12, margin: 10}}>*Цены могут не включать
-                                    налоги</Text>
+                                <Text style={{color: '#212121', fontSize: 12, margin: 10}}>
+                                    {strings.prices_may_not_include_taxes}
+                                </Text>
                             </View>
                         </View>}
 
