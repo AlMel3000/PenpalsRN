@@ -388,7 +388,7 @@ export default class EnvelopePublication extends Component {
                 data.append('photo', {
                     uri: this.state.pic.uri,
                     type: 'image/*',
-                    name: 'user'
+                    name: 'photo'
                 });
             }
 

@@ -89,7 +89,7 @@ let strings = new LocalizedStrings({
         'Let us know how it can be improved and we\'ll build it!\n' +
         'Or just rate us on Google Play.',
         reset_filter: 'Reset filter',
-        show_only_own_envelops: 'Show only own envelopes',
+        show_only_own_envelopes: 'Show only own envelopes',
         suggest_improvement: 'Improve',
         choose_country: 'Country',
         went_wrong: 'Something went wrong.\n\n Please check your Internet connection or try again later',
@@ -123,7 +123,7 @@ let strings = new LocalizedStrings({
         'Let us know how it can be improved and we\'ll build it!\n' +
         'Or just rate us on Google Play.',
         reset_filter: 'Reset filter',
-        show_only_own_envelops: 'Show only own envelopes',
+        show_only_own_envelopes: 'Show only own envelopes',
         suggest_improvement: 'Improve',
         choose_country: 'Country',
         went_wrong: 'Something went wrong.\n\n Please check your Internet connection or try again later',
@@ -157,7 +157,7 @@ let strings = new LocalizedStrings({
         'どのように改善されるべきか教えてください、私たちはそれをもとに構築していきます\n' +
         'または、Google Play で評価してください。',
         reset_filter: 'フィルターをリセット',
-        show_only_own_envelops: '自分の封筒のみ表示',
+        show_only_own_envelopes: '自分の封筒のみ表示',
         suggest_improvement: '改善',
         choose_country: '国',
         went_wrong: '何か問題があったようです。\n\nインターネットの接続を確認するか、後でもう一度お試しください。',
@@ -189,7 +189,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -223,7 +223,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -258,7 +258,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -292,7 +292,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -327,7 +327,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -361,7 +361,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -396,7 +396,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -430,7 +430,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -465,7 +465,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -499,7 +499,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -554,7 +554,7 @@ export default class Main extends Component {
 
             value: 0,
 
-            ownEnvelopesFilterText: 'Показать только собственные конверты',
+            ownEnvelopesFilterText: strings.show_only_own_envelopes,
             ownEnvelopesFilterTextColor: '#212121',
 
             showOwnEnvelopes: false,
@@ -1190,7 +1190,7 @@ export default class Main extends Component {
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.setState({showRateDialog: false})}><Text
-                                    style={{color: '#257492', fontSize: 16}}>Later</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>{strings.later}</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.rate()}><Text
@@ -1385,7 +1385,7 @@ export default class Main extends Component {
                 })
             } else {
                 this.setState({
-                    ownEnvelopesFilterText: strings.show_only_own_envelops,
+                    ownEnvelopesFilterText: strings.show_only_own_envelopes,
                     ownEnvelopesFilterTextColor: '#212121'
                 })
             }

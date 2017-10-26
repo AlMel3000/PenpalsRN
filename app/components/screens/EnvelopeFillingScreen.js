@@ -65,7 +65,8 @@ let strings = new LocalizedStrings({
         next: 'Next',
         zip: 'Zip',
         agreement_n_fields: 'You must accept the agreement and fill in all fields correctly!',
-        fields: 'You must fill in all fields correctly'
+        fields: 'You must fill in all fields correctly',
+        acceptance_warning: 'You must accept the agreement'
     },
     en: {
         name: 'Name, last name',
@@ -83,7 +84,8 @@ let strings = new LocalizedStrings({
         next: 'Next',
         zip: 'Zip',
         agreement_n_fields: 'You must accept the agreement and fill in all fields correctly!',
-        fields: 'You must fill in all fields correctly'
+        fields: 'You must fill in all fields correctly',
+        acceptance_warning: 'You must accept the agreement'
     },
     ja: {
         name: '名前、姓',
@@ -101,7 +103,8 @@ let strings = new LocalizedStrings({
         next: '次',
         zip: '郵便番号',
         agreement_n_fields: '規約内容に同意し、すべての欄に正しく記入する必要があります。',
-        fields: 'すべての欄に正しく記入する必要があります。'
+        fields: 'すべての欄に正しく記入する必要があります。',
+        acceptance_warning: 'あなたは、契約に同意する必要があります'
     },
     ru: {
         name: 'Имя, фамилия',
@@ -119,7 +122,8 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение'
     },
     be: {
         name: 'Имя, фамилия',
@@ -137,7 +141,8 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение'
     },
     uk: {
         name: 'Имя, фамилия',
@@ -155,7 +160,8 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение'
     },
     az: {
         name: 'Имя, фамилия',
@@ -173,7 +179,8 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение'
 
     },
     hy: {
@@ -192,7 +199,8 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение'
     },
     kk: {
         name: 'Имя, фамилия',
@@ -210,7 +218,8 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение'
     },
     ky: {
         name: 'Имя, фамилия',
@@ -228,7 +237,8 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение'
     },
     tg: {
         name: 'Имя, фамилия',
@@ -246,8 +256,8 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
-
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение'
     },
     tk: {
         name: 'Имя, фамилия',
@@ -265,7 +275,8 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение'
     },
     uz: {
         name: 'Имя, фамилия',
@@ -283,7 +294,8 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение'
     }
 
 });

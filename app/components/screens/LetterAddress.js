@@ -37,7 +37,8 @@ let strings = new LocalizedStrings({
         your_address: 'My postal address',
         next: 'Next',
         zip: 'Zip',
-        fields: 'You must fill in all fields correctly'
+        fields: 'You must fill in all fields correctly',
+        fill_address: 'Specify correct mailing address to receive responce'
     },
     en: {
         name: 'Name, last name',
@@ -47,7 +48,8 @@ let strings = new LocalizedStrings({
         your_address: 'My postal address',
         next: 'Next',
         zip: 'Zip',
-        fields: 'You must fill in all fields correctly'
+        fields: 'You must fill in all fields correctly',
+        fill_address: 'Specify correct mailing address to receive responce'
     },
     ja: {
         name: '名前、姓',
@@ -57,7 +59,8 @@ let strings = new LocalizedStrings({
         your_address: 'あなたの住所',
         next: '次',
         zip: '郵便番号',
-        fields: 'すべての欄に正しく記入する必要があります。'
+        fields: 'すべての欄に正しく記入する必要があります。',
+        fill_address: '手紙を受け取るために、正しい住所を指定します。'
     },
     ru: {
         name: 'Имя, фамилия',
@@ -67,7 +70,8 @@ let strings = new LocalizedStrings({
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
         zip: 'Индекс',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получить ответ'
     },
     be: {
         name: 'Имя, фамилия',
@@ -77,7 +81,8 @@ let strings = new LocalizedStrings({
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
         zip: 'Индекс',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получить ответ'
     },
     uk: {
         name: 'Имя, фамилия',
@@ -87,7 +92,8 @@ let strings = new LocalizedStrings({
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
         zip: 'Индекс',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получить ответ'
     },
     az: {
         name: 'Имя, фамилия',
@@ -97,7 +103,8 @@ let strings = new LocalizedStrings({
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
         zip: 'Индекс',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получить ответ'
     },
     hy: {
         name: 'Имя, фамилия',
@@ -107,7 +114,8 @@ let strings = new LocalizedStrings({
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
         zip: 'Индекс',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получить ответ'
     },
     kk: {
         name: 'Имя, фамилия',
@@ -117,7 +125,8 @@ let strings = new LocalizedStrings({
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
         zip: 'Индекс',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получить ответ'
     },
     ky: {
         name: 'Имя, фамилия',
@@ -127,7 +136,8 @@ let strings = new LocalizedStrings({
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
         zip: 'Индекс',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получить ответ'
     },
     tg: {
         name: 'Имя, фамилия',
@@ -137,7 +147,8 @@ let strings = new LocalizedStrings({
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
         zip: 'Индекс',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получить ответ'
     },
     tk: {
         name: 'Имя, фамилия',
@@ -147,7 +158,8 @@ let strings = new LocalizedStrings({
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
         zip: 'Индекс',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получить ответ'
     },
     uz: {
         name: 'Имя, фамилия',
@@ -157,7 +169,8 @@ let strings = new LocalizedStrings({
         your_address: 'Мой почтовый адрес',
         next: 'Далее',
         zip: 'Индекс',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        fill_address: 'Укажите правильный почтовый адрес чтобы получить ответ'
     }
 
 });
@@ -549,7 +562,7 @@ export default class LetterAddress extends Component {
                             alignSelf: 'stretch'
                         }}>
                             <Text style={{color: '#212121', alignSelf: 'center', marginVertical: 16}}>
-                                Specify correct address to receive responce
+                                {strings.fill_address}
                             </Text>
                             <View style={{
                                 flexDirection: 'row',
