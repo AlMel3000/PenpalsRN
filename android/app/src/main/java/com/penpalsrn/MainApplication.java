@@ -9,8 +9,8 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.reactlibrary.RNCardViewPackage;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import org.wonday.orientation.OrientationPackage;
-import com.imagepicker.ImagePickerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.idehub.Billing.InAppBillingBridgePackage;
 
@@ -35,7 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
               new ReactNativeLocalizationPackage(),
               new RNCardViewPackage(),
               new OrientationPackage(),
-              new ImagePickerPackage(),
+              new PickerPackage(),
               new RNFetchBlobPackage(),
               new InAppBillingBridgePackage()
       );

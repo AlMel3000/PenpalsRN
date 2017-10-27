@@ -56,8 +56,6 @@ const CARDS_COUNT_FOR_RATING_DIALOG = 35;
 let savedBlock;
 let blocksAvailable;
 
-let scrollToFirst = false;
-
 let page = 0;
 let block = 1;
 
@@ -618,9 +616,8 @@ export default class Main extends Component {
 
             if (await savedBlock !== null) {
                 block = savedBlock;
-                if (!scrollToFirst) {
-                    page = JSON.parse(await AsyncStorage.getItem('page'));
-                }
+                page = JSON.parse(await AsyncStorage.getItem('page'));
+
                 if (await lastCardOfUser) {
                     this.getLastCardOfUser(lastCardOfUser);
                 } else {
