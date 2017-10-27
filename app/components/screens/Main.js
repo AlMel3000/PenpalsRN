@@ -56,8 +56,6 @@ const CARDS_COUNT_FOR_RATING_DIALOG = 35;
 let savedBlock;
 let blocksAvailable;
 
-let scrollToFirst = false;
-
 let page = 0;
 let block = 1;
 
@@ -89,7 +87,7 @@ let strings = new LocalizedStrings({
         'Let us know how it can be improved and we\'ll build it!\n' +
         'Or just rate us on Google Play.',
         reset_filter: 'Reset filter',
-        show_only_own_envelops: 'Show only own envelopes',
+        show_only_own_envelopes: 'Show only own envelopes',
         suggest_improvement: 'Improve',
         choose_country: 'Country',
         went_wrong: 'Something went wrong.\n\n Please check your Internet connection or try again later',
@@ -123,7 +121,7 @@ let strings = new LocalizedStrings({
         'Let us know how it can be improved and we\'ll build it!\n' +
         'Or just rate us on Google Play.',
         reset_filter: 'Reset filter',
-        show_only_own_envelops: 'Show only own envelopes',
+        show_only_own_envelopes: 'Show only own envelopes',
         suggest_improvement: 'Improve',
         choose_country: 'Country',
         went_wrong: 'Something went wrong.\n\n Please check your Internet connection or try again later',
@@ -157,7 +155,7 @@ let strings = new LocalizedStrings({
         'どのように改善されるべきか教えてください、私たちはそれをもとに構築していきます\n' +
         'または、Google Play で評価してください。',
         reset_filter: 'フィルターをリセット',
-        show_only_own_envelops: '自分の封筒のみ表示',
+        show_only_own_envelopes: '自分の封筒のみ表示',
         suggest_improvement: '改善',
         choose_country: '国',
         went_wrong: '何か問題があったようです。\n\nインターネットの接続を確認するか、後でもう一度お試しください。',
@@ -189,7 +187,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -223,7 +221,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -258,7 +256,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -292,7 +290,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -327,7 +325,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -361,7 +359,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -396,7 +394,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -430,7 +428,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -465,7 +463,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -499,7 +497,7 @@ let strings = new LocalizedStrings({
         own_envelopes_not_found_body: 'Возможно Вы удалили свои конверты или истёк срок их размещения',
         rating_dialog: 'Мы ценим Ваш опыт и хотим сделать приложение удобнее.\nПожалуйста, сообщите нам, как его можно улучшить и мы будем действовать!\nИли просто поставьте нам оценку в Google Play!',
         reset_filter: 'Сбросить',
-        show_only_own_envelops: 'Показать только собственные конверты',
+        show_only_own_envelopes: 'Показать только собственные конверты',
         suggest_improvement: 'Улучшить',
         choose_country: 'Страна',
         went_wrong: 'Что-то пошло не так.\n\nПожалуйста, проверьте интернет соединение или зайдите позже',
@@ -554,7 +552,7 @@ export default class Main extends Component {
 
             value: 0,
 
-            ownEnvelopesFilterText: 'Показать только собственные конверты',
+            ownEnvelopesFilterText: strings.show_only_own_envelopes,
             ownEnvelopesFilterTextColor: '#212121',
 
             showOwnEnvelopes: false,
@@ -576,7 +574,7 @@ export default class Main extends Component {
             BackHandler.exitApp();
             return true;
         });
-        this.getCountries().then(console.log(JSON.stringify(countryByISO)));
+        this.getCountries();
     }
 
     componentWillUnmount() {
@@ -618,9 +616,8 @@ export default class Main extends Component {
 
             if (await savedBlock !== null) {
                 block = savedBlock;
-                if (!scrollToFirst) {
-                    page = JSON.parse(await AsyncStorage.getItem('page'));
-                }
+                page = JSON.parse(await AsyncStorage.getItem('page'));
+
                 if (await lastCardOfUser) {
                     this.getLastCardOfUser(lastCardOfUser);
                 } else {
@@ -639,13 +636,11 @@ export default class Main extends Component {
     }
 
     async getLastCardOfUser(email: string) {
-        console.log("BOOM START");
         try {
             let response = await fetch(('http://penpal.eken.live/Api/get-last-user-envelope/?email=' + email), {
                 method: 'GET'
             });
             let res = JSON.parse(await response.text());
-            console.log(JSON.stringify(res));
             if (response.status >= 200 && response.status < 300) {
 
                 if (!res.result) {
@@ -668,15 +663,11 @@ export default class Main extends Component {
                     }];
                     tempArray.concat(envelopesArray);
                     envelopesArray = tempArray;
-                    console.log("BOOM 4");
                 }
 
             }
         } catch (message) {
-            console.log("BOOM 5");
-            console.log('catch ' + message)
         } finally {
-            console.log("BOOM 6 main");
             this.getCards();
         }
     }
@@ -837,7 +828,6 @@ export default class Main extends Component {
 
         if (!isAppRatedOrRateDeclined) {
             this.setState({pagesViewed: this.state.pagesViewed + 1});
-            console.log('pagesViewed ' + this.state.pagesViewed);
             if (this.state.pagesViewed >= CARDS_COUNT_FOR_RATING_DIALOG) {
                 this.setState({
                     pagesViewed: 0,
@@ -857,7 +847,6 @@ export default class Main extends Component {
                 method: 'GET'
             });
             let res = JSON.parse(await response.text());
-            console.log(JSON.stringify(res));
             if (response.status >= 200 && response.status < 300) {
 
                 if (res.result === 0) {
@@ -878,8 +867,6 @@ export default class Main extends Component {
 
             }
         } catch (message) {
-            console.log("BOOM 5");
-            console.log('catch ' + message)
         }
     }
 
@@ -896,7 +883,6 @@ export default class Main extends Component {
     }
 
     renderEnvelope(envelope) {
-        console.log("item " + JSON.stringify(envelope.index));
 
         let buttonIconColor = '#9e9e9e';
         let buttonTextColor = '#9e9e9e';
@@ -1201,7 +1187,7 @@ export default class Main extends Component {
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.setState({showRateDialog: false})}><Text
-                                    style={{color: '#257492', fontSize: 16}}>Later</Text></TouchableOpacity>
+                                    style={{color: '#257492', fontSize: 16}}>{strings.later}</Text></TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
                                     onPress={(e) => this.rate()}><Text
@@ -1304,7 +1290,6 @@ export default class Main extends Component {
             } else {
                 nextBlock = 1;
             }
-            console.log('nextBlock ' + nextBlock);
             block = nextBlock;
             this.getCards();
             this.updateViews();
@@ -1341,7 +1326,6 @@ export default class Main extends Component {
             viewsToShow++;
             envelopesArray[pageNum].data.views = viewsToShow;
             viewsById[id] = view;
-            console.log('id ' + id)
         }
 
     }
@@ -1357,12 +1341,9 @@ export default class Main extends Component {
                     method: 'POST',
                     body: data
                 });
-                console.log('viewsById posted' + JSON.stringify(viewsById));
                 let res = JSON.stringify(await response.text());
-                console.log("update views" + JSON.stringify(res));
             }
         } catch (message) {
-            console.log('catch ' + message)
         }
     }
 
@@ -1401,7 +1382,7 @@ export default class Main extends Component {
                 })
             } else {
                 this.setState({
-                    ownEnvelopesFilterText: strings.show_only_own_envelops,
+                    ownEnvelopesFilterText: strings.show_only_own_envelopes,
                     ownEnvelopesFilterTextColor: '#212121'
                 })
             }
@@ -1495,7 +1476,6 @@ export default class Main extends Component {
 
                 }
 
-                console.log(JSON.stringify(envelopesArray));
                 this.setState({
                     showProgress: false,
                     showError: false
@@ -1508,7 +1488,6 @@ export default class Main extends Component {
                 });
             }
         } catch (message) {
-            console.log(message);
             this.setState({
                 showProgress: false,
                 showError: true,
@@ -1565,7 +1544,6 @@ export default class Main extends Component {
                         style={{height: 48, width: 48, alignSelf: 'center'}}
                         duration={3000}
                         onFinishedAnimating={( (status) => {
-                            console.log(status)
                         } )}>
                         <Image
                             style={{height: '100%', width: '100%', resizeMode: 'contain'}}

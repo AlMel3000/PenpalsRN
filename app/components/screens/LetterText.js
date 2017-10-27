@@ -205,21 +205,20 @@ export default class LetterText extends Component {
 
     async retrieveFields() {
         try {
-            this.setState({
-                text: JSON.parse(await AsyncStorage.getItem('letterText'))
-            })
+            this.processTextChanging(JSON.parse(await AsyncStorage.getItem('letterText')));
         } catch (message) {
         }
     }
 
 
     processTextChanging(text) {
+        let textLength = text.length;
         this.setState({
             text: text,
-            counterText: text.length + '/4000'
+            counterText: textLength + '/4000'
         });
 
-        if (text.length > 3500) {
+        if (textLength > 3500) {
             this.setState({
                 counterColor: 'red'
             });

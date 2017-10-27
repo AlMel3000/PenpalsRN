@@ -17,6 +17,8 @@ import {
     View
 } from 'react-native';
 
+import ImagePicker from 'react-native-image-crop-picker';
+
 import DismissKeyboard from 'dismissKeyboard';
 
 import Orientation from 'react-native-orientation-locker';
@@ -27,7 +29,7 @@ import CountryPicker from 'react-native-country-picker-modal';
 import CheckBox from 'react-native-check-box'
 import LocalizedStrings from 'react-native-localization';
 
-var ImagePicker = require('react-native-image-picker');
+import Modal from 'react-native-modal'
 
 
 var TimerMixin = require('react-timer-mixin');
@@ -35,18 +37,6 @@ var TimerMixin = require('react-timer-mixin');
 
 let defaultRobohash = require('./../assets/default_robohash.png');
 
-let options = {
-    title: 'Photo',
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-        returnBase64Image: true
-    },
-    cancelButtonTitle: 'Cancel',
-    takePhotoButtonTitle: 'Camera',
-    chooseFromLibraryButtonTitle: 'Gallery',
-
-};
 
 let strings = new LocalizedStrings({
     "en-US": {
@@ -65,7 +55,10 @@ let strings = new LocalizedStrings({
         next: 'Next',
         zip: 'Zip',
         agreement_n_fields: 'You must accept the agreement and fill in all fields correctly!',
-        fields: 'You must fill in all fields correctly'
+        fields: 'You must fill in all fields correctly',
+        acceptance_warning: 'You must accept the agreement',
+        camera: 'Camera',
+        gallery: 'Gallery'
     },
     en: {
         name: 'Name, last name',
@@ -83,7 +76,10 @@ let strings = new LocalizedStrings({
         next: 'Next',
         zip: 'Zip',
         agreement_n_fields: 'You must accept the agreement and fill in all fields correctly!',
-        fields: 'You must fill in all fields correctly'
+        fields: 'You must fill in all fields correctly',
+        acceptance_warning: 'You must accept the agreement',
+        camera: 'Camera',
+        gallery: 'Gallery'
     },
     ja: {
         name: '名前、姓',
@@ -101,7 +97,10 @@ let strings = new LocalizedStrings({
         next: '次',
         zip: '郵便番号',
         agreement_n_fields: '規約内容に同意し、すべての欄に正しく記入する必要があります。',
-        fields: 'すべての欄に正しく記入する必要があります。'
+        fields: 'すべての欄に正しく記入する必要があります。',
+        acceptance_warning: 'あなたは、契約に同意する必要があります',
+        camera: 'カメラ',
+        gallery: 'ギャラリー',
     },
     ru: {
         name: 'Имя, фамилия',
@@ -119,7 +118,10 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение',
+        camera: 'Камера',
+        gallery: 'Галерея'
     },
     be: {
         name: 'Имя, фамилия',
@@ -137,7 +139,10 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение',
+        camera: 'Камера',
+        gallery: 'Галерея'
     },
     uk: {
         name: 'Имя, фамилия',
@@ -155,7 +160,10 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение',
+        camera: 'Камера',
+        gallery: 'Галерея'
     },
     az: {
         name: 'Имя, фамилия',
@@ -173,7 +181,10 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение',
+        camera: 'Камера',
+        gallery: 'Галерея'
 
     },
     hy: {
@@ -192,7 +203,10 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение',
+        camera: 'Камера',
+        gallery: 'Галерея'
     },
     kk: {
         name: 'Имя, фамилия',
@@ -210,7 +224,10 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение',
+        camera: 'Камера',
+        gallery: 'Галерея'
     },
     ky: {
         name: 'Имя, фамилия',
@@ -228,7 +245,10 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение',
+        camera: 'Камера',
+        gallery: 'Галерея'
     },
     tg: {
         name: 'Имя, фамилия',
@@ -246,8 +266,10 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
-
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение',
+        camera: 'Камера',
+        gallery: 'Галерея'
     },
     tk: {
         name: 'Имя, фамилия',
@@ -265,7 +287,10 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение',
+        camera: 'Камера',
+        gallery: 'Галерея'
     },
     uz: {
         name: 'Имя, фамилия',
@@ -283,7 +308,10 @@ let strings = new LocalizedStrings({
         next: 'Далее',
         zip: 'Индекс',
         agreement_n_fields: 'Вы должны принять соглашение и корректно заполнить все поля!',
-        fields: 'Вы должны корректно заполнить все поля'
+        fields: 'Вы должны корректно заполнить все поля',
+        acceptance_warning: 'Вы должны принять соглашение',
+        camera: 'Камера',
+        gallery: 'Галерея'
     }
 
 });
@@ -328,9 +356,12 @@ export default class EnvelopeFillingScreen extends Component {
             photoIsSet: false,
             image: defaultRobohash,
 
-            userEmails: ''
+            userEmails: '',
+
+            showPickPhotoDialog: false
 
         };
+        this._pickPhoto = this._pickPhoto.bind(this);
 
     }
 
@@ -713,26 +744,35 @@ export default class EnvelopeFillingScreen extends Component {
         )
     }
 
+    _capturePhoto() {
+        this.setState({
+            showPickPhotoDialog: false
+        });
+        ImagePicker.openCamera({
+            width: 300,
+            height: 400,
+            cropping: true
+        }).then(image => {
+            this.setState({
+                photoIsSet: true,
+                image: {uri: image.path}
+            })
+        });
+    }
 
     _pickPhoto(){
-        ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response);
-
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            }
-            else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            }
-            else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            }
-            else {
-                this.setState({
-                    photoIsSet: true,
-                    image: {uri: response.uri}
-                });
-            }
+        this.setState({
+            showPickPhotoDialog: false
+        });
+        ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true
+        }).then(image => {
+            this.setState({
+                photoIsSet: true,
+                image: {uri: image.path}
+            })
         });
     }
 
@@ -824,7 +864,7 @@ export default class EnvelopeFillingScreen extends Component {
                            </View>
 
                            <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems:'center', alignSelf:'stretch', borderColor:'#e4e4e4', borderWidth:0.2, padding: 8}}
-                                             onPress={(event) => this._pickPhoto()}>
+                                             onPress={(event) => this.setState({showPickPhotoDialog: true})}>
                                <Image source={this.state.image} style={{flex: 1, width: 120, height: 130, resizeMode:'contain'}}/>
                            </TouchableOpacity>
                        </View>
@@ -946,6 +986,28 @@ export default class EnvelopeFillingScreen extends Component {
                        </View>
                    </TouchableWithoutFeedback>
                </ScrollView>
+                   <Modal isVisible={this.state.showPickPhotoDialog}
+                          backdropOpacity={0.4}>
+                       <View style={{flex: 0, height: 182, backgroundColor: 'white', padding: 16, margin: 24}}>
+                           <TouchableOpacity
+                               style={{flex: 2, height: 60, justifyContent: 'center', alignItems: 'center'}}
+                               onPress={(e) => this._capturePhoto()}>
+                               <Text style={{color: 'black'}}>{strings.camera}</Text>
+                           </TouchableOpacity>
+                           <View style={{backgroundColor: '#e4e4e4', flex: 0, height: 1}}/>
+                           <TouchableOpacity
+                               style={{flex: 2, height: 60, justifyContent: 'center', alignItems: 'center'}}
+                               onPress={(e) => this._pickPhoto()}>
+                               <Text style={{color: 'black'}}>{strings.gallery}</Text>
+                           </TouchableOpacity>
+                           <View style={{backgroundColor: '#e4e4e4', flex: 0, height: 1}}/>
+                           <TouchableOpacity
+                               style={{flex: 2, height: 60, justifyContent: 'center', alignItems: 'center'}}
+                               onPress={(e) => this.setState({showPickPhotoDialog: false})}>
+                               <Text style={{color: 'black'}}>{strings.cancel}</Text>
+                           </TouchableOpacity>
+                       </View>
+                   </Modal>
                </Image>
         );
     }

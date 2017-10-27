@@ -33,7 +33,8 @@ let strings = new LocalizedStrings({
         payment: 'Payment',
         prices_may_not_include_taxes: '*Prices may not include taxes',
         to: 'To:',
-        total: 'Total: '
+        total: 'Total: ',
+        text: 'Text:'
     },
     en: {
         departure: 'Departure\nfrom:',
@@ -42,7 +43,8 @@ let strings = new LocalizedStrings({
         payment: 'Payment',
         prices_may_not_include_taxes: '*Prices may not include taxes',
         to: 'To:',
-        total: 'Total: '
+        total: 'Total: ',
+        text: 'Text:'
     },
     ja: {
         departure: 'から出発：',
@@ -51,7 +53,8 @@ let strings = new LocalizedStrings({
         payment: '支払い',
         prices_may_not_include_taxes: '*価格は税金が含まれない場合があります',
         to: 'に：',
-        total: '合計: '
+        total: '合計: ',
+        text: 'テキスト：'
     },
     ru: {
         departure: 'Отправить\nиз',
@@ -60,7 +63,8 @@ let strings = new LocalizedStrings({
         payment: 'Оплата услуги',
         prices_may_not_include_taxes: '*Цены могут не включать налоги',
         to: 'Кому:',
-        total: 'Итого: '
+        total: 'Итого: ',
+        text: 'Текст:'
 
     },
     be: {
@@ -70,7 +74,8 @@ let strings = new LocalizedStrings({
         payment: 'Оплата услуги',
         prices_may_not_include_taxes: '*Цены могут не включать налоги',
         to: 'Кому:',
-        total: 'Итого: '
+        total: 'Итого: ',
+        text: 'Текст:'
 
     },
     uk: {
@@ -80,7 +85,8 @@ let strings = new LocalizedStrings({
         payment: 'Оплата услуги',
         prices_may_not_include_taxes: '*Цены могут не включать налоги',
         to: 'Кому:',
-        total: 'Итого: '
+        total: 'Итого: ',
+        text: 'Текст:'
     },
     az: {
         departure: 'Отправить\nиз',
@@ -89,7 +95,8 @@ let strings = new LocalizedStrings({
         payment: 'Оплата услуги',
         prices_may_not_include_taxes: '*Цены могут не включать налоги',
         to: 'Кому:',
-        total: 'Итого: '
+        total: 'Итого: ',
+        text: 'Текст:'
 
     },
     hy: {
@@ -99,7 +106,8 @@ let strings = new LocalizedStrings({
         payment: 'Оплата услуги',
         prices_may_not_include_taxes: '*Цены могут не включать налоги',
         to: 'Кому:',
-        total: 'Итого: '
+        total: 'Итого: ',
+        text: 'Текст:'
 
     },
     kk: {
@@ -109,7 +117,8 @@ let strings = new LocalizedStrings({
         payment: 'Оплата услуги',
         prices_may_not_include_taxes: '*Цены могут не включать налоги',
         to: 'Кому:',
-        total: 'Итого: '
+        total: 'Итого: ',
+        text: 'Текст:'
 
     },
     ky: {
@@ -119,7 +128,8 @@ let strings = new LocalizedStrings({
         payment: 'Оплата услуги',
         prices_may_not_include_taxes: '*Цены могут не включать налоги',
         to: 'Кому:',
-        total: 'Итого: '
+        total: 'Итого: ',
+        text: 'Текст:'
 
     },
     tg: {
@@ -129,7 +139,8 @@ let strings = new LocalizedStrings({
         payment: 'Оплата услуги',
         prices_may_not_include_taxes: '*Цены могут не включать налоги',
         to: 'Кому:',
-        total: 'Итого: '
+        total: 'Итого: ',
+        text: 'Текст:'
     },
     tk: {
         departure: 'Отправить\nиз',
@@ -138,7 +149,8 @@ let strings = new LocalizedStrings({
         payment: 'Оплата услуги',
         prices_may_not_include_taxes: '*Цены могут не включать налоги',
         to: 'Кому:',
-        total: 'Итого: '
+        total: 'Итого: ',
+        text: 'Текст:'
     },
     uz: {
         departure: 'Отправить\nиз',
@@ -147,7 +159,8 @@ let strings = new LocalizedStrings({
         payment: 'Оплата услуги',
         prices_may_not_include_taxes: '*Цены могут не включать налоги',
         to: 'Кому:',
-        total: 'Итого: '
+        total: 'Итого: ',
+        text: 'Текст:'
 
     }
 
@@ -273,7 +286,6 @@ export default class LetterPurchasingAndSending extends Component {
         try {
             InAppBilling.getProductDetailsArray([departureCountryID])
                 .then((details) => {
-                    console.log(details);
                     for (let i = 0; i < details.length; i++) {
                         this.setState({
                             price: details[i].priceText,
@@ -288,7 +300,6 @@ export default class LetterPurchasingAndSending extends Component {
                     return InAppBilling.close()
                 })
         } catch (e) {
-            console.log('BILLING ' + e.message)
         }
     }
 
@@ -299,7 +310,6 @@ export default class LetterPurchasingAndSending extends Component {
                 InAppBilling.open()
                     .then(() => InAppBilling.purchase(departureCountryID))
                     .then((details) => {
-                        console.log('DETAILS try' + JSON.stringify(details));
                         this.setState({details});
                         this.sendLetter();
                         return InAppBilling.consumePurchase(departureCountryID)
@@ -309,7 +319,6 @@ export default class LetterPurchasingAndSending extends Component {
                         return InAppBilling.close()
                     }))
         } catch (e) {
-            console.log('DETAILS err' + e.message);
             InAppBilling.close()
         }
     }
@@ -359,7 +368,6 @@ export default class LetterPurchasingAndSending extends Component {
 
 
         } catch (e) {
-            console.log("FAIL " + e.message);
 
         } finally {
             this._navigateTo('Main', {envelopesArray: envelopesArray, block: block, page: page,});
@@ -462,7 +470,8 @@ export default class LetterPurchasingAndSending extends Component {
                                         paddingVertical: 14
                                     }}>
                                         <Text style={{flex: 1, color: '#212121'}}>
-                                            Текст
+                                            {strings.text
+                                            }
                                         </Text>
 
                                         <View style={{flex: 3}}>
@@ -565,7 +574,6 @@ export default class LetterPurchasingAndSending extends Component {
                                 style={{height: 48, width: 48, alignSelf: 'center'}}
                                 duration={3000}
                                 onFinishedAnimating={( (status) => {
-                                    console.log(status)
                                 } )}>
                                 <Image
                                     style={{height: '100%', width: '100%', resizeMode: 'contain'}}

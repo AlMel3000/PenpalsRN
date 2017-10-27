@@ -238,7 +238,6 @@ export default class EnvelopePreview extends Component {
             });
 
         } catch (message) {
-            console.log(message + '  ' + JSON.stringify(this.state.usersEnvelope))
         }
 
 
@@ -511,7 +510,6 @@ export default class EnvelopePreview extends Component {
                         style={{height: 48, width: 48, alignSelf: 'center'}}
                         duration={3000}
                         onFinishedAnimating={( (status) => {
-                            console.log(status)
                         } )}>
                         <Image
                             style={{height: '100%', width: '100%', resizeMode: 'contain'}}

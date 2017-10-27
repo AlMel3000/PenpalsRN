@@ -253,7 +253,6 @@ export default class EnvelopePublication extends Component {
         try {
             InAppBilling.getProductDetailsArray([PUBLICATION_FOR_1_YEAR_ID, PUBLICATION_FOR_3_YEARS_ID, PUBLICATION_FOR_5_YEARS_ID, PUBLICATION_FOR_10_YEARS_ID])
                 .then((details) => {
-                    console.log(details);
                     for (let i = 0; i < details.length; i++) {
 
                         switch (details[i].productId) {
@@ -289,7 +288,6 @@ export default class EnvelopePublication extends Component {
                     return InAppBilling.close()
                 })
         } catch (e) {
-            console.log('BILLING ' + e.message)
         }
     }
 
@@ -307,7 +305,6 @@ export default class EnvelopePublication extends Component {
 
 
         } catch (message) {
-            console.log(message + '  ' + JSON.stringify(this.state.usersEnvelope))
         }
     }
 
@@ -317,7 +314,6 @@ export default class EnvelopePublication extends Component {
                 InAppBilling.open()
                     .then(() => InAppBilling.purchase(tariffID))
                     .then((details) => {
-                        console.log('DETAILS try' + JSON.stringify(details));
                         this.setState({details});
                         this.publish(tariffID);
                         return InAppBilling.consumePurchase(tariffID)
@@ -327,7 +323,6 @@ export default class EnvelopePublication extends Component {
                         return InAppBilling.close()
                     }))
         } catch (e) {
-            console.log('DETAILS err' + e.message);
             InAppBilling.close()
         }
     }
@@ -393,7 +388,7 @@ export default class EnvelopePublication extends Component {
                 data.append('photo', {
                     uri: this.state.pic.uri,
                     type: 'image/*',
-                    name: 'user'
+                    name: 'photo'
                 });
             }
 
@@ -409,7 +404,6 @@ export default class EnvelopePublication extends Component {
 
 
         } catch (e) {
-            console.log("FAIL " + e.message);
 
         } finally {
             this.saveAndGo()
@@ -830,7 +824,6 @@ export default class EnvelopePublication extends Component {
                         style={{height: 48, width: 48, alignSelf: 'center'}}
                         duration={3000}
                         onFinishedAnimating={( (status) => {
-                            console.log(status)
                         } )}>
                         <Image
                             style={{height: '100%', width: '100%', resizeMode: 'contain'}}

@@ -44,7 +44,8 @@ let strings = new LocalizedStrings({
         '2.Empty sheet of paper\n' +
         '3.Write a letter\n' +
         '4.Fill the envelope, do not forget your return address\n' +
-        '5.Go to the post office and send a letter to a friend'
+        '5.Go to the post office and send a letter to a friend',
+        free: 'Free'
     },
     en: {
         direct_mail_help: '\t\tThis feature will allow you with the comfort of home send a letter to a friend from whom\'s envelope you have clicked  "Send letter".\n\t\tYou choose the country from which your letter will be sent. List of countries from which we can send letters is small, but we\'ll expand it in the future.\n\t\tWrite letter\'s text on the next screen and provide your return address. Penpals employees will print out your letter, fill out an envelope and send it on your behalf.',
@@ -57,7 +58,8 @@ let strings = new LocalizedStrings({
         '2.Empty sheet of paper\n' +
         '3.Write a letter\n' +
         '4.Fill the envelope, do not forget your return address\n' +
-        '5.Go to the post office and send a letter to a friend'
+        '5.Go to the post office and send a letter to a friend',
+        free: 'Free'
     },
     ja: {
         direct_mail_help: '\t\tこの機能を使うと、送りたい相手の封筒から「手紙を送る」をクリックして家にいながら手紙を送ることが可能になります。\n\t\tあなたは自分の手紙をどこの国から発送したいか選択します。発送できる国はまだ少ないですが、私たちは将来的に拡張していきます。 \t\t 次の画面で手紙の内容を書いていきます。そして、あなたの返信先住所を入力します。Penpalsの従業員は、あなたの手紙を印刷して封筒に必要事項を記入し、あなたに代わって発送します。',
@@ -70,7 +72,8 @@ let strings = new LocalizedStrings({
         '2.紙を用意します。 \n' +
         '3.手紙を書きます。 \n' +
         '4.封筒に書きます。あなたの返信用住所を書き忘れないでください。 \n' +
-        '5.郵便局言って友達に手紙を送ります。'
+        '5.郵便局言って友達に手紙を送ります。',
+        free: '無料'
     },
     ru: {
         direct_mail_help: '\t\tЭта функция позволит Вам не выходя из дома отправить письмо Другу, с конверта которого Вы нажали \"Отправить письмо\".\n\t\tВы выбираете страну из которой будет отправлено Ваше письмо. Список стран из которых мы можем отправлять письма пока небольшой, но мы обязательно расширим его в будущем.\n\t\tПишите текст письма на следующем экране, и укажите Ваш обратный адрес. Сотрудники Penpals распечатают Ваше письмо, заполнят конверт и отправят его за Вас.',
@@ -83,7 +86,8 @@ let strings = new LocalizedStrings({
         '2.Чистый лист бумаги\n' +
         '3.Напишите письмо\n' +
         '4.Заполните конверт, не забудьте свой обратный адрес\n' +
-        '5.Идите на почту и отправьте письмо другу'
+        '5.Идите на почту и отправьте письмо другу',
+        free: 'Бесплатно'
     },
     be: {
         direct_mail_help: '\t\tЭта функция позволит Вам не выходя из дома отправить письмо Другу, с конверта которого Вы нажали \"Отправить письмо\".\n\t\tВы выбираете страну из которой будет отправлено Ваше письмо. Список стран из которых мы можем отправлять письма пока небольшой, но мы обязательно расширим его в будущем.\n\t\tПишите текст письма на следующем экране, и укажите Ваш обратный адрес. Сотрудники Penpals распечатают Ваше письмо, заполнят конверт и отправят его за Вас.',
@@ -96,7 +100,8 @@ let strings = new LocalizedStrings({
         '2.Чистый лист бумаги\n' +
         '3.Напишите письмо\n' +
         '4.Заполните конверт, не забудьте свой обратный адрес\n' +
-        '5.Идите на почту и отправьте письмо другу'
+        '5.Идите на почту и отправьте письмо другу',
+        free: 'Бесплатно'
 
     },
     uk: {
@@ -110,7 +115,8 @@ let strings = new LocalizedStrings({
         '2.Чистый лист бумаги\n' +
         '3.Напишите письмо\n' +
         '4.Заполните конверт, не забудьте свой обратный адрес\n' +
-        '5.Идите на почту и отправьте письмо другу'
+        '5.Идите на почту и отправьте письмо другу',
+        free: 'Бесплатно'
     },
     az: {
         direct_mail_help: '\t\tЭта функция позволит Вам не выходя из дома отправить письмо Другу, с конверта которого Вы нажали \"Отправить письмо\".\n\t\tВы выбираете страну из которой будет отправлено Ваше письмо. Список стран из которых мы можем отправлять письма пока небольшой, но мы обязательно расширим его в будущем.\n\t\tПишите текст письма на следующем экране, и укажите Ваш обратный адрес. Сотрудники Penpals распечатают Ваше письмо, заполнят конверт и отправят его за Вас.',
@@ -123,7 +129,8 @@ let strings = new LocalizedStrings({
         '2.Чистый лист бумаги\n' +
         '3.Напишите письмо\n' +
         '4.Заполните конверт, не забудьте свой обратный адрес\n' +
-        '5.Идите на почту и отправьте письмо другу'
+        '5.Идите на почту и отправьте письмо другу',
+        free: 'Бесплатно'
     },
     hy: {
         direct_mail_help: '\t\tЭта функция позволит Вам не выходя из дома отправить письмо Другу, с конверта которого Вы нажали \"Отправить письмо\".\n\t\tВы выбираете страну из которой будет отправлено Ваше письмо. Список стран из которых мы можем отправлять письма пока небольшой, но мы обязательно расширим его в будущем.\n\t\tПишите текст письма на следующем экране, и укажите Ваш обратный адрес. Сотрудники Penpals распечатают Ваше письмо, заполнят конверт и отправят его за Вас.',
@@ -136,7 +143,8 @@ let strings = new LocalizedStrings({
         '2.Чистый лист бумаги\n' +
         '3.Напишите письмо\n' +
         '4.Заполните конверт, не забудьте свой обратный адрес\n' +
-        '5.Идите на почту и отправьте письмо другу'
+        '5.Идите на почту и отправьте письмо другу',
+        free: 'Бесплатно'
     },
     kk: {
         direct_mail_help: '\t\tЭта функция позволит Вам не выходя из дома отправить письмо Другу, с конверта которого Вы нажали \"Отправить письмо\".\n\t\tВы выбираете страну из которой будет отправлено Ваше письмо. Список стран из которых мы можем отправлять письма пока небольшой, но мы обязательно расширим его в будущем.\n\t\tПишите текст письма на следующем экране, и укажите Ваш обратный адрес. Сотрудники Penpals распечатают Ваше письмо, заполнят конверт и отправят его за Вас.',
@@ -149,7 +157,8 @@ let strings = new LocalizedStrings({
         '2.Чистый лист бумаги\n' +
         '3.Напишите письмо\n' +
         '4.Заполните конверт, не забудьте свой обратный адрес\n' +
-        '5.Идите на почту и отправьте письмо другу'
+        '5.Идите на почту и отправьте письмо другу',
+        free: 'Бесплатно'
     },
     ky: {
         direct_mail_help: '\t\tЭта функция позволит Вам не выходя из дома отправить письмо Другу, с конверта которого Вы нажали \"Отправить письмо\".\n\t\tВы выбираете страну из которой будет отправлено Ваше письмо. Список стран из которых мы можем отправлять письма пока небольшой, но мы обязательно расширим его в будущем.\n\t\tПишите текст письма на следующем экране, и укажите Ваш обратный адрес. Сотрудники Penpals распечатают Ваше письмо, заполнят конверт и отправят его за Вас.',
@@ -162,7 +171,8 @@ let strings = new LocalizedStrings({
         '2.Чистый лист бумаги\n' +
         '3.Напишите письмо\n' +
         '4.Заполните конверт, не забудьте свой обратный адрес\n' +
-        '5.Идите на почту и отправьте письмо другу'
+        '5.Идите на почту и отправьте письмо другу',
+        free: 'Бесплатно'
 
     },
     tg: {
@@ -176,7 +186,8 @@ let strings = new LocalizedStrings({
         '2.Чистый лист бумаги\n' +
         '3.Напишите письмо\n' +
         '4.Заполните конверт, не забудьте свой обратный адрес\n' +
-        '5.Идите на почту и отправьте письмо другу'
+        '5.Идите на почту и отправьте письмо другу',
+        free: 'Бесплатно'
     },
     tk: {
         direct_mail_help: '\t\tЭта функция позволит Вам не выходя из дома отправить письмо Другу, с конверта которого Вы нажали \"Отправить письмо\".\n\t\tВы выбираете страну из которой будет отправлено Ваше письмо. Список стран из которых мы можем отправлять письма пока небольшой, но мы обязательно расширим его в будущем.\n\t\tПишите текст письма на следующем экране, и укажите Ваш обратный адрес. Сотрудники Penpals распечатают Ваше письмо, заполнят конверт и отправят его за Вас.',
@@ -189,7 +200,8 @@ let strings = new LocalizedStrings({
         '2.Чистый лист бумаги\n' +
         '3.Напишите письмо\n' +
         '4.Заполните конверт, не забудьте свой обратный адрес\n' +
-        '5.Идите на почту и отправьте письмо другу'
+        '5.Идите на почту и отправьте письмо другу',
+        free: 'Бесплатно'
 
     },
     uz: {
@@ -269,7 +281,6 @@ export default class LetterDeparture extends Component {
         try {
             InAppBilling.getProductDetailsArray([RUSSIAN_LETTER_ID, JAPANESE_LETTER_ID])
                 .then((details) => {
-                    console.log(details);
                     for (let i = 0; i < details.length; i++) {
 
                         switch (details[i].productId) {
@@ -296,7 +307,6 @@ export default class LetterDeparture extends Component {
                     return InAppBilling.close()
                 })
         } catch (e) {
-            console.log('BILLING ' + e.message)
         }
     }
 
@@ -415,7 +425,7 @@ export default class LetterDeparture extends Component {
                                             alignSelf: 'center',
                                             bottom: 8
                                         }}>
-                                            Бесплатно
+                                            {strings.free}
                                         </Text>
                                     </View>
                                 </TouchableOpacity>
@@ -460,7 +470,7 @@ export default class LetterDeparture extends Component {
                                                 marginRight: 10,
                                                 marginBottom: 18
                                             }}>
-                                                Россия
+                                                {strings.russia}
                                             </Text>
 
                                         </CardView>
@@ -560,7 +570,6 @@ export default class LetterDeparture extends Component {
                         style={{height: 48, width: 48, alignSelf: 'center'}}
                         duration={3000}
                         onFinishedAnimating={( (status) => {
-                            console.log(status)
                         } )}>
                         <Image
                             style={{height: '100%', width: '100%', resizeMode: 'contain'}}
@@ -580,76 +589,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#e4e4e4',
-    },
-    viewPager: {
-        flex: 1,
-        width: null, height: null,
-        alignSelf: 'center',
-        paddingVertical: deviceHeight * 0.025,
-
-    },
-    page: {
-        flex: 1,
-    },
-    topRow: {
-        flex: 3,
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row'
-    },
-    envelopeImage: {
-        flex: 1,
-        resizeMode: 'contain',
-        height: null,
-        width: null
-    },
-    topLeftRow: {
-        height: deviceHeight / 1.9,
-        width: deviceWidth / 2 - 82,
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        flexDirection: 'column',
-        paddingLeft: deviceWidth * 0.0225,
-        paddingTop: deviceHeight * 0.15
-    },
-    prefix: {
-        height: deviceHeight / 25,
-        resizeMode: 'contain'
-    },
-    topRightRow: {
-        height: deviceHeight / 1.9,
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        flexDirection: 'row',
-        paddingRight: deviceWidth * 0.0375,
-        paddingTop: deviceHeight * 0.1125
-    },
-    userPhoto: {
-        height: deviceHeight / 2.5,
-        width: deviceWidth / 4,
-        resizeMode: 'contain',
-        marginTop: deviceHeight * 0.025
-    },
-    address: {
-        color: '#212121',
-        fontSize: 14,
-        marginLeft: deviceWidth * 0.003125
-    },
-    name: {
-        color: '#212121',
-        fontSize: 16,
-        marginLeft: deviceWidth * 0.003125
-    },
-    actionButtonIcon: {
-        fontSize: 22,
-        color: '#757575',
-    },
-    actionButtonText: {
-        color: '#212121',
-        fontSize: 16,
-        marginRight: deviceWidth * 0.03125
     }
 });
 
