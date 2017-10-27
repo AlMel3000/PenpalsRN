@@ -31,10 +31,6 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
-        <meta-data
-                android:name="io.fabric.ApiKey"
-                android:value="dfdab14df2c6b86c8604fca2f58d851bed8fc9b2"
-        />
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     </application>
 
