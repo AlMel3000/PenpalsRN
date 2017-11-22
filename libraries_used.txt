@@ -1,0 +1,38 @@
+// react-native libraries used for project
+
+npm install --save react-navigation
+
+npm install react-native-orientation --save
+react-native link react-native-orientation
+
+
+npm install react-native-vector-icons --save
+//todo iOS linking
+
+npm install react-native-localization --save
+react-native link
+
+npm install react-native-cardview --save
+react-native link react-native-cardview
+
+npm i react-native-check-box --save
+npm i react-native-country-picker-modal --save
+
+npm install react-native-image-picker@latest --save
+react-native link
+
+npm install --save react-native-fetch-blob
+react-native link
+
+npm install react-native-img-cache --save
+
+npm install --save react-native-billing
+
+npm install --save react-native-modal
+
+npm i radio-button-react-native --save
+
+npm install --save react-native-material-dropdown
+
+
+npm i babel-plugin-transform-remove-console --save
